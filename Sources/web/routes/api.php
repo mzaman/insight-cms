@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Domains\V1\Auth\Http\Controllers\Api\AuthApiController;
+use App\Domains\V1\News\Http\Controllers\Api\PostApiController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PostController;
@@ -27,10 +28,10 @@ use App\Http\Controllers\UserController;
 Route::prefix('v1')->group(function () {
     
     Route::prefix('auth')->controller(AuthApiController::class)->group(function () {
-        Route::post('login', 'login');
-        Route::post('register', 'register');
-        Route::post('logout', 'logout');
-        Route::post('refresh', 'refresh');
+        Route::post('login', 'login')->name('auth.login');
+        Route::post('register', 'register')->name('auth.register');
+        Route::post('logout', 'logout')->name('auth.logout');
+        Route::post('refresh', 'refresh')->name('auth.refresh');
     });
 
     Route::controller(PermissionController::class)
@@ -66,6 +67,10 @@ Route::prefix('v1')->group(function () {
             ->post('posts', [PostController::class, 'store'])
             ->name('post.store');
 
+        Route::middleware(['throttle:5,1', 'post.access:create'])
+            ->post('/sync-news', [PostApiController::class, 'sync'])
+            ->name('post.sync');
+        
         Route::middleware('post.access:delete')
             ->delete('posts/{id}', [PostController::class, 'destroy'])
             ->name('post.delete');

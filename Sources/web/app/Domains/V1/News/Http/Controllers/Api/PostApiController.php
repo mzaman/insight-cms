@@ -24,7 +24,18 @@ class PostApiController extends Controller
         // Inject the service dependency into the controller
         $this->service = $service;
         
-        $this->authorizeResource(Post::class, 'post');
+        // $this->authorizeResource(Post::class, 'post');
+    }
+
+    /**
+     * Sync news posts from external API and store them.
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function sync()
+    {
+        $this->service->fetchAndStorePosts();
+        return response()->json(['message' => 'Posts synced successfully']);
     }
 
     /**
