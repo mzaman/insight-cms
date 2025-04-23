@@ -23,30 +23,51 @@ use App\Http\Controllers\UserController;
 //     return $request->user();
 // });
 
-Route::controller(AuthApiController::class)->group(function () {
-    Route::post('login', 'login');
-    Route::post('register', 'register');
-    Route::post('logout', 'logout');
-    Route::post('refresh', 'refresh');
-});
 
-Route::controller(PermissionController::class)->name('permission.')->prefix('permissions')->group(function(){
-    Route::get('/', 'index')->name('list');
-    Route::post('/', 'store')->name('store');
-});
+Route::prefix('v1')->group(function () {
+    
+    Route::prefix('auth')->controller(AuthApiController::class)->group(function () {
+        Route::post('login', 'login');
+        Route::post('register', 'register');
+        Route::post('logout', 'logout');
+        Route::post('refresh', 'refresh');
+    });
 
-Route::controller(RoleController::class)->name('role.')->prefix('roles')->group(function(){
-    Route::get('/', 'index')->name('list');
-    Route::post('/', 'store')->name('store');
-    Route::get('/{id}', 'show')->name('show');
-});
+    Route::controller(PermissionController::class)
+        ->name('permission.')
+        ->prefix('permissions')
+        ->group(function () {
+            Route::get('/', 'index')->name('list');
+            Route::post('/', 'store')->name('store');
+        });
 
-Route::controller(UserController::class)->name('user.')->prefix('users')->group(function(){
-    Route::get('/', 'index')->name('list');
-});
+    Route::controller(RoleController::class)
+        ->name('role.')
+        ->prefix('roles')
+        ->group(function () {
+            Route::get('/', 'index')->name('list');
+            Route::post('/', 'store')->name('store');
+            Route::get('/{id}', 'show')->name('show');
+        });
 
-Route::middleware('auth:api')->group(function(){
-    Route::middleware('post.access:read')->get('posts', [PostController::class, 'index'])->name('post.index');
-    Route::middleware('post.access:create')->post('posts', [PostController::class, 'store'])->name('post.store');
-    Route::middleware('post.access:delete')->delete('posts/{id}', [PostController::class, 'destroy'])->name('post.delete');
+    Route::controller(UserController::class)
+        ->name('user.')
+        ->prefix('users')
+        ->group(function () {
+            Route::get('/', 'index')->name('list');
+        });
+
+    Route::middleware('auth:api')->group(function () {
+        Route::middleware('post.access:read')
+            ->get('posts', [PostController::class, 'index'])
+            ->name('post.index');
+
+        Route::middleware('post.access:create')
+            ->post('posts', [PostController::class, 'store'])
+            ->name('post.store');
+
+        Route::middleware('post.access:delete')
+            ->delete('posts/{id}', [PostController::class, 'destroy'])
+            ->name('post.delete');
+    });
 });
