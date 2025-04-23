@@ -16,3 +16,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('login', function () {
+    return "Temporary Web Route: Welcome to the login page!";
+})->name('login');
+

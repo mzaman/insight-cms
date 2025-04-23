@@ -40,62 +40,74 @@ class PostApiService extends \App\Services\BaseApiService implements PostApiServ
     public function __construct(PostApiRepository $repository)
     {
       $this->repository = $repository;
+      $this->title = 'Post';
+      $this->create_message = 'created successfully';
+      $this->update_message = 'updated successfully';
+      $this->delete_message = 'deleted successfully';
     }
 
     // Additional methods specific to PostApiService
     // New methods for the Api Service
-
     /**
      * Fetch the latest posts from the external API and store them in the database.
-     * This function does not require GuzzleHttp\Client to be passed via constructor.
-     * 
-     * @return array|null
+     *
+     * @return \Illuminate\Http\JsonResponse|null
      */
     public function fetchAndStorePosts()
     {
-        // Check if cached articles exist in Redis (to avoid fetching from API again)
-        // if (Cache::has('posts')) {
-        //     return Cache::get('posts');
-        // }
+        // Check if cached articles exist to avoid fetching again from API
+        if (Cache::has('posts')) {
+            return $this->setResult(Cache::get('posts'))
+                        ->setCode(200)
+                        ->setStatus(true)
+                        ->toJson();
+        }
 
-        // Fetch posts from the third-party API (NewsAPI)
         try {
-            // Using the Laravel service container to resolve GuzzleHttp client
+            // Use GuzzleHttp client to fetch data from NewsAPI
             $client = new Client();
+            $apiUrl = \Config::get('news.api_base_url') . '/' . \Config::get('news.api_version') . '/top-headlines';
+            $apiKey = \Config::get('news.api_key');
 
-            // Fetch data from NewsAPI
-            $apiUrl = Config::get('news.api_url') . '/' . Config::get('news.api_version') . '/top-headlines'; // Example: https://newsapi.org/v2/top-headlines';
-            $apiKey = Config::get('news.api_key');
             $response = $client->get($apiUrl, [
                 'query' => ['apiKey' => $apiKey, 'country' => 'us']
             ]);
-            dd($response);
-            // Decode the response body to extract the posts data
+
+            // Decode the API response
             $posts = json_decode($response->getBody()->getContents(), true)['articles'];
 
-            // Loop through the fetched posts and insert or update them in the database
+            // Prepare the data for insertion with timestamps
+            $postData = [];
             foreach ($posts as $post) {
-                Post::updateOrCreate(
-                    ['external_id' => $post['url']],
-                    [
-                        'title' => $post['title'],
-                        'source' => $post['source']['name'],
-                        'content' => $post['content'],
-                        'published_at' => $post['publishedAt'],
-                        'user_id' => 1,  // Assuming admin user or dynamic user
-                    ]
-                );
+                $postData[] = [
+                    'title' => $post['title'],
+                    'source' => $post['source']['name'],
+                    'content' => $post['content'],
+                    'published_at' => $post['publishedAt'],
+                    'external_id' => $post['url'],
+                    'user_id' => auth()->user()->id, // Assuming the current user is the admin/editor
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
             }
 
-            // Cache the fetched posts for 1 hour in Redis
+            // Use repository method to upsert the posts (either create or update)
+            $this->repository->upsert($postData);
+
+            // Cache the fetched posts for 1 hour
             Cache::put('posts', $posts, now()->addHour());
 
-            return $posts;
+            // Return success response
+            return $this->setResult($posts)
+                        ->setCode(200)
+                        ->setStatus(true)
+                        ->setMessage('Posts fetched and stored successfully.')
+                        ->toJson();
 
-        } catch (\Exception $e) {
-            // Log the error for debugging and store the error details in API logs
-            Log::error('Failed to fetch posts from API: ' . $e->getMessage());
-            return null;
+        } catch (Exception $e) {
+            // Log the error and format the response
+            Log::error('Failed to fetch posts from NewsAPI: ' . $e->getMessage());
+            return $this->exceptionResponse($e)->toJson();
         }
     }
 

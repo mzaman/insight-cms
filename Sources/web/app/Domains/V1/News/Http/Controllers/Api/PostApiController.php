@@ -34,8 +34,9 @@ class PostApiController extends Controller
      */
     public function sync()
     {
-        $this->service->fetchAndStorePosts();
-        return response()->json(['message' => 'Posts synced successfully']);
+        return $this->service->fetchAndStorePosts();
+        // dd($result);
+        // return response()->json(['message' => 'Posts synced successfully']);
     }
 
     /**
