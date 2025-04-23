@@ -27,6 +27,7 @@ INITIAL_COMMANDS=(
 
 POST_UPDATE_COMMANDS=(
     "php artisan vendor:publish --provider='LaravelSimpleModule\LaravelSimpleModuleServiceProvider' --tag='simple-module-config'"
+    "php artisan migrate:refresh --seed"
 )
 
 ADDITIONAL_PACKAGES=(
