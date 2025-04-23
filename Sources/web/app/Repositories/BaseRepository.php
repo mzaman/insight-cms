@@ -1,0 +1,627 @@
+<?php
+
+namespace App\Repositories;
+
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+
+/**
+ * Abstract class BaseRepository.
+ *
+ * This abstract class serves as a base repository class implementing the \App\Repositories\BaseRepositoryInterface.
+ * It provides a suite of common database operations for Eloquent models, including finding,
+ * creating, updating, deleting, and retrieving records with various query configurations.
+ *
+ * @implements \App\Repositories\BaseRepositoryInterface
+ */
+abstract class BaseRepository implements \App\Repositories\BaseRepositoryInterface
+{
+    /**
+     * The repository model.
+     *
+     * This protected property holds an instance of the Eloquent model
+     * associated with the repository. It is used to interact with the database.
+     *
+     * @var \Illuminate\Database\Eloquent\Model
+     */
+    protected $model;
+
+    /**
+     * The query builder.
+     *
+     * This protected property holds the query builder instance
+     * used for constructing and executing database queries.
+     *
+     * @var \Illuminate\Database\Eloquent\Builder
+     */
+    protected $query;
+
+    /**
+     * Alias for the query limit.
+     *
+     * This protected property defines the limit for the number of records to retrieve
+     * in a query. It can be set using the `limit` method.
+     *
+     * @var int
+     */
+    protected $take;
+
+    /**
+     * Array of related models to eager load.
+     *
+     * This protected property holds an array of relationships to be eager loaded
+     * with the model query to optimize performance and reduce the number of queries.
+     *
+     * @var array
+     */
+    protected $with = [];
+
+    /**
+     * Array of one or more where clause parameters.
+     *
+     * This protected property holds an array of where clause conditions
+     * to filter the query results based on specific criteria.
+     *
+     * @var array
+     */
+    protected $wheres = [];
+
+    /**
+     * Array of one or more where in clause parameters.
+     *
+     * This protected property holds an array of where-in clause conditions
+     * to filter the query results based on specific sets of values.
+     *
+     * @var array
+     */
+    protected $whereIns = [];
+
+    /**
+     * Array of one or more ORDER BY column/value pairs.
+     *
+     * This protected property holds an array of order by conditions
+     * to sort the query results by specific columns and directions.
+     *
+     * @var array
+     */
+    protected $orderBys = [];
+
+    /**
+     * Array of scope methods to call on the model.
+     *
+     * This protected property holds an array of scope methods
+     * that will be applied to the model query for further filtering or modifications.
+     *
+     * @var array
+     */
+    protected $scopes = [];
+
+    /**
+     * Find an item by its id.
+     *
+     * This method retrieves a model record by its primary key.
+     * If found, it returns the model instance; otherwise, it returns null.
+     *
+     * @param mixed $id The id of the item to find.
+     * @return \Illuminate\Database\Eloquent\Model|null The found item, or null if not found.
+     */
+    public function find($id)
+    {
+        return $this->getById($id);
+    }
+
+    /**
+     * Find an item by its id or fail with an exception if not found.
+     *
+     * This method retrieves a model record by its primary key.
+     * If found, it returns the model instance; otherwise, it throws a ModelNotFoundException.
+     *
+     * @param mixed $id The id of the item to find.
+     * @return \Illuminate\Database\Eloquent\Model The found item.
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException If the item is not found.
+     */
+    public function findOrFail($id)
+    {
+        return $this->getByIdOrFail($id);
+    }
+
+    /**
+     * Get all model records from the database.
+     *
+     * This method retrieves all records for the model from the database.
+     * It returns a collection containing all the model instances found.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection All model records.
+     */
+    public function all()
+    {
+        $this->newQuery()->eagerLoad();
+
+        $models = $this->query->get();
+
+        $this->unsetClauses();
+
+        return $models;
+    }
+
+    /**
+     * Count the number of specified model records in the database.
+     *
+     * This method counts the number of records that match the current query conditions.
+     * It returns the total count of records.
+     *
+     * @return int The count of model records.
+     */
+    public function count()
+    {
+        return $this->get()->count();
+    }
+
+    /**
+     * Create an item.
+     *
+     * This method creates a new model record in the database using the provided data array.
+     * It returns the newly created model instance.
+     *
+     * @param array $data The data to create the item.
+     * @return \Illuminate\Database\Eloquent\Model|null The created item.
+     */
+    public function create(array $data)
+    {
+        return $this->model->create($data);
+    }
+
+    /**
+     * Create multiple items.
+     *
+     * This method inserts multiple new model records into the database using the provided data array.
+     * It returns a collection of the newly created model instances.
+     *
+     * @param array $data An array of data to create multiple items.
+     * @return \Illuminate\Database\Eloquent\Collection Created items.
+     */
+    public function createMultiple(array $data)
+    {
+        return $this->model->insert($data);
+    }
+
+    /**
+     * Delete all items or the specified model record from the database by ID.
+     *
+     * This method deletes a model record by its primary key if an ID is provided.
+     * If no ID is provided, it deletes all records for the model. It returns
+     * true if the deletion is successful, null if it fails or if no record
+     * is found for the given ID.
+     *
+     * @param mixed|null $id The ID of the item to delete, or null to delete all items.
+     * @return bool|null True if deletion is successful, null if deletion fails, or if no item is found for the given ID.
+     *
+     * @throws \Exception If an error occurs during deletion.
+     */
+    public function delete($id = null)
+    {
+        if ($id) {
+            return $this->deleteById($id);
+        } else {
+            $this->newQuery()->setClauses()->setScopes();
+
+            $result = $this->query->delete();
+
+            $this->unsetClauses();
+
+            return $result;
+        }
+    }
+
+    /**
+     * Delete the specified model record from the database.
+     *
+     * This method deletes a model record identified by its primary key.
+     * It returns true if the deletion is successful, or null if it fails.
+     *
+     * @param mixed $id The ID of the item to delete.
+     * @return bool|null True if deletion is successful, null if deletion fails.
+     *
+     * @throws \Exception If an error occurs during deletion.
+     */
+    public function deleteById($id)
+    {
+        $this->unsetClauses();
+
+        return $this->getByIdOrFail($id)->delete();
+    }
+
+    /**
+     * Delete multiple items by their IDs.
+     *
+     * This method deletes multiple model records identified by their primary keys.
+     * It returns the number of records that were successfully deleted.
+     *
+     * @param array $ids An array of IDs of items to delete.
+     * @return int The number of deleted items.
+     */
+    public function deleteMultiple(array $ids)
+    {
+        return $this->model->destroy($ids);
+    }
+
+    /**
+     * Destroy multiple models by their IDs.
+     *
+     * This method permanently deletes multiple model records identified by their primary keys
+     * from the database. It does not return anything.
+     *
+     * @param array $ids The IDs of the items to destroy.
+     * @return void
+     */
+    public function destroy(array $ids)
+    {
+        $this->deleteMultiple($ids);
+    }
+
+    /**
+     * Get the first specified model record from the database.
+     *
+     * This method retrieves the first model record matching the current query conditions.
+     * If no conditions are set, it retrieves the first record in the table.
+     * 
+     * @return \Illuminate\Database\Eloquent\Model The first model record.
+     */
+    public function first()
+    {
+        $this->newQuery()->eagerLoad()->setClauses()->setScopes();
+
+        $model = $this->query->first();
+
+        $this->unsetClauses();
+
+        return $model;
+    }
+
+    /**
+     * Get the first specified model record from the database or throw an exception if not found.
+     *
+     * This method retrieves the first model record matching the current query conditions.
+     * If no conditions are set, it retrieves the first record in the table.
+     * If no record is found, it throws a ModelNotFoundException.
+     * 
+     * @return \Illuminate\Database\Eloquent\Model The first model record.
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException If the item is not found.
+     */
+    public function firstOrFail()
+    {
+        $this->newQuery()->eagerLoad()->setClauses()->setScopes();
+
+        $model = $this->query->firstOrFail();
+
+        $this->unsetClauses();
+
+        return $model;
+    }
+
+    /**
+     * Get all specified model records from the database.
+     *
+     * This method retrieves all records for the model matching the current query conditions.
+     * It returns a collection containing the model instances found.
+     * 
+     * @return \Illuminate\Database\Eloquent\Collection All specified model records.
+     */
+    public function get()
+    {
+        $this->newQuery()->eagerLoad()->setClauses()->setScopes();
+
+        $models = $this->query->get();
+
+        $this->unsetClauses();
+
+        return $models;
+    }
+
+    /**
+     * Get the specified model record from the database.
+     *
+     * This method retrieves a model record by its primary key.
+     * If found, it returns the model instance; otherwise, it returns null.
+     * 
+     * @param mixed $id The ID of the item to retrieve.
+     * @return \Illuminate\Database\Eloquent\Model|null The found item, or null if not found.
+     */
+    public function getById($id)
+    {
+        $this->unsetClauses();
+
+        $this->newQuery()->eagerLoad();
+
+        return $this->query->find($id);
+    }
+
+    /**
+     * Find an item by id or fail.
+     *
+     * This method retrieves a model record by its primary key.
+     * If found, it returns the model instance; otherwise, it throws a ModelNotFoundException.
+     * 
+     * @param mixed $id The ID of the item to retrieve.
+     * @return \Illuminate\Database\Eloquent\Model The found item.
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException If the item is not found.
+     */
+    public function getByIdOrFail($id)
+    {
+        $this->unsetClauses();
+
+        $this->newQuery()->eagerLoad();
+
+        return $this->query->findOrFail($id);
+    }
+
+    /**
+     * Get an item by column value.
+     *
+     * This method retrieves a model record by a specific column value.
+     * If found, it returns the model instance; otherwise, it returns null.
+     * 
+     * @param mixed $item The value of the column to search for.
+     * @param string $column The column to search in.
+     * @param array $columns The columns to retrieve.
+     * @return \Illuminate\Database\Eloquent\Model|null The found item, or null if not found.
+     */
+    public function getByColumn($item, $column, array $columns = ['*'])
+    {
+        $this->unsetClauses();
+
+        $this->newQuery()->eagerLoad();
+
+        return $this->query->where($column, $item)->first($columns);
+    }
+
+    /**
+     * Set the query limit.
+     *
+     * This method sets a limit on the number of records to retrieve in the query.
+     * It returns the repository instance to allow method chaining.
+     * 
+     * @param int $limit The limit of the query.
+     * @return $this
+     */
+    public function limit($limit)
+    {
+        $this->take = $limit;
+
+        return $this;
+    }
+
+    /**
+     * Set an ORDER BY clause.
+     *
+     * This method sets an order by condition for the query results.
+     * It accepts a column to order by and the direction ('asc' or 'desc').
+     * It returns the repository instance to allow method chaining.
+     * 
+     * @param string $column The column to order by.
+     * @param string $direction The direction of ordering ('asc' or 'desc').
+     * @return $this
+     */
+    public function orderBy($column, $direction = 'asc')
+    {
+        $this->orderBys[] = compact('column', 'direction');
+
+        return $this;
+    }
+
+    /**
+     * Update an item by its ID.
+     *
+     * This method updates a model record identified by its primary key with the provided data.
+     * It returns the updated model instance.
+     * 
+     * @param mixed $id The ID of the item to update.
+     * @param array $data The data to update.
+     * @return \Illuminate\Database\Eloquent\Model The updated item.
+     */
+    public function update($id, array $data)
+    {
+        return $this->updateById($id, $data);
+    }
+
+    /**
+     * Update an item by its ID.
+     *
+     * This method updates a model record identified by its primary key with the provided data.
+     * It returns the updated model instance.
+     * 
+     * @param mixed $id The ID of the item to update.
+     * @param array $data The data to update.
+     * @return \Illuminate\Database\Eloquent\Model The updated item.
+     */
+    public function updateById($id, array $data)
+    {
+        $this->unsetClauses();
+
+        $model = $this->getByIdOrFail($id);
+
+        $model->update($data);
+
+        return $model;
+    }
+
+    /**
+     * Paginate the specified model records.
+     *
+     * This method retrieves a paginated list of records for the model matching the current query conditions.
+     * It returns a LengthAwarePaginator instance containing the paginated results.
+     * 
+     * @param int $limit The number of records per page.
+     * @param array $columns The columns to retrieve.
+     * @param string $pageName The name of the page query parameter.
+     * @param int|null $page The page number.
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator Paginated results.
+     */
+    public function paginate($limit = 25, array $columns = ['*'], $pageName = 'page', $page = null)
+    {
+        $this->newQuery()->eagerLoad()->setClauses()->setScopes();
+
+        $models = $this->query->paginate($limit, $columns, $pageName, $page);
+
+        $this->unsetClauses();
+
+        return $models;
+    }
+
+    /**
+     * Add a simple where clause to the query.
+     *
+     * This method adds a where condition to the query based on a column, value, and optional operator.
+     * It returns the repository instance to allow method chaining.
+     * 
+     * @param string $column The column to filter by.
+     * @param mixed $value The value to compare against.
+     * @param string $operator The comparison operator.
+     * @return $this
+     */
+    public function where($column, $value, $operator = '=')
+    {
+        $this->wheres[] = compact('column', 'value', 'operator');
+
+        return $this;
+    }
+
+    /**
+     * Add a simple where in clause to the query.
+     *
+     * This method adds a where-in condition to the query based on a column and values.
+     * It returns the repository instance to allow method chaining.
+     * 
+     * @param string $column The column to filter by.
+     * @param mixed $values The values to compare against.
+     * @return $this
+     */
+    public function whereIn($column, $values)
+    {
+        $values = is_array($values) ? $values : [$values];
+
+        $this->whereIns[] = compact('column', 'values');
+
+        return $this;
+    }
+
+    /**
+     * Set Eloquent relationships to eager load.
+     *
+     * This method sets the relationships to be eager loaded with the query.
+     * It accepts a string or an array of relationships.
+     * It returns the repository instance to allow method chaining.
+     * 
+     * @param mixed $relations The relationships to eager load.
+     * @return $this
+     */
+    public function with($relations)
+    {
+        if (is_string($relations)) {
+            $relations = func_get_args();
+        }
+
+        $this->with = $relations;
+
+        return $this;
+    }
+
+    /**
+     * Create a new instance of the model's query builder.
+     *
+     * This method initializes a new query builder instance for the model.
+     * It returns the repository instance to allow method chaining.
+     * 
+     * @return $this
+     */
+    protected function newQuery()
+    {
+        $this->query = $this->model->newQuery();
+
+        return $this;
+    }
+
+    /**
+     * Add relationships to the query builder to eager load.
+     *
+     * This method adds the specified relationships to the query builder
+     * to be eager loaded with the query results.
+     * It returns the repository instance to allow method chaining.
+     * 
+     * @return $this
+     */
+    protected function eagerLoad()
+    {
+        foreach ($this->with as $relation) {
+            $this->query->with($relation);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set clauses on the query builder.
+     *
+     * This method applies the stored where, where-in, and order by conditions to the query builder.
+     * It also sets the query limit if specified. It returns the repository instance to allow method chaining.
+     * 
+     * @return $this
+     */
+    protected function setClauses()
+    {
+        foreach ($this->wheres as $where) {
+            $this->query->where($where['column'], $where['operator'], $where['value']);
+        }
+
+        foreach ($this->whereIns as $whereIn) {
+            $this->query->whereIn($whereIn['column'], $whereIn['values']);
+        }
+
+        foreach ($this->orderBys as $orders) {
+            $this->query->orderBy($orders['column'], $orders['direction']);
+        }
+
+        if (isset($this->take) && !is_null($this->take)) {
+            $this->query->take($this->take);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set query scopes.
+     *
+     * This method applies the stored query scopes to the query builder.
+     * It returns the repository instance to allow method chaining.
+     * 
+     * @return $this
+     */
+    protected function setScopes()
+    {
+        foreach ($this->scopes as $method => $args) {
+            $this->query->$method(implode(', ', $args));
+        }
+
+        return $this;
+    }
+
+    /**
+     * Reset the query clause parameter arrays.
+     *
+     * This method resets the stored query conditions (where, where-in, scopes, limit)
+     * to their default states. It returns the repository instance to allow method chaining.
+     * 
+     * @return $this
+     */
+    protected function unsetClauses()
+    {
+        $this->wheres = [];
+        $this->whereIns = [];
+        $this->scopes = [];
+        $this->take = null;
+
+        return $this;
+    }
+}

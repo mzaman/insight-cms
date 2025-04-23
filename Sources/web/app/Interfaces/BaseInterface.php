@@ -1,0 +1,123 @@
+<?php
+
+namespace App\Interfaces;
+
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+
+/**
+ * Interface BaseInterface.
+ * This interface defines common database operations for Eloquent models in Laravel.
+ */
+interface BaseInterface
+{
+    /**
+     * Find an item by its ID.
+     *
+     * This method attempts to retrieve a model record by its primary key.
+     * If a record with the specified ID is found, it is returned as a Model
+     * instance. Otherwise, it returns null.
+     *
+     * @param mixed $id The ID of the item to find.
+     * @return \Illuminate\Database\Eloquent\Model|null The found item, or null if not found.
+     */
+    public function find($id);
+
+    /**
+     * Find an item by its ID or fail with an exception if not found.
+     *
+     * This method attempts to retrieve a model record by its primary key.
+     * If a record with the specified ID is found, it is returned as a Model
+     * instance. If no record is found, a ModelNotFoundException is thrown.
+     *
+     * @param mixed $id The ID of the item to find.
+     * @return \Illuminate\Database\Eloquent\Model The found item.
+     *
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException If the item is not found.
+     */
+    public function findOrFail($id);
+
+    /**
+     * Get all model records from the database.
+     *
+     * This method retrieves all records for the model from the database.
+     * It returns a Collection containing all the records found.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection All model records.
+     */
+    public function all();
+
+    /**
+     * Create a new item.
+     *
+     * This method creates a new record in the database using the provided
+     * data array. It returns the created model instance, or null if the
+     * creation fails.
+     *
+     * @param array $data The data to create the item with.
+     * @return \Illuminate\Database\Eloquent\Model|null The created item.
+     */
+    public function create(array $data);
+
+    /**
+     * Create multiple items.
+     *
+     * This method creates multiple records in the database using the provided
+     * data array. It returns a Collection containing the created model instances.
+     *
+     * @param array $data An array of data to create multiple items.
+     * @return \Illuminate\Database\Eloquent\Collection Created items.
+     */
+    public function createMultiple(array $data);
+
+    /**
+     * Update a model.
+     *
+     * This method updates a model record identified by its primary key with the
+     * provided data array. It returns the updated model instance.
+     *
+     * @param int|mixed $id The ID of the item to update.
+     * @param array $data The data to update the item with.
+     * @return Model The updated model.
+     */
+    public function update($id, array $data);
+
+    /**
+     * Delete an item or all items from the database.
+     *
+     * This method deletes a model record by its primary key if an ID is provided.
+     * If no ID is provided, it deletes all records for the model. It returns
+     * true if the deletion is successful, null if it fails or if no record
+     * is found for the given ID.
+     *
+     * @param mixed|null $id The ID of the item to delete, or null to delete all items.
+     * @return bool|null True if deletion is successful, null if deletion fails, or if no item is found for the given ID.
+     *
+     * @throws \Exception If an error occurs during deletion.
+     */
+    public function delete($id = null);
+
+    /**
+     * Delete multiple items by their IDs.
+     *
+     * This method deletes multiple model records identified by their primary keys.
+     * It returns the number of records that were successfully deleted.
+     *
+     * @param array $ids An array of IDs of items to delete.
+     * @return int The number of deleted items.
+     */
+    public function deleteMultiple(array $ids);
+
+    /**
+     * Destroy multiple models by their IDs.
+     *
+     * This method permanently deletes multiple model records identified by their primary keys
+     * from the database. It does not return anything.
+     *
+     * @param array $ids The IDs of the items to destroy.
+     * @return void
+     */
+    public function destroy(array $ids);
+
+}

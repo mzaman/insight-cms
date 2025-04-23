@@ -1,0 +1,164 @@
+<?php
+
+namespace App\Services;
+
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use \Exception;
+
+/**
+ * Abstract class BaseService.
+ *
+ * This abstract class implements the \App\Services\BaseServiceInterface interface and serves as a base
+ * class for other repository classes. It provides common database operations for
+ * Eloquent models, including finding, creating, updating, and deleting records.
+ *
+ * @implements \App\Services\BaseServiceInterface
+ */
+abstract class BaseService implements \App\Services\BaseServiceInterface
+{
+    /**
+     * The repository instance.
+     *
+     * This protected property holds an instance of the repository class which 
+     * interacts with the database. It is used to perform various CRUD operations.
+     *
+     * @var $repository
+     */
+    protected $repository;
+
+    /**
+     * Find an item by its ID.
+     *
+     * This method attempts to retrieve a model record by its primary key. 
+     * If a record with the specified ID is found, it is returned as a Model instance.
+     * Otherwise, it returns null.
+     *
+     * @param mixed $id The ID of the item to find.
+     * @return Model|null The found item, or null if not found.
+     */
+    public function find($id): ?Model
+    {
+        return $this->repository->find($id);
+    }
+
+    /**
+     * Find an item by its ID or fail.
+     *
+     * This method attempts to retrieve a model record by its primary key.
+     * If a record with the specified ID is found, it is returned as a Model instance.
+     * If no record is found, a ModelNotFoundException is thrown.
+     *
+     * @param mixed $id The ID of the item to find.
+     * @return Model The found item.
+     *
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException If the item is not found.
+     */
+    public function findOrFail($id): Model
+    {
+        return $this->repository->findOrFail($id);
+    }
+
+    /**
+     * Return all items.
+     *
+     * This method retrieves all records for the model from the database.
+     * It returns a Collection containing all the records found.
+     *
+     * @return Collection All items.
+     */
+    public function all(): Collection
+    {
+        return $this->repository->all();
+    }
+
+    /**
+     * Create an item.
+     *
+     * This method creates a new record in the database using the provided
+     * data array. The data can be an associative array or other data types
+     * supported by the repository. The method does not return anything.
+     *
+     * @param array|mixed $data The data to create the item.
+     * @return void
+     */
+    public function create($data): void
+    {
+        $this->repository->create($data);
+    }
+
+    /**
+     * Create multiple items.
+     *
+     * This method inserts multiple new model records into the database using the provided data array.
+     * It returns a collection of the newly created model instances.
+     *
+     * @param array $data An array of data to create multiple items.
+     * @return \Illuminate\Database\Eloquent\Collection Created items.
+     */
+    public function createMultiple(array $data)
+    {
+        return $this->repository->createMultiple($data);
+    }
+
+    /**
+     * Update a model.
+     *
+     * This method updates a model record identified by its primary key with the
+     * provided data array. It returns the updated model instance.
+     *
+     * @param int|mixed $id The ID of the item to update.
+     * @param array $data The data to update the item with.
+     * @return Model The updated model.
+     */
+    public function update($id, array $data): Model
+    {
+        return $this->repository->update($id, $data);
+    }
+
+    /**
+     * Delete all items or the specified model record from the database by ID.
+     *
+     * This method deletes a model record by its primary key if an ID is provided.
+     * If no ID is provided, it deletes all records for the model. It returns
+     * true if the deletion is successful, null if it fails or if no record
+     * is found for the given ID.
+     *
+     * @param mixed|null $id The ID of the item to delete, or null to delete all items.
+     * @return bool|null True if the deletion is successful, otherwise null.
+     *
+     * @throws \Exception If an error occurs during deletion.
+     */
+    public function delete($id = null)
+    {
+        return $this->repository->delete($id);
+    }
+
+    /**
+     * Delete multiple models by their IDs.
+     *
+     * This method deletes multiple model records identified by their primary keys.
+     * It returns the number of records that were successfully deleted.
+     *
+     * @param array $ids The IDs of the items to delete.
+     * @return int The number of models deleted.
+     */
+    public function deleteMultiple(array $ids): int
+    {
+        return $this->repository->deleteMultiple($ids);
+    }
+
+    /**
+     * Destroy multiple models by their IDs.
+     *
+     * This method permanently deletes multiple model records identified by their primary keys
+     * from the database. It does not return anything.
+     *
+     * @param array $ids The IDs of the items to destroy.
+     * @return void
+     */
+    public function destroy(array $ids)
+    {
+        $this->repository->deleteMultiple($ids);
+    }
+}

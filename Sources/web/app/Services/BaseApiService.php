@@ -1,0 +1,401 @@
+<?php
+
+namespace App\Services;
+
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
+use \Exception;
+
+/**
+ * Abstract class BaseApiService.
+ *
+ * This abstract class provides a base implementation for the \App\Services\BaseServiceInterface interface,
+ * handling common CRUD operations and response formatting for API interactions.
+ *
+ * @implements \App\Services\BaseServiceInterface
+ */
+abstract class BaseApiService implements \App\Services\BaseServiceInterface
+{
+    // Properties for response formatting
+    protected $title = "";
+    protected $create_message = "";
+    protected $update_message = "";
+    protected $delete_message = "";
+
+    // Property to reference the repository
+    protected $repository;
+
+    /**
+     * Constructor to initialize the repository.
+     *
+     * @param mixed $repository The repository instance to be used for data operations.
+     */
+    public function __construct($repository)
+    {
+        $this->repository = $repository;
+    }
+
+    /* Response formatting related code: START */
+    private $result = null;  // Stores the result of the operation
+    private $status = false; // Indicates the success or failure of the operation
+    private $message = null; // Message to be included in the response
+    private $code = null;    // HTTP status code for the response
+
+    /**
+     * Set the result output.
+     *
+     * @param mixed $result The result to set.
+     * @return $this Returns the current instance for method chaining.
+     */
+    public function setResult($result)
+    {
+        $this->result = $result;
+        return $this;
+    }
+
+    /**
+     * Get the result.
+     *
+     * @return mixed|null The result of the operation, or null if not set.
+     */
+    public function getResult()
+    {
+        return $this->result;
+    }
+
+    /**
+     * Set the status.
+     *
+     * @param bool $status The status to set (true for success, false for failure).
+     * @return $this Returns the current instance for method chaining.
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+        return $this;
+    }
+
+    /**
+     * Get the status.
+     *
+     * @return bool The status of the operation (true for success, false for failure).
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set the message.
+     *
+     * @param mixed $message The message to set.
+     * @return $this Returns the current instance for method chaining.
+     */
+    public function setMessage($message)
+    {
+        $this->message = $message;
+        return $this;
+    }
+
+    /**
+     * Get the message.
+     *
+     * @return mixed|null The message of the operation, or null if not set.
+     */
+    public function getMessage()
+    {
+        return $this->message;
+    }
+
+    /**
+     * Set the code.
+     *
+     * @param mixed $code The HTTP status code to set.
+     * @return $this Returns the current instance for method chaining.
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+        return $this;
+    }
+
+    /**
+     * Get the code.
+     *
+     * @return mixed|null The HTTP status code of the operation, or null if not set.
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * Handle exceptions and format the response accordingly.
+     *
+     * This method handles different types of exceptions and formats the response
+     * based on the exception type. For QueryException, it checks for specific error codes.
+     * For ModelNotFoundException, it handles both JSON and non-JSON requests.
+     * In debug mode, it provides detailed exception information; otherwise,
+     * it provides a generic error message.
+     *
+     * @param Exception $exception The exception to handle.
+     * @return $this Returns the current instance with the error response set.
+     */
+    public function exceptionResponse(Exception $exception)
+    {
+        // Handle database related exceptions
+        if ($exception instanceof QueryException) {
+            if ($exception->errorInfo[1] == 1451) {
+                return $this->setStatus(false)
+                    ->setMessage('Unable to delete data. It is being referenced by other records.')
+                    ->setCode(400);
+            }
+        }
+        // Handle model not found exceptions
+        if ($exception instanceof ModelNotFoundException) {
+            if (!request()->expectsJson()) {
+                return abort(404);
+            }
+            return $this->setStatus(false)
+                ->setMessage('The requested data does not exist.')
+                ->setCode(404);
+        }
+        // Handle generic exceptions with debug details if in debug mode
+        if (config('app.debug')) {
+            $message = (object) [
+                'exception' => 'Error',
+                'error_message' => $exception->getMessage(),
+                'file' => $exception->getFile(),
+                'line' => $exception->getLine(),
+                'trace' => $exception->getTrace()
+            ];
+            return $this->setStatus(false)
+                ->setMessage($message)
+                ->setCode(500);
+        }
+        // Handle generic exceptions with a generic message in production mode
+        return $this->setStatus(false)
+            ->setMessage('An unexpected error occurred. Please try again later.')
+            ->setCode(500);
+    }
+
+    /**
+     * Convert the response to JSON format.
+     *
+     * This method formats the response data into JSON, including the status, HTTP code,
+     * message, and result data. The HTTP code defaults to 200 for success or 400 for failure
+     * if not explicitly set.
+     *
+     * @return \Illuminate\Http\JsonResponse The JSON response.
+     */
+    public function toJson()
+    {
+        $http_code = $this->getCode() ?? ($this->getStatus() ? 200 : 400);
+
+        return response()->json([
+            'success' => $this->getStatus(),
+            'code' => $http_code,
+            'message' => $this->getMessage(),
+            'data' => $this->getResult(),
+        ], $http_code);
+    }
+    /* Response formatting related code: END */
+
+    /**
+     * Find an item by its ID.
+     *
+     * This method attempts to find a single item by its ID using the repository.
+     * If found, it sets the result, status, and code. If an exception occurs,
+     * it handles the exception and formats the response.
+     *
+     * @param mixed $id The ID of the item to find.
+     * @return $this The current instance with the result set or an error response.
+     */
+    public function find($id)
+    {
+        try {
+            $result = $this->repository->getById($id);
+            return $this->setResult($result)
+                ->setCode(200)
+                ->setStatus(true);
+        } catch (Exception $exception) {
+            return $this->exceptionResponse($exception);
+        }
+    }
+
+    /**
+     * Find an item by its ID or fail.
+     *
+     * This method attempts to find a single item by its ID using the repository.
+     * If the item is not found, it throws a ModelNotFoundException.
+     * If found, it sets the result, status, and code. If an exception occurs,
+     * it handles the exception and formats the response.
+     *
+     * @param mixed $id The ID of the item to find.
+     * @return $this The current instance with the result set or an error response.
+     */
+    public function findOrFail($id)
+    {
+        try {
+            $result = $this->repository->getByIdOrFail($id);
+            return $this->setResult($result)
+                ->setCode(200)
+                ->setStatus(true);
+        } catch (Exception $exception) {
+            return $this->exceptionResponse($exception);
+        }
+    }
+
+    /**
+     * Return all items.
+     *
+     * This method retrieves all items from the repository and sets the result.
+     * If an exception occurs, it handles the exception and formats the response.
+     *
+     * @return $this The current instance with the result set or an error response.
+     */
+    public function all()
+    {
+        try {
+            $result = $this->repository->all();
+            return $this->setResult($result)
+                ->setCode(200)
+                ->setStatus(true);
+        } catch (Exception $exception) {
+            return $this->exceptionResponse($exception);
+        }
+    }
+
+    /**
+     * Create an item.
+     *
+     * This method creates a new item using the provided data.
+     * Upon successful creation, it sets a success message, status, and code.
+     * If an exception occurs, it handles the exception and formats the response.
+     *
+     * @param array|mixed $data The data to create the item.
+     * @return $this The current instance with the creation status or an error response.
+     */
+    public function create($data)
+    {
+        try {
+            $this->repository->create($data);
+            return $this->setMessage($this->title . " " . $this->create_message)
+                ->setCode(200)
+                ->setStatus(true);
+        } catch (Exception $exception) {
+            return $this->exceptionResponse($exception);
+        }
+    }
+
+    /**
+     * Create multiple items.
+     *
+     * This method inserts multiple new model records into the database using the provided data array.
+     * It returns a collection of the newly created model instances.
+     *
+     * @param array $data An array of data to create multiple items.
+     * @return $this The current instance with the creation status or an error response.
+     */
+    public function createMultiple(array $data)
+    {        
+        try {
+            $this->repository->createMultiple($data);
+            return $this->setMessage($this->title . " " . $this->create_message)
+                ->setCode(200)
+                ->setStatus(true);
+        } catch (Exception $exception) {
+            return $this->exceptionResponse($exception);
+        }
+    }
+
+    /**
+     * Update a model.
+     *
+     * This method updates an existing item identified by its ID with the provided data.
+     * Upon successful update, it sets a success message, status, and code.
+     * If an exception occurs, it handles the exception and formats the response.
+     *
+     * @param int|mixed $id The ID of the item to update.
+     * @param array|mixed $data The data to update the item with.
+     * @return $this The current instance with the update status or an error response.
+     */
+    public function update($id, array $data)
+    {
+        try {
+            $this->repository->update($id, $data);
+            return $this->setMessage($this->title . " " . $this->update_message)
+                ->setCode(200)
+                ->setStatus(true);
+        } catch (Exception $exception) {
+            return $this->exceptionResponse($exception);
+        }
+    }
+
+    /**
+     * Delete an item by its ID.
+     *
+     * This method deletes an item identified by its ID from the repository.
+     * Upon successful deletion, it sets a success message, status, and code.
+     * If an exception occurs, it handles the exception and formats the response.
+     *
+     * @param mixed|null $id The ID of the item to delete.
+     * @return $this The current instance with the deletion status or an error response.
+     * @throws Exception
+     */
+    public function delete($id = null)
+    {
+        try {
+            $this->repository->delete($id);
+            return $this->setMessage($this->title . " " . $this->delete_message)
+                ->setCode(200)
+                ->setStatus(true);
+        } catch (Exception $exception) {
+            return $this->exceptionResponse($exception);
+        }
+    }
+
+    /**
+     * Delete multiple items by their IDs.
+     *
+     * This method deletes multiple items identified by their IDs from the repository.
+     * Upon successful deletion, it sets a success message, status, and code.
+     * If an exception occurs, it handles the exception and formats the response.
+     *
+     * @param array $ids The IDs of the items to delete.
+     * @return $this The current instance with the deletion status or an error response.
+     */
+    public function deleteMultiple(array $ids)
+    {
+        try {
+            $this->repository->deleteMultiple($ids);
+            return $this->setMessage($this->title . " " . $this->delete_message)
+                ->setCode(200)
+                ->setStatus(true);
+        } catch (Exception $exception) {
+            return $this->exceptionResponse($exception);
+        }
+    }
+
+    /**
+     * Delete multiple items by their IDs.
+     *
+     * This method deletes multiple items identified by their IDs from the repository.
+     * Upon successful deletion, it sets a success message, status, and code.
+     * If an exception occurs, it handles the exception and formats the response.
+     *
+     * @param array $ids The IDs of the items to delete.
+     * @return $this The current instance with the deletion status or an error response.
+     */
+    public function destroy(array $ids)
+    {
+        try {
+            $this->repository->deleteMultiple($ids);
+            return $this->setMessage($this->title . " " . $this->delete_message)
+                ->setCode(200)
+                ->setStatus(true);
+        } catch (Exception $exception) {
+            return $this->exceptionResponse($exception);
+        }
+    }
+}
