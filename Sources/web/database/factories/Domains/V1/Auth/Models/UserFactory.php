@@ -2,7 +2,9 @@
 
 namespace Database\Factories\Domains\V1\Auth\Models;
 
+use App\Domains\V1\Auth\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Domains\V1\Auth\Models\User>
@@ -17,7 +19,22 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'name' => fake()->name(),
+            'email' => fake()->unique()->safeEmail(),
+            'role_id' => random_int(1,3),
+            'password' => Hash::make('password'),
         ];
+    }
+
+    /**
+     * Indicate that the model's email address should be unverified.
+     *
+     * @return static
+     */
+    public function unverified()
+    {
+        return $this->state(fn (array $attributes) => [
+            'email_verified_at' => null,
+        ]);
     }
 }

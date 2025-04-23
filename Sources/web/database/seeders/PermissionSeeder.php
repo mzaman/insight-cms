@@ -2,18 +2,37 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Domains\V1\Auth\Models\Permission;
 
 class PermissionSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Seed the permissions table.
      *
      * @return void
      */
     public function run()
     {
-        //
+        // Define the permissions
+        $permissions = [
+            ['name' => 'Create', 'slug' => 'create'],
+            ['name' => 'Delete', 'slug' => 'delete'],
+            ['name' => 'Read', 'slug' => 'read'],
+            ['name' => 'Update', 'slug' => 'update'],
+            ['name' => 'Approve', 'slug' => 'approve'],
+            ['name' => 'Publish', 'slug' => 'publish'],
+            ['name' => 'Manage Users', 'slug' => 'manage_users'],
+            ['name' => 'Manage Roles', 'slug' => 'manage_roles'],
+            ['name' => 'Manage Permissions', 'slug' => 'manage_permissions'],
+        ];
+
+        // Loop through each permission and insert it
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate([
+                'name' => $permission['name'],
+                'slug' => $permission['slug'],
+            ]);
+        }
     }
 }

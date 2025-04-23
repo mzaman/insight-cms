@@ -49,11 +49,12 @@ class PostApiRepository extends \App\Repositories\BaseRepository implements Post
             );
 
             // Add the updated or created post to the result array
-            $updatedOrCreatedPosts[] = $post;
+            // $updatedOrCreatedPosts[] = $post;
         }
-
+        
+        return null;
         // Return the newly created or updated posts
-        return $updatedOrCreatedPosts;
+        // return $updatedOrCreatedPosts;
     }
 
     /**
