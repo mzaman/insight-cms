@@ -86,7 +86,8 @@ http://localhost:5151
 
 ## Project Installation
 
-Generate a JWT Secret
+## Environment Variables
+Generate a JWT Secret (Important)
 ```bash
 php artisan jwt:secret
 ```
@@ -95,7 +96,11 @@ After running the jwt:secret command, ensure that the .env file contains the fol
 ```bash
 JWT_SECRET=your_generated_secret_key
 ```
-
+## API Key
+To use the News API, you will need to obtain an API key from a provider such as NewsAPI. Once you have obtained the API key, you can set it as an environment variable in your `.env` file if missing.
+```bash
+NEWS_API_KEY=4164b37f2e1a47a1a583003a70c420b3
+```
 
 To populate the database with dummy data, run the following command:
 

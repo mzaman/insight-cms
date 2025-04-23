@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "db3fd06f-b145-4283-9811-9f0ea777502e",
+		"_postman_id": "9fa0a48a-f423-4429-bae6-a8156068898a",
 		"name": "Insight CMS : REST API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "697454"
@@ -32,7 +32,7 @@
 						},
 						{
 							"key": "email",
-							"value": "user1@mail.com",
+							"value": "user3@mail.com",
 							"type": "default"
 						},
 						{
@@ -43,7 +43,7 @@
 					]
 				},
 				"url": {
-					"raw": "http://web.test/api/register",
+					"raw": "http://web.test/api/v1/auth/register",
 					"protocol": "http",
 					"host": [
 						"web",
@@ -51,6 +51,8 @@
 					],
 					"path": [
 						"api",
+						"v1",
+						"auth",
 						"register"
 					]
 				}
@@ -84,7 +86,7 @@
 					]
 				},
 				"url": {
-					"raw": "http://web.test/api/login",
+					"raw": "http://web.test/api/v1/auth/login",
 					"protocol": "http",
 					"host": [
 						"web",
@@ -92,6 +94,8 @@
 					],
 					"path": [
 						"api",
+						"v1",
+						"auth",
 						"login"
 					]
 				}
@@ -115,17 +119,19 @@
 						{
 							"key": "email",
 							"value": "admin@mail.com",
-							"type": "default"
+							"type": "default",
+							"disabled": true
 						},
 						{
 							"key": "password",
 							"value": "password",
-							"type": "default"
+							"type": "default",
+							"disabled": true
 						}
 					]
 				},
 				"url": {
-					"raw": "http://web.test/api/login",
+					"raw": "http://web.test/api/v1/auth/refresh",
 					"protocol": "http",
 					"host": [
 						"web",
@@ -133,7 +139,9 @@
 					],
 					"path": [
 						"api",
-						"login"
+						"v1",
+						"auth",
+						"refresh"
 					]
 				}
 			},
@@ -166,7 +174,7 @@
 					]
 				},
 				"url": {
-					"raw": "http://web.test/api/login",
+					"raw": "http://web.test/api/v1/auth/logout",
 					"protocol": "http",
 					"host": [
 						"web",
@@ -174,7 +182,9 @@
 					],
 					"path": [
 						"api",
-						"login"
+						"v1",
+						"auth",
+						"logout"
 					]
 				}
 			},
@@ -207,7 +217,7 @@
 					]
 				},
 				"url": {
-					"raw": "http://web.test/api/permission",
+					"raw": "http://web.test/api/v1/permissions",
 					"protocol": "http",
 					"host": [
 						"web",
@@ -215,7 +225,8 @@
 					],
 					"path": [
 						"api",
-						"permission"
+						"v1",
+						"permissions"
 					]
 				}
 			},
@@ -237,7 +248,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://web.test/api/permission",
+					"raw": "http://web.test/api/v1/permissions",
 					"protocol": "http",
 					"host": [
 						"web",
@@ -245,7 +256,8 @@
 					],
 					"path": [
 						"api",
-						"permission"
+						"v1",
+						"permissions"
 					]
 				}
 			},
@@ -277,18 +289,18 @@
 					"formdata": [
 						{
 							"key": "name",
-							"value": "Admin",
+							"value": "Editor",
 							"type": "default"
 						},
 						{
 							"key": "slug",
-							"value": "admin",
+							"value": "editor",
 							"type": "default"
 						}
 					]
 				},
 				"url": {
-					"raw": "http://web.test/api/role",
+					"raw": "http://web.test/api/v1/roles",
 					"protocol": "http",
 					"host": [
 						"web",
@@ -296,7 +308,8 @@
 					],
 					"path": [
 						"api",
-						"role"
+						"v1",
+						"roles"
 					]
 				}
 			},
@@ -314,7 +327,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://web.test/api/role/4",
+					"raw": "http://web.test/api/v1/roles/1",
 					"protocol": "http",
 					"host": [
 						"web",
@@ -322,8 +335,9 @@
 					],
 					"path": [
 						"api",
-						"role",
-						"4"
+						"v1",
+						"roles",
+						"1"
 					]
 				}
 			},
@@ -351,7 +365,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://web.test/api/role/6",
+					"raw": "http://web.test/api/v1/roles/1",
 					"protocol": "http",
 					"host": [
 						"web",
@@ -359,8 +373,9 @@
 					],
 					"path": [
 						"api",
-						"role",
-						"6"
+						"v1",
+						"roles",
+						"1"
 					]
 				}
 			},
@@ -422,7 +437,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://web.test/api/post",
+					"raw": "http://web.test/api/v1/posts",
 					"protocol": "http",
 					"host": [
 						"web",
@@ -430,7 +445,8 @@
 					],
 					"path": [
 						"api",
-						"post"
+						"v1",
+						"posts"
 					]
 				}
 			},
@@ -458,7 +474,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://web.test/api/post/21",
+					"raw": "http://web.test/api/v1/posts/21",
 					"protocol": "http",
 					"host": [
 						"web",
@@ -466,7 +482,8 @@
 					],
 					"path": [
 						"api",
-						"post",
+						"v1",
+						"posts",
 						"21"
 					]
 				}
@@ -479,7 +496,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://web.test/api/post",
+					"raw": "http://web.test/api/v1/users",
 					"protocol": "http",
 					"host": [
 						"web",
@@ -487,7 +504,59 @@
 					],
 					"path": [
 						"api",
-						"post"
+						"v1",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "News Sync",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://web.test/api/v1/sync-news",
+					"protocol": "http",
+					"host": [
+						"web",
+						"test"
+					],
+					"path": [
+						"api",
+						"v1",
+						"sync-news"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "News API Direct Fetch",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://newsapi.org/v2/top-headlines?apiKey=4164b37f2e1a47a1a583003a70c420b3&country=us",
+					"protocol": "https",
+					"host": [
+						"newsapi",
+						"org"
+					],
+					"path": [
+						"v2",
+						"top-headlines"
+					],
+					"query": [
+						{
+							"key": "apiKey",
+							"value": "4164b37f2e1a47a1a583003a70c420b3"
+						},
+						{
+							"key": "country",
+							"value": "us"
+						}
 					]
 				}
 			},
@@ -499,7 +568,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vd2ViLnRlc3QvYXBpL2xvZ2luIiwiaWF0IjoxNzQ1NDA4MDE4LCJleHAiOjE3NDU0MTE2MTgsIm5iZiI6MTc0NTQwODAxOCwianRpIjoiOEl1cnNUNUxqTTI4cU1peCIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.YVStWijXPSWEqmzrufPNfDcdf9BGeLF5Pz6DuHNFvlo",
+				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vd2ViLnRlc3QvYXBpL3YxL2F1dGgvbG9naW4iLCJpYXQiOjE3NDU0NDM1NjEsImV4cCI6MTc0NTQ0NzE2MSwibmJmIjoxNzQ1NDQzNTYxLCJqdGkiOiJGclJPeGg5VnEwNjN0Z0hQIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.klD1UJdsJHJ9AOwqZez1w8Ki7DElph1b4G-m4YpjVHw",
 				"type": "string"
 			}
 		]
