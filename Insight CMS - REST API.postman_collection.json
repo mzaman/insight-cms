@@ -510,6 +510,57 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "News Sync",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://web.test/api/v1/sync-news",
+					"protocol": "http",
+					"host": [
+						"web",
+						"test"
+					],
+					"path": [
+						"api",
+						"v1",
+						"sync-news"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "News API Direct Fetch",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://newsapi.org/v2/top-headlines?apiKey=4164b37f2e1a47a1a583003a70c420b3&country=us",
+					"protocol": "https",
+					"host": [
+						"newsapi",
+						"org"
+					],
+					"path": [
+						"v2",
+						"top-headlines"
+					],
+					"query": [
+						{
+							"key": "apiKey",
+							"value": "4164b37f2e1a47a1a583003a70c420b3"
+						},
+						{
+							"key": "country",
+							"value": "us"
+						}
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"auth": {
@@ -517,7 +568,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vd2ViLnRlc3QvYXBpL3YxL2F1dGgvbG9naW4iLCJpYXQiOjE3NDU0MzI0NzksImV4cCI6MTc0NTQzNjA3OSwibmJmIjoxNzQ1NDMyNDc5LCJqdGkiOiIxR21TWlVKaUl3VE5QMTQ4Iiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.PT5BxuVs_uwlHQMSTx6nCmQNYhKk6Onxbly_oOeiWxo",
+				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vd2ViLnRlc3QvYXBpL3YxL2F1dGgvbG9naW4iLCJpYXQiOjE3NDU0NDM1NjEsImV4cCI6MTc0NTQ0NzE2MSwibmJmIjoxNzQ1NDQzNTYxLCJqdGkiOiJGclJPeGg5VnEwNjN0Z0hQIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.klD1UJdsJHJ9AOwqZez1w8Ki7DElph1b4G-m4YpjVHw",
 				"type": "string"
 			}
 		]
