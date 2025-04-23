@@ -33,7 +33,7 @@ POST_UPDATE_COMMANDS=(
 ADDITIONAL_PACKAGES=(
     "barryvdh/laravel-debugbar"
     "guzzlehttp/guzzle:^7.0"
-    "mzaman/laravel-simple-module"
+    "mzaman/laravel-simple-module:*"
 )
 
 # ─────────────────────────────────────────────────────────────
