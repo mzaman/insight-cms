@@ -144,16 +144,38 @@ class AuthApiService extends \App\Services\BaseApiService implements UserApiServ
         ]);
     }
 
-    /**
-     * Refresh the JWT token.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function refresh()
-    {
-        // Refresh the token and return user data with the new token
-        return $this->responseWith(Auth::user(), Auth::refresh());
-    }
+  /**
+   * Refresh the JWT token.
+   *
+   * @return \Illuminate\Http\JsonResponse
+   */
+  public function refresh()
+  {
+      try {
+          // Retrieve the currently authenticated user
+          $user = Auth::user();
+
+          // Generate a new token
+          $token = Auth::refresh();
+
+          // Return the response with the new token and user details
+          return $this->responseWith(
+              $user->makeHidden([
+                  'email_verified_at',  // Exclude email_verified_at field
+                  'created_at',          // Exclude created_at field
+                  'updated_at',          // Exclude updated_at field
+                  'deleted_at',          // Exclude deleted_at field
+              ]),
+              $token
+          );
+      } catch (Exception $e) {
+          // Handle any error that occurs during refresh
+          return response()->json([
+              'status' => 'error',
+              'message' => 'Failed to refresh token. Please try again.',
+          ], 500);
+      }
+  }
 
     /**
      * Generate response with user data and token.
