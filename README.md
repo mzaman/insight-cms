@@ -1,4 +1,4 @@
-# Laravel Dockerized Environment
+# Insight CMS
 
 This project provides a streamlined Docker-based development environment for Laravel using Laradock. It includes setup scripts and handy Docker shortcut commands to simplify local development.
 
