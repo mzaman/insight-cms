@@ -161,6 +161,7 @@ class AuthApiService extends \App\Services\BaseApiService implements UserApiServ
           // Return the response with the new token and user details
           return $this->responseWith(
               $user->makeHidden([
+                  'id',                 // Exclude id field
                   'email_verified_at',  // Exclude email_verified_at field
                   'created_at',          // Exclude created_at field
                   'updated_at',          // Exclude updated_at field
