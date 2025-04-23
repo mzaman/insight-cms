@@ -16,9 +16,13 @@ return new class extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->text('content');
+            $table->string('external_id')->nullable();
+            $table->string('source')->nullable();
+            $table->text('content')->nullable();
             $table->foreignId('user_id')->constrained();
+            $table->timestamp('published_at')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

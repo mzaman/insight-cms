@@ -1,21 +1,38 @@
-
 ## Installation
 
-For fill dummy data have to run ```php artisan migrate --seed```
+To populate the database with dummy data, run the following command:
+
+```bash
+php artisan migrate:refresh --seed
+```
 
 ## Description
 
-There is three users by defaul Admin, Manager and Guest.<br />
-Admin can create, delete and read posts.<br />
-Manager has the rights to delete and read posts.<br />
-Guest can only read posts.<br />
+By default, there are three types of users:
 
-## Users credentials
-Email and password for Admin, Manager and Guest according to<br />
-"admin@mail.com", "password"<br />
-"manager@mail.com", "password"<br />
-"guest@mail.com", "password"<br />
+- **Admin**: Can create, delete, and read posts.
+- **Manager**: Has the rights to delete and read posts.
+- **Guest**: Can only read posts.
 
-## Postman instructions
-Use file "roles-permissions.postman_collection.json" for import collection.<br />
-After login or register save Bearer Token in section roles-permissions->Authorization.
+## User Credentials
+
+Here are the default credentials for each user:
+
+- **Admin**:
+  - **Email**: `admin@mail.com`
+  - **Password**: `password`
+
+- **Manager**:
+  - **Email**: `manager@mail.com`
+  - **Password**: `password`
+
+- **Guest**:
+  - **Email**: `guest@mail.com`
+  - **Password**: `password`
+
+## Postman Instructions
+
+To use the Postman collection, follow these steps:
+
+1. Import the **`roles-permissions.postman_collection.json`** file into Postman.
+2. After logging in or registering, save the **Bearer Token** in the `Authorization` section of the `roles-permissions` request.
