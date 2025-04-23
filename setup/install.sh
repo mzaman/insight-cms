@@ -19,21 +19,21 @@ DEFAULT_DOCKER_SERVICES=(nginx php-fpm php-worker mysql phpmyadmin redis swagger
 DEFAULT_DB_ROOT_USER="root"
 DEFAULT_DB_ROOT_PASSWORD="root"
 DEFAULT_DB_NAME="insight_cms"
-DEFAULT_LARAVEL_VERSION="^10"
+DEFAULT_LARAVEL_VERSION="^9"
 
 INITIAL_COMMANDS=(
     "echo 'No pre-install command'"
 )
 
 POST_UPDATE_COMMANDS=(
-    "echo 'No post-install command'"
+    "php artisan vendor:publish --provider='LaravelSimpleModule\LaravelSimpleModuleServiceProvider' --tag='simple-module-config'"
+    "php artisan migrate:refresh --seed"
 )
 
 ADDITIONAL_PACKAGES=(
-    # "barryvdh/laravel-debugbar"
-    # "laravel/sanctum"
-    # "guzzlehttp/guzzle:^7.0"
-    # "spatie/laravel-permission"
+    "barryvdh/laravel-debugbar"
+    "guzzlehttp/guzzle:^7.0"
+    "mzaman/laravel-simple-module:*"
 )
 
 # ─────────────────────────────────────────────────────────────

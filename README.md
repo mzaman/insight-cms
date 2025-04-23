@@ -1,4 +1,4 @@
-# Laravel Dockerized Environment
+# Insight CMS
 
 This project provides a streamlined Docker-based development environment for Laravel using Laradock. It includes setup scripts and handy Docker shortcut commands to simplify local development.
 
@@ -41,6 +41,17 @@ chmod +x install.sh
 ./install.sh
 ```
 
+## Edit the /etc/hosts file
+
+```bash
+sudo nano /etc/hosts
+```
+
+Add the following line:
+```
+127.0.0.1 web.test
+```
+
 ## Docker Shortcut Scripts
 
 | Script    | Description                          | Example Usage                  |
@@ -59,4 +70,22 @@ chmod +x cmd/*
 
 - Laravel code lives in: `Sources/web`
 - Laradock lives in: `Docker/`
+
+Web URL:
+http://web.test
+
+PhpMyAdmin:
+http://localhost:8081
+
+Swagger test form:
+http://localhost:5555
+
+Swagger Editor:
+http://localhost:5151
+
+
+## License
+
+MIT
+
 
