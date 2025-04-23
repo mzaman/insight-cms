@@ -19,4 +19,9 @@ class Role extends Model
         RoleMethod,
         RoleRelationship,
         RoleScope;
+
+    protected $fillable = [
+        'name',
+        'slug',
+    ];
 }

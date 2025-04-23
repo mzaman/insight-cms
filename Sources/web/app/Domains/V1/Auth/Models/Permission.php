@@ -19,4 +19,9 @@ class Permission extends Model
         PermissionMethod,
         PermissionRelationship,
         PermissionScope;
+        
+    protected $fillable = [
+        'name',
+        'slug',
+    ];
 }

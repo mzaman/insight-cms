@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
+use App\Domains\V1\Auth\Http\Controllers\Api\AuthApiController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PostController;
@@ -23,7 +23,7 @@ use App\Http\Controllers\UserController;
 //     return $request->user();
 // });
 
-Route::controller(AuthController::class)->group(function () {
+Route::controller(AuthApiController::class)->group(function () {
     Route::post('login', 'login');
     Route::post('register', 'register');
     Route::post('logout', 'logout');
