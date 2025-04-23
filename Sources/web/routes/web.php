@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Domains\V1\Yaml\Http\Controllers\Api\YamlController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/yaml-content', [YamlController::class, 'getYamlContent']);
 Route::get('/', function () {
     return view('welcome');
 });
