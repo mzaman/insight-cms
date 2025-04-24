@@ -47,8 +47,6 @@ class ApiKeyApiController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request);
-        
         // Add validation rules
         $rules = [
             'service_name' => 'required|string|unique:api_keys,service_name',
@@ -63,7 +61,7 @@ class ApiKeyApiController extends Controller
             'service_name',
             'api_key'
         ]);
-        dd($data);
+        // dd($data);
         // Create a new resource
         return $this->service->create($data);
     }

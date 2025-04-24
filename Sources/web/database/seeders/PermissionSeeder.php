@@ -25,6 +25,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'Manage Users', 'slug' => 'manage_users'],
             ['name' => 'Manage Roles', 'slug' => 'manage_roles'],
             ['name' => 'Manage Permissions', 'slug' => 'manage_permissions'],
+            ['name' => 'Manage API Keys', 'slug' => 'manage_api_keys'],
         ];
 
         // Loop through each permission and insert it

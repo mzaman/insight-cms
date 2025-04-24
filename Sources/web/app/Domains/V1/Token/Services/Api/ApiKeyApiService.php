@@ -49,21 +49,47 @@ class ApiKeyApiService extends \App\Services\BaseApiService implements ApiKeyApi
      */
     public function create($data)
     {
-      $data['api_key'] = Crypt::encryptString($data['api_key']);
-      dd($data);
-        try {
-            $this->repository->create($data);
-            return $this->setResult($posts)
-              ->setCode(200)
-              ->setStatus(true)
-              ->setMessage('API key stored successfully.')
+        // Check if the service name already exists in the database
+        $existingApiKey = $this->repository->getByColumn($data['service_name'], 'service_name');
+        
+        if ($existingApiKey) {
+          $this->setResult($data)
+              ->setCode(404)
+              ->setStatus(false)
+              ->setMessage('Service name already exists. Please choose a different service name.')
               ->toJson();
+        }
+
+        // Encrypt the API key and set timestamps
+        $data['api_key'] = Crypt::encryptString($data['api_key']);
+        $data['created_at'] = now();
+
+        try {
+            // Create the API key in the repository
+            $this->repository->create($data);
+
+            // Return success response
+            return $this->setResult($data)
+            ->setCode(200)
+            ->setStatus(true)
+            ->setMessage('API key stored successfully.')
+            ->toJson();
+
         } catch (QueryException $e) {
-            return $this->responseError($e->getMessage());
+            // Catch any query-related exceptions
+            \Log::error('Failed to store API key: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Database error occurred while storing the API key.'
+            ], 500); // 500 Internal Server Error
+
         } catch (Exception $e) {
-            // Log the error and format the response
-            Log::error('Failed to store API key: ' . $e->getMessage());
-            return $this->exceptionResponse($e)->toJson();
+            // Catch general exceptions
+            \Log::error('Failed to store API key: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'An unexpected error occurred while storing the API key.'
+            ], 500); // 500 Internal Server Error
         }
     }
     

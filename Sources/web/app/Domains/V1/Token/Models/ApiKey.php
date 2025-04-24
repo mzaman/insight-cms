@@ -20,7 +20,7 @@ class ApiKey extends Model
         ApiKeyRelationship,
         ApiKeyScope;
 
-        protected $fillable = ['service_name', 'key'];
+        protected $fillable = ['service_name', 'api_key'];
 
         // This model does not need to manage timestamps manually
         public $timestamps = true;

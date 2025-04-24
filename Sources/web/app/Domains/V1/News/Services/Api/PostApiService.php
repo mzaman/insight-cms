@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Domains\V1\Auth\Models\User;  // For accessing CLI user if needed
+use App\Domains\V1\Token\Models\ApiKey;
 use \Exception;
+use Illuminate\Support\Facades\Crypt;
 
 class PostApiService extends \App\Services\BaseApiService implements PostApiServiceInterface
 {
@@ -56,10 +58,17 @@ class PostApiService extends \App\Services\BaseApiService implements PostApiServ
         $userId = $isCli ? $this->getCliUserId() : Auth::id(); // Use CLI User if it's a CLI sync, else use authenticated user.
 
         try {
+
+            // Assuming you've retrieved the encrypted API key from the database
+            $encryptedApiKey = ApiKey::latest()->first()->api_key;
+
+            // Decrypt the API key
+            $apiKey = Crypt::decryptString($encryptedApiKey);
+
             // Use GuzzleHttp client to fetch data from NewsAPI
             $client = new Client();
             $apiUrl = \Config::get('news.api_base_url') . '/' . \Config::get('news.api_version') . '/top-headlines';
-            $apiKey = \Config::get('news.api_key');
+            // $apiKey = \Config::get('news.api_key');
 
             $response = $client->get($apiUrl, [
                 'query' => ['apiKey' => $apiKey, 'country' => 'us']

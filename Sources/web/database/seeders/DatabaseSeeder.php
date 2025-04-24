@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
     {
         // Call all the individual seeders
         $this->call([
+            ApiKeySeeder::class,
             PermissionSeeder::class,
             RoleSeeder::class,
             PermissionRoleSeeder::class,

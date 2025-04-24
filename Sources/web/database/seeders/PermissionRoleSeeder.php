@@ -25,6 +25,7 @@ class PermissionRoleSeeder extends Seeder
             7,  // Manage Users
             8,  // Manage Roles
             9,  // Manage Permissions
+            10,  // Manage API Keys
         ];
 
         $managerPermissions = [
