@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -20,4 +19,6 @@ Route::get('/', function () {
 Route::get('login', function () {
     return "Temporary Web Route: Welcome to the login page!";
 })->name('login');
+
+Route::get('test-form/swagger.json', [YamlFrontendController::class, 'getYaml']);
 

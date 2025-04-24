@@ -26,14 +26,20 @@ INITIAL_COMMANDS=(
 )
 
 POST_UPDATE_COMMANDS=(
-    "php artisan vendor:publish --provider='LaravelSimpleModule\LaravelSimpleModuleServiceProvider' --tag='simple-module-config'"
+    # "find . -type f -exec chmod 644 {} \;"
+    # "find . -type d -exec chmod 755 {} \;"
+    "chgrp -R www-data storage bootstrap/cache"
+    "chmod -R ug+rwx storage bootstrap/cache"
+    "chmod -R gu+w storage bootstrap/cache && chmod -R guo+w storage bootstrap/cache"
+    # "chmod -R 777 ./bootstrap/cache/"
+    "php artisan key:generate"
+    "php artisan optimize:clear"
     "php artisan migrate:refresh --seed"
+    "composer dump-autoload"
 )
 
 ADDITIONAL_PACKAGES=(
-    "barryvdh/laravel-debugbar"
-    "guzzlehttp/guzzle:^7.0"
-    "mzaman/laravel-simple-module:*"
+
 )
 
 # ─────────────────────────────────────────────────────────────
