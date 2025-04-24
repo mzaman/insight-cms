@@ -28,7 +28,7 @@ use App\Http\Controllers\UserController;
 Route::prefix('v1')->group(function () {
     
     Route::prefix('auth')->controller(AuthApiController::class)->group(function () {
-        // Route::post('login', 'login')->name('auth.login');
+        Route::post('login', 'login')->name('auth.login');
         Route::post('register', 'register')->name('auth.register');
         Route::post('logout', 'logout')->name('auth.logout');
         Route::post('refresh', 'refresh')->name('auth.refresh');
