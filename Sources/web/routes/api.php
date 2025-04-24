@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Domains\V1\Auth\Http\Controllers\Api\AuthApiController;
 use App\Domains\V1\News\Http\Controllers\Api\PostApiController;
+use App\Domains\V1\Token\Http\Controllers\Api\ApiKeyApiController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PostController;
@@ -58,23 +59,32 @@ Route::prefix('v1')->group(function () {
             Route::get('/', 'index')->name('list');
         });
 
+    Route::middleware('has_role:manage_api_keys')
+        ->post('api-key', [ApiKeyApiController::class, 'store'])
+        ->name('api-key.store');
+
+
     Route::middleware('auth:api')->group(function () {
-        Route::middleware('post.access:read')
+        Route::middleware('has_role:read')
             ->get('posts', [PostController::class, 'index'])
             ->name('post.index');
 
-        Route::middleware('post.access:create')
+        Route::middleware('has_role:create')
             ->post('posts', [PostController::class, 'store'])
             ->name('post.store');
 
-        Route::middleware(['throttle:5,1', 'post.access:create'])
+        Route::middleware(['throttle:5,1', 'has_role:create'])
             ->post('/sync-news', [PostApiController::class, 'sync'])
             ->name('post.sync');
 
         Route::post('cli-sync-news', [PostApiController::class, 'syncNews']);
 
-        Route::middleware('post.access:delete')
+        Route::middleware('has_role:delete')
             ->delete('posts/{id}', [PostController::class, 'destroy'])
             ->name('post.delete');
+
+    
+
+
     });
 });
