@@ -7,6 +7,7 @@ use App\Domains\V1\News\Http\Requests\Api\Post\UpdatePostRequest;
 use App\Domains\V1\News\Models\Post;
 use App\Domains\V1\News\Services\Api\PostApiService;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 
@@ -23,6 +24,7 @@ class PostApiController extends Controller
     {
         // Inject the service dependency into the controller
         $this->service = $service;
+        // $this->middleware('auth:api');
         
         // $this->authorizeResource(Post::class, 'post');
     }
@@ -37,6 +39,35 @@ class PostApiController extends Controller
         return $this->service->fetchAndStorePosts();
         // dd($result);
         // return response()->json(['message' => 'Posts synced successfully']);
+    }
+
+    /**
+     * Synchronize news articles with the third-party API.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function syncNews(Request $request)
+    {
+        try {
+            // Trigger the synchronization process
+            $posts = $this->service->fetchAndStorePosts();
+
+            // Return success response
+            return response()->json([
+                'success' => true,
+                'message' => 'News synchronization completed successfully.',
+                'data' => $posts,
+            ], 200);
+
+        } catch (\Exception $e) {
+            // Return failure response if there's an error
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to synchronize news.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**

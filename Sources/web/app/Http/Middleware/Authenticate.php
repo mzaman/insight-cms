@@ -3,6 +3,8 @@
 namespace App\Http\Middleware;
 
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Http\JsonResponse;
 
 class Authenticate extends Middleware
 {
@@ -14,8 +16,29 @@ class Authenticate extends Middleware
      */
     protected function redirectTo($request)
     {
-        if (! $request->expectsJson()) {
-            return route('login');
+        try {
+            // If the request is an API request, return a JSON response with a 401 error
+            if ($request->is('api/*')) {
+                $ErrorResponse = [
+                    'success' => false,
+                    'error' => 'Unauthorized',
+                    'message' => 'Invalid or expired Token, or unauthorized access',
+                ];
+                return response()->json($ErrorResponse, 401); // Use 401 for unauthorized API requests
+            }
+
+            // For non-API requests, return the login route
+            if (! $request->expectsJson()) {
+                return route('login');
+            }
+
+        } catch (AuthenticationException $e) {
+            // Handle AuthenticationException and return a 401 response for API requests
+            return response()->json([
+                'success' => false,
+                'error' => 'Unauthorized',
+                'message' => 'Authentication failed. Please log in.'
+            ], 401);
         }
     }
 }

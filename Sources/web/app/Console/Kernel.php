@@ -7,6 +7,11 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
+    protected $commands = [
+        // Register the custom sync news command
+        \App\Console\Commands\SyncNews::class,
+    ];
+    
     /**
      * Define the application's command schedule.
      *
