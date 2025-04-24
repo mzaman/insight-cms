@@ -3,9 +3,9 @@
 namespace App\Domains\V1\Token\Models\Traits\Relationship;
 
 /**
- * Trait KeyRelationship.
+ * Trait ApiKeyRelationship.
  */
-trait KeyRelationship
+trait ApiKeyRelationship
 {
   
 }

@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Domains\V1\Auth\Http\Controllers\Api\AuthApiController;
 use App\Domains\V1\News\Http\Controllers\Api\PostApiController;
+use App\Domains\V1\Token\Http\Controllers\Api\ApiKeyApiController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PostController;
@@ -28,7 +29,7 @@ use App\Http\Controllers\UserController;
 Route::prefix('v1')->group(function () {
     
     Route::prefix('auth')->controller(AuthApiController::class)->group(function () {
-        // Route::post('login', 'login')->name('auth.login');
+        Route::post('login', 'login')->name('auth.login');
         Route::post('register', 'register')->name('auth.register');
         Route::post('logout', 'logout')->name('auth.logout');
         Route::post('refresh', 'refresh')->name('auth.refresh');
@@ -76,5 +77,16 @@ Route::prefix('v1')->group(function () {
         Route::middleware('post.access:delete')
             ->delete('posts/{id}', [PostController::class, 'destroy'])
             ->name('post.delete');
+
+        
+        Route::middleware('post.access:create')
+            ->post('/api-key', [ApiKeyApiController::class, 'store'])
+            ->name('api.key.store');
+    
+
+        Route::middleware('post.access:create')
+                ->get('tokens/{serviceName}', [ApiKeyApiController::class, 'show'])
+                ->name('api.key.show');
+
     });
 });

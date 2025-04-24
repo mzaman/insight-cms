@@ -3,9 +3,9 @@
 namespace App\Domains\V1\Token\Models\Traits\Attribute;
 
 /**
- * Trait KeyAttribute.
+ * Trait ApiKeyAttribute.
  */
-trait KeyAttribute
+trait ApiKeyAttribute
 {
   
 }

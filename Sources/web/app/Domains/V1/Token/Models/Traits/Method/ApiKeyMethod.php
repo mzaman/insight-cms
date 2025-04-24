@@ -3,9 +3,9 @@
 namespace App\Domains\V1\Token\Models\Traits\Method;
 
 /**
- * Trait KeyMethod.
+ * Trait ApiKeyMethod.
  */
-trait KeyMethod
+trait ApiKeyMethod
 {
   
 }

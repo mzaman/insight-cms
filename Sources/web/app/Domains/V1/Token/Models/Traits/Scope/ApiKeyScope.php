@@ -3,9 +3,9 @@
 namespace App\Domains\V1\Token\Models\Traits\Scope;
 
 /**
- * Trait KeyScope.
+ * Trait ApiKeyScope.
  */
-trait KeyScope
+trait ApiKeyScope
 {
   
 }

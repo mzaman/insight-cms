@@ -7,6 +7,7 @@ use App\Domains\V1\Token\Http\Requests\Api\ApiKey\UpdateApiKeyRequest;
 use App\Domains\V1\Token\Models\ApiKey;
 use App\Domains\V1\Token\Services\Api\ApiKeyApiService;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 
@@ -24,7 +25,7 @@ class ApiKeyApiController extends Controller
         // Inject the service dependency into the controller
         $this->service = $service;
         
-        $this->authorizeResource(ApiKey::class, 'apiKey');
+        // $this->authorizeResource(ApiKey::class, 'apiKey');
     }
 
     /**
@@ -41,14 +42,17 @@ class ApiKeyApiController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  StoreApiKeyRequest  $request
+     * @param  Request  $request
      * @return Response
      */
-    public function store(StoreApiKeyRequest $request)
+    public function store(Request $request)
     {
+        dd($request);
+        
         // Add validation rules
         $rules = [
-            // Add your validation rules here
+            'service_name' => 'required|string|unique:api_keys,service_name',
+            'api_key' => 'required|string'
         ];
 
         // Validate the request
@@ -56,9 +60,10 @@ class ApiKeyApiController extends Controller
 
         // Extract data from the request
         $data = $request->only([
-            // Add your input names here
+            'service_name',
+            'api_key'
         ]);
-
+        dd($data);
         // Create a new resource
         return $this->service->create($data);
     }

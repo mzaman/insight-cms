@@ -19,4 +19,9 @@ class ApiKey extends Model
         ApiKeyMethod,
         ApiKeyRelationship,
         ApiKeyScope;
+
+        protected $fillable = ['service_name', 'key'];
+
+        // This model does not need to manage timestamps manually
+        public $timestamps = true;
 }

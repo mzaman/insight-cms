@@ -2,7 +2,7 @@
 
 namespace App\Domains\V1\Token\Repositories\Api;
 
-use App\Domains\V1\Token\Models\Key;
+use App\Domains\V1\Token\Models\ApiKey;
 
 /**
  * Class ApiKeyApiRepository.
@@ -19,7 +19,7 @@ class ApiKeyApiRepository extends \App\Repositories\BaseRepository implements Ap
     */
     protected $model;
 
-    public function __construct(Key $model)
+    public function __construct(ApiKey $model)
     {
         $this->model = $model;
     }
