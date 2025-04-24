@@ -432,6 +432,56 @@
 			"response": []
 		},
 		{
+			"name": "Create NewsAPI Key",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjcyNzQ1NDMxLCJleHAiOjE2NzI3NDkwMzEsIm5iZiI6MTY3Mjc0NTQzMSwianRpIjoiVnBBdDFJVHY2UXlpNmdKZSIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.otY7vuDFfEU1IgKjRnaCJxKIVETO4e1_00RTNIcpkcg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "post 1",
+							"type": "default"
+						},
+						{
+							"key": "content",
+							"value": "rerererer  ere",
+							"type": "default"
+						},
+						{
+							"key": "user_id",
+							"value": "1",
+							"type": "default"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://web.test/api/post",
+					"protocol": "http",
+					"host": [
+						"web",
+						"test"
+					],
+					"path": [
+						"api",
+						"post"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "List Posts",
 			"request": {
 				"method": "GET",
@@ -589,7 +639,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vd2ViLnRlc3QvYXBpL2xvZ2luIiwiaWF0IjoxNzQ1NDU2NjQ4LCJleHAiOjE3NDU0NjAyNDgsIm5iZiI6MTc0NTQ1NjY0OCwianRpIjoianJtajhhRm9RRGswaGlSOCIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.Ovui9n4UEJFnatiowU2e4Ht8G49g1ZdvxNbUDB8Q71I",
+				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vd2ViLnRlc3QvYXBpL3YxL2F1dGgvbG9naW4iLCJpYXQiOjE3NDU0NzA2NjMsImV4cCI6MTc0NTQ3NDI2MywibmJmIjoxNzQ1NDcwNjYzLCJqdGkiOiJpV296QjRWbllleEN3aWF2Iiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.BMGRl0o7RByHeC_DJZjViZ7eBOeuePTrFhmqR1nB_C4",
 				"type": "string"
 			}
 		]
