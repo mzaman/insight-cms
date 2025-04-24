@@ -10,6 +10,8 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 
+use App\Domains\V1\Swagger\Http\Controllers\Frontend\YamlFrontendController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -28,6 +30,9 @@ use App\Http\Controllers\UserController;
 
 Route::prefix('v1')->group(function () {
     
+
+    Route::get('test-form/swagger.json', [YamlFrontendController::class, 'getYaml']);
+
     Route::prefix('auth')->controller(AuthApiController::class)->group(function () {
         Route::post('login', 'login')->name('auth.login');
         Route::post('register', 'register')->name('auth.register');
