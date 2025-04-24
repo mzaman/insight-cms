@@ -51,10 +51,12 @@ class SyncNews extends Command
         try {
             // Trigger the synchronization
             $posts = $this->service->fetchAndStorePosts();
-            
+
             // Output success message
             $this->info('News synchronization completed successfully.');
-
+            // Log to verify execution
+            \Log::info('SyncNewsCron job executed at: ' . now());
+            
         } catch (\Exception $e) {
             // Output error message if something goes wrong
             $this->error('Failed to synchronize news: ' . $e->getMessage());

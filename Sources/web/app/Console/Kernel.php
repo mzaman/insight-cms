@@ -20,6 +20,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        // $schedule->command('sync:news')->hourly(); // Run the sync news command every hour
+        $schedule->command('sync:news')->everyFiveMinutes(); // Run the sync news command every five minutes
+        
         // $schedule->command('inspire')->hourly();
     }
 
