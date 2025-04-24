@@ -52,6 +52,15 @@ class UserSeeder extends Seeder
             'password' => bcrypt('password')
         ]);
 
+        // CLI User (for synchronization tasks)
+        User::firstOrCreate([
+            'email' => 'cliuser@mail.com',
+        ], [
+            'name' => 'CLI User',
+            'role_id' => 1,  // Admin role, or create a specific CLI role if needed
+            'password' => bcrypt('password')
+        ]);
+
         // Create random users (factory-generated data) without overriding specific fields
         User::factory()->count(7)->create();
     }

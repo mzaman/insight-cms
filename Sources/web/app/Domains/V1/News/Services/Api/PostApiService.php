@@ -2,23 +2,16 @@
 
 namespace App\Domains\V1\News\Services\Api;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\QueryException;
 use App\Domains\V1\News\Repositories\Api\PostApiRepository;
-use \Exception;
-use App\Domains\V1\News\Models\Post;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use App\Domains\V1\Auth\Models\User;  // For accessing CLI user if needed
+use \Exception;
 
-/**
- * Class PostApiService.
- * 
- * @extends \App\Services\BaseApiService
- * @implements PostApiServiceInterface
- */
-class PostApiService extends \App\Services\BaseApiService implements PostApiServiceInterface { 
-
+class PostApiService extends \App\Services\BaseApiService implements PostApiServiceInterface
+{
     /**
      * Set message api for CRUD
      * @param string $title
@@ -26,31 +19,25 @@ class PostApiService extends \App\Services\BaseApiService implements PostApiServ
      * @param string $update_message
      * @param string $delete_message
      */
-     protected $title = "";
-     protected $create_message = "";
-     protected $update_message = "";
-     protected $delete_message = "";
+    protected $title = "Post";
+    protected $create_message = "created successfully";
+    protected $update_message = "updated successfully";
+    protected $delete_message = "deleted successfully";
 
-     /**
+    /**
      * Don't change $this->repository variable name
      * because used in extends service class
      */
-     protected $repository;
+    protected $repository;
 
     public function __construct(PostApiRepository $repository)
     {
-      $this->repository = $repository;
-      $this->title = 'Post';
-      $this->create_message = 'created successfully';
-      $this->update_message = 'updated successfully';
-      $this->delete_message = 'deleted successfully';
+        $this->repository = $repository;
     }
 
-    // Additional methods specific to PostApiService
-    // New methods for the Api Service
     /**
      * Fetch the latest posts from the external API and store them in the database.
-     *
+     * 
      * @return \Illuminate\Http\JsonResponse|null
      */
     public function fetchAndStorePosts()
@@ -58,10 +45,15 @@ class PostApiService extends \App\Services\BaseApiService implements PostApiServ
         // Check if cached articles exist to avoid fetching again from API
         if (Cache::has('posts')) {
             return $this->setResult(Cache::get('posts'))
-                        ->setCode(200)
-                        ->setStatus(true)
-                        ->toJson();
+                ->setCode(200)
+                ->setMessage('Posts fetched from cache.')
+                ->setStatus(true)
+                ->toJson();
         }
+
+        // Detect if sync is initiated via CLI and set the user ID accordingly
+        $isCli = php_sapi_name() == 'cli';
+        $userId = $isCli ? $this->getCliUserId() : Auth::id(); // Use CLI User if it's a CLI sync, else use authenticated user.
 
         try {
             // Use GuzzleHttp client to fetch data from NewsAPI
@@ -85,7 +77,7 @@ class PostApiService extends \App\Services\BaseApiService implements PostApiServ
                     'content' => $post['content'],
                     'published_at' => $post['publishedAt'],
                     'external_id' => $post['url'],
-                    'user_id' => auth()->user()->id, // Assuming the current user is the admin/editor
+                    'user_id' => $userId,  // Use the correct user_id (CLI or Authenticated user)
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
@@ -99,10 +91,10 @@ class PostApiService extends \App\Services\BaseApiService implements PostApiServ
 
             // Return success response
             return $this->setResult($posts)
-                        ->setCode(200)
-                        ->setStatus(true)
-                        ->setMessage('Posts fetched and stored successfully.')
-                        ->toJson();
+                ->setCode(200)
+                ->setStatus(true)
+                ->setMessage('Posts fetched and stored successfully.')
+                ->toJson();
 
         } catch (Exception $e) {
             // Log the error and format the response
@@ -111,4 +103,15 @@ class PostApiService extends \App\Services\BaseApiService implements PostApiServ
         }
     }
 
+    /**
+     * Get the CLI User ID.
+     * 
+     * @return int
+     */
+    protected function getCliUserId()
+    {
+        // Retrieve the CLI User by email or a predefined user for synchronization
+        $cliUser = User::where('email', 'cliuser@mail.com')->first();
+        return $cliUser ? $cliUser->id : 1; // Default to user ID 1 if no CLI user is found
+    }
 }

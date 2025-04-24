@@ -28,7 +28,7 @@ use App\Http\Controllers\UserController;
 Route::prefix('v1')->group(function () {
     
     Route::prefix('auth')->controller(AuthApiController::class)->group(function () {
-        Route::post('login', 'login')->name('auth.login');
+        // Route::post('login', 'login')->name('auth.login');
         Route::post('register', 'register')->name('auth.register');
         Route::post('logout', 'logout')->name('auth.logout');
         Route::post('refresh', 'refresh')->name('auth.refresh');
@@ -70,7 +70,9 @@ Route::prefix('v1')->group(function () {
         Route::middleware(['throttle:5,1', 'post.access:create'])
             ->post('/sync-news', [PostApiController::class, 'sync'])
             ->name('post.sync');
-        
+
+        Route::post('cli-sync-news', [PostApiController::class, 'syncNews']);
+
         Route::middleware('post.access:delete')
             ->delete('posts/{id}', [PostController::class, 'destroy'])
             ->name('post.delete');
