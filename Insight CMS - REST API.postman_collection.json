@@ -533,6 +533,27 @@
 			"response": []
 		},
 		{
+			"name": "News Sync via CLI",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://web.test/api/v1/cli-sync-news",
+					"protocol": "http",
+					"host": [
+						"web",
+						"test"
+					],
+					"path": [
+						"api",
+						"v1",
+						"cli-sync-news"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "News API Direct Fetch",
 			"request": {
 				"method": "GET",
@@ -568,7 +589,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vd2ViLnRlc3QvYXBpL3YxL2F1dGgvbG9naW4iLCJpYXQiOjE3NDU0NDM1NjEsImV4cCI6MTc0NTQ0NzE2MSwibmJmIjoxNzQ1NDQzNTYxLCJqdGkiOiJGclJPeGg5VnEwNjN0Z0hQIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.klD1UJdsJHJ9AOwqZez1w8Ki7DElph1b4G-m4YpjVHw",
+				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vd2ViLnRlc3QvYXBpL2xvZ2luIiwiaWF0IjoxNzQ1NDU2NjQ4LCJleHAiOjE3NDU0NjAyNDgsIm5iZiI6MTc0NTQ1NjY0OCwianRpIjoianJtajhhRm9RRGswaGlSOCIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.Ovui9n4UEJFnatiowU2e4Ht8G49g1ZdvxNbUDB8Q71I",
 				"type": "string"
 			}
 		]
