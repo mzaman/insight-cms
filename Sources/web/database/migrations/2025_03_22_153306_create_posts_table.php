@@ -16,7 +16,8 @@ return new class extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('external_id')->unique();
+            $table->text('external_id');
+            // $table->string('external_id', 444)->unique();
             $table->string('source')->nullable();
             $table->text('content')->nullable();
             $table->foreignId('user_id')->constrained();

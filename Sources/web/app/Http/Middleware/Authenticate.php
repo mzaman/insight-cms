@@ -24,7 +24,7 @@ class Authenticate extends Middleware
                     'error' => 'Unauthorized',
                     'message' => 'Invalid or expired Token, or unauthorized access',
                 ];
-                return response()->json($ErrorResponse, 401); // Use 401 for unauthorized API requests
+                abort(response()->json($ErrorResponse, 403)); // Use 401 for unauthorized API requests
             }
 
             // For non-API requests, return the login route
