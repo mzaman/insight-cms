@@ -3,18 +3,21 @@
 		"_postman_id": "9fa0a48a-f423-4429-bae6-a8156068898a",
 		"name": "Insight CMS : REST API (v1)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "697454"
+		"_exporter_id": "697454",
+		"description": "This is the REST API collection for Insight CMS version 1. It provides access to various functionalities such as user authentication, permissions management, role management, and post creation. Each endpoint is designed to interact with the system's core services, enabling users to manage content efficiently."
 	},
 	"item": [
 		{
 			"name": "Create NewsAPI Key",
+			"description": "Generates a new API key for accessing the News API. The API key is used for making requests to fetch news articles.",
 			"request": {
 				"method": "POST",
 				"header": [
 					{
 						"key": "Accept",
 						"value": "application/json",
-						"type": "default"
+						"type": "default",
+						"description": "Indicates that the response should be in JSON format."
 					}
 				],
 				"body": {
@@ -23,12 +26,14 @@
 						{
 							"key": "service_name",
 							"value": "News API2",
-							"type": "default"
+							"type": "default",
+							"description": "The name of the service for which the API key is being created. Example: 'News API2'."
 						},
 						{
 							"key": "api_key",
-							"value": "4164b37f2e1a47a1a583003a70c420b3",
-							"type": "default"
+							"value": "<API_KEY>",
+							"type": "default",
+							"description": "A unique API key used for accessing the News API. This key should be kept secure."
 						}
 					]
 				},
@@ -50,13 +55,15 @@
 		},
 		{
 			"name": "Register",
+			"description": "Registers a new user in the system. The user will need to provide a name, password, email, and role ID.",
 			"request": {
 				"method": "POST",
 				"header": [
 					{
 						"key": "Accept",
 						"value": "application/json",
-						"type": "default"
+						"type": "default",
+						"description": "Indicates that the response should be in JSON format."
 					}
 				],
 				"body": {
@@ -65,22 +72,26 @@
 						{
 							"key": "name",
 							"value": "TestUser",
-							"type": "default"
+							"type": "default",
+							"description": "The full name of the user being registered. Example: 'TestUser'."
 						},
 						{
 							"key": "password",
 							"value": "password",
-							"type": "default"
+							"type": "default",
+							"description": "The password for the user. Example: 'password'."
 						},
 						{
 							"key": "email",
 							"value": "user3@mail.com",
-							"type": "default"
+							"type": "default",
+							"description": "The email address of the user. Example: 'user3@mail.com'."
 						},
 						{
 							"key": "role_id",
 							"value": "4",
-							"type": "default"
+							"type": "default",
+							"description": "The ID of the role to be assigned to the user. Example: '4'."
 						}
 					]
 				},
@@ -103,14 +114,16 @@
 		},
 		{
 			"name": "Login",
+			"description": "Logs a user into the system by providing their email and password. Returns a JWT token if authentication is successful.",
 			"request": {
 				"auth": {
 					"type": "bearer",
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vd2ViLnRlc3QvYXBpL3YxL2F1dGgvbG9naW4iLCJpYXQiOjE3NDU1NjgyOTgsImV4cCI6MTc0NTU3MTg5OCwibmJmIjoxNzQ1NTY4Mjk4LCJqdGkiOiJQM3U2QTdsYlUzdlRLRWMwIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.A8ilG02_AjHfC8y0lVPASzA5HCznQe3lBfnZty5eVPU",
-							"type": "string"
+							"value": "<JWT_TOKEN>",
+							"type": "string",
+							"description": "JWT token for authorization. The token is required for accessing protected endpoints."
 						}
 					]
 				},
@@ -119,7 +132,8 @@
 					{
 						"key": "Accept",
 						"value": "application/json",
-						"type": "default"
+						"type": "default",
+						"description": "Indicates that the response should be in JSON format."
 					}
 				],
 				"body": {
@@ -128,12 +142,14 @@
 						{
 							"key": "email",
 							"value": "admin@mail.com",
-							"type": "default"
+							"type": "default",
+							"description": "The email address of the user attempting to log in. Example: 'admin@mail.com'."
 						},
 						{
 							"key": "password",
 							"value": "password",
-							"type": "default"
+							"type": "default",
+							"description": "The password associated with the provided email. Example: 'password'."
 						}
 					]
 				},
@@ -156,13 +172,15 @@
 		},
 		{
 			"name": "Refresh",
+			"description": "Refreshes the JWT token to extend the session. The user needs to provide their email and password for the refresh request.",
 			"request": {
 				"method": "POST",
 				"header": [
 					{
 						"key": "Accept",
 						"value": "application/json",
-						"type": "default"
+						"type": "default",
+						"description": "Indicates that the response should be in JSON format."
 					}
 				],
 				"body": {
@@ -172,13 +190,15 @@
 							"key": "email",
 							"value": "admin@mail.com",
 							"type": "default",
-							"disabled": true
+							"disabled": true,
+							"description": "The email address of the user requesting the token refresh."
 						},
 						{
 							"key": "password",
 							"value": "password",
 							"type": "default",
-							"disabled": true
+							"disabled": true,
+							"description": "The password of the user requesting the token refresh."
 						}
 					]
 				},
@@ -201,13 +221,15 @@
 		},
 		{
 			"name": "Logout",
+			"description": "Logs the user out of the system, invalidating the JWT token.",
 			"request": {
 				"method": "POST",
 				"header": [
 					{
 						"key": "Accept",
 						"value": "application/json",
-						"type": "default"
+						"type": "default",
+						"description": "Indicates that the response should be in JSON format."
 					}
 				],
 				"body": {
@@ -216,12 +238,14 @@
 						{
 							"key": "email",
 							"value": "admin@mail.com",
-							"type": "default"
+							"type": "default",
+							"description": "The email address of the user logging out. Example: 'admin@mail.com'."
 						},
 						{
 							"key": "password",
 							"value": "password",
-							"type": "default"
+							"type": "default",
+							"description": "The password associated with the provided email. Example: 'password'."
 						}
 					]
 				},
@@ -244,13 +268,15 @@
 		},
 		{
 			"name": "Add Permission",
+			"description": "Adds a new permission to the system, specifying its name and slug.",
 			"request": {
 				"method": "POST",
 				"header": [
 					{
 						"key": "Accept",
 						"value": "application/json",
-						"type": "default"
+						"type": "default",
+						"description": "Indicates that the response should be in JSON format."
 					}
 				],
 				"body": {
@@ -259,12 +285,14 @@
 						{
 							"key": "name",
 							"value": "Share",
-							"type": "default"
+							"type": "default",
+							"description": "The name of the permission. Example: 'Share'."
 						},
 						{
 							"key": "slug",
 							"value": "share",
-							"type": "default"
+							"type": "default",
+							"description": "The slug for the permission, used for URL routing. Example: 'share'."
 						}
 					]
 				},
@@ -286,14 +314,16 @@
 		},
 		{
 			"name": "List Permissions",
+			"description": "Retrieves a list of all permissions in the system. Requires a bearer token for authentication.",
 			"request": {
 				"auth": {
 					"type": "bearer",
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vd2ViLnRlc3QvYXBpL3YxL2F1dGgvbG9naW4iLCJpYXQiOjE3NDU0Nzg1MjUsImV4cCI6MTc0NTQ4MjEyNSwibmJmIjoxNzQ1NDc4NTI1LCJqdGkiOiJTSXBzY0YybHhNVWw2cml6Iiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.db8n2o1cY1szU6XbJzczII6Uq_qwEA91M2agH2FPJIY",
-							"type": "string"
+							"value": "<JWT_TOKEN>",
+							"type": "string",
+							"description": "JWT token for authorization. The token is required for accessing protected endpoints."
 						}
 					]
 				},
@@ -691,8 +721,9 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "",
-				"type": "string"
+				"value": "<JWT_TOKEN>",
+				"type": "string",
+				"description": "Bearer token required for accessing authenticated endpoints. Example: '<JWT_TOKEN>'."
 			}
 		]
 	},
