@@ -32,10 +32,10 @@ class PermissionController extends Controller
     {
 
         $data = $request->validate([
-            'name'=>'required',
-            'slug'=>'required',
+            'name' => 'required|string|unique:permissions,name',
+            'slug' => 'required|string|unique:permissions,slug'
         ]);
 
-        $this->permissionRepository->create($data);
+        return $this->permissionRepository->create($data);
     }
 }
