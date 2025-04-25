@@ -1,3 +1,22 @@
 #!/bin/bash
+
+# Check if arguments are passed
+if [ "$#" -eq 0 ]; then
+    echo "Error: No arguments provided."
+    exit 1
+fi
+
+# Display the command being run
 echo "Running: docker-compose -f ../Docker/docker-compose.yml exec workspace bash -c 'cd web && $*'"
-docker-compose -f ../Docker/docker-compose.yml exec workspace bash -c "cd web && $*"
+
+# Execute the docker-compose command and capture output
+docker-compose -f ../Docker/docker-compose.yml exec workspace bash -c "cd web && $*" 2>&1 | tee bash_output.log
+
+# Check if the command was successful using a different method for error checking
+EXIT_CODE=$?
+if [ $EXIT_CODE -ne 0 ]; then
+    echo "Error: bash command failed with exit code $EXIT_CODE."
+    exit $EXIT_CODE
+else
+    echo "bash command executed successfully."
+fi
