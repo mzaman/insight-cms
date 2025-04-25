@@ -9,7 +9,6 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
-
 use App\Domains\V1\Swagger\Http\Controllers\Api\YamlApiController;
 
 /*
@@ -23,11 +22,6 @@ use App\Domains\V1\Swagger\Http\Controllers\Api\YamlApiController;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
-
 Route::prefix('v1')->group(function () {
 
     Route::get('test-form/swagger.json', [YamlApiController::class, 'getYaml']);
@@ -40,13 +34,20 @@ Route::prefix('v1')->group(function () {
         Route::post('refresh', 'refresh')->name('auth.refresh');
     });
 
+
     Route::middleware('auth:api')->group(function () {
+        // API key routes
+        Route::middleware('capable:api-key-create')
+            ->post('api-key', [ApiKeyApiController::class, 'store'])
+            ->name('api-key.store');
+            
         // User routes
         Route::controller(UserController::class)
             ->name('user.')
             ->prefix('users')
             ->group(function () {
-                Route::get('/', 'index')->name('list');
+                Route::middleware('capable:user-view')
+                    ->get('/', 'index')->name('list');
             });
 
         // Role permission routes
@@ -54,45 +55,43 @@ Route::prefix('v1')->group(function () {
             ->name('role.')
             ->prefix('roles')
             ->group(function () {
-                Route::get('/', 'index')->name('list');
-                Route::post('/', 'store')->name('store');
-                Route::get('/{id}', 'show')->name('show');
+                Route::middleware('capable:role-view')
+                    ->get('/', 'index')->name('list');
+                Route::middleware('capable:role-create')
+                    ->post('/', 'store')->name('store');
+                Route::middleware('capable:role-view')
+                    ->get('/{id}', 'show')->name('show');
             });
     
+        // Permission routes
         Route::controller(PermissionController::class)
             ->name('permission.')
             ->prefix('permissions')
             ->group(function () {
-                Route::get('/', 'index')->name('list');
-                Route::post('/', 'store')->name('store');
+                Route::middleware('capable:permission-view')
+                    ->get('/', 'index')->name('list');
+                Route::middleware('capable:permission-create')
+                    ->post('/', 'store')->name('store');
             });
 
-        // API key routes
-        Route::middleware('has_role:manage_api_keys')
-            ->post('api-key', [ApiKeyApiController::class, 'store'])
-            ->name('api-key.store');
-
         // News Article routes
-        Route::middleware('has_role:read')
+        Route::middleware('capable:post-read')
             ->get('posts', [PostController::class, 'index'])
             ->name('post.index');
 
-        Route::middleware('has_role:create')
+        Route::middleware('capable:post-create')
             ->post('posts', [PostController::class, 'store'])
             ->name('post.store');
 
-        Route::middleware('has_role:delete')
+        Route::middleware('capable:post-delete')
             ->delete('posts/{id}', [PostController::class, 'destroy'])
             ->name('post.delete');
         
         // News sync routes
-        Route::middleware(['throttle:5,1', 'has_role:create'])
+        Route::middleware(['throttle:5,1', 'capable:post-create'])
             ->post('/sync-news', [PostApiController::class, 'sync'])
             ->name('post.sync');
 
         Route::post('cli-sync-news', [PostApiController::class, 'syncNews']);
-
-
-
     });
 });
