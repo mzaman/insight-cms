@@ -121,7 +121,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "<JWT_TOKEN>",
+							"value": "",
 							"type": "string",
 							"description": "JWT token for authorization. The token is required for accessing protected endpoints."
 						}
@@ -321,7 +321,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "<JWT_TOKEN>",
+							"value": "",
 							"type": "string",
 							"description": "JWT token for authorization. The token is required for accessing protected endpoints."
 						}
@@ -347,14 +347,16 @@
 		},
 		{
 			"name": "Add Role",
+			"description": "Adds a new role to the system, specifying its name and slug.",
 			"request": {
 				"auth": {
 					"type": "bearer",
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjcyNzU3ODc3LCJleHAiOjE2NzI3NjE0NzcsIm5iZiI6MTY3Mjc1Nzg3NywianRpIjoiQW9KRjgwdHZ5WnRjVXN4YiIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.NPt5MwUL4s1mhwCs8uSLMYwo9bPXefhnzUKwqT_x42I",
-							"type": "string"
+							"value": "<JWT_TOKEN>",
+							"type": "string",
+							"description": "JWT token required for authorization. Example: '<JWT_TOKEN>'."
 						}
 					]
 				},
@@ -363,7 +365,8 @@
 					{
 						"key": "Accept",
 						"value": "application/json",
-						"type": "default"
+						"type": "default",
+						"description": "Indicates that the response should be in JSON format."
 					}
 				],
 				"body": {
@@ -372,12 +375,14 @@
 						{
 							"key": "name",
 							"value": "Editor",
-							"type": "default"
+							"type": "default",
+							"description": "The name of the role being created. Example: 'Editor'."
 						},
 						{
 							"key": "slug",
 							"value": "editor",
-							"type": "default"
+							"type": "default",
+							"description": "The slug for the role, used for URL routing. Example: 'editor'."
 						}
 					]
 				},
@@ -399,13 +404,15 @@
 		},
 		{
 			"name": "List Roles",
+			"description": "Retrieves a list of all roles in the system.",
 			"request": {
 				"method": "GET",
 				"header": [
 					{
 						"key": "Accept",
 						"value": "application/json",
-						"type": "default"
+						"type": "default",
+						"description": "Indicates that the response should be in JSON format."
 					}
 				],
 				"url": {
@@ -427,6 +434,7 @@
 		},
 		{
 			"name": "Show Role Without Permissions",
+			"description": "Retrieves a role's details without showing the permissions associated with it.",
 			"request": {
 				"auth": {
 					"type": "noauth"
@@ -436,7 +444,8 @@
 					{
 						"key": "Accept",
 						"value": "application/json",
-						"type": "default"
+						"type": "default",
+						"description": "Indicates that the response should be in JSON format."
 					}
 				],
 				"url": {
@@ -458,13 +467,15 @@
 		},
 		{
 			"name": "Add Post",
+			"description": "Adds a new post to the system, including the title, content, external ID, and user ID.",
 			"request": {
 				"method": "POST",
 				"header": [
 					{
 						"key": "Accept",
 						"value": "application/json",
-						"type": "default"
+						"type": "default",
+						"description": "Indicates that the response should be in JSON format."
 					}
 				],
 				"body": {
@@ -473,22 +484,26 @@
 						{
 							"key": "title",
 							"value": "my blog title",
-							"type": "default"
+							"type": "default",
+							"description": "The title of the post. Example: 'my blog title'."
 						},
 						{
 							"key": "content",
 							"value": "Content goes here",
-							"type": "default"
+							"type": "default",
+							"description": "The content of the post. Example: 'Content goes here'."
 						},
 						{
 							"key": "external_id",
 							"value": "https://domain.com/page1",
-							"type": "text"
+							"type": "text",
+							"description": "An external ID or reference URL associated with the post. Example: 'https://domain.com/page1'."
 						},
 						{
 							"key": "user_id",
 							"value": "1",
-							"type": "text"
+							"type": "text",
+							"description": "The user ID associated with the post. Example: '1'."
 						}
 					]
 				},
@@ -510,6 +525,7 @@
 		},
 		{
 			"name": "List Posts",
+			"description": "Retrieves a list of all posts in the system.",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -531,13 +547,15 @@
 		},
 		{
 			"name": "Delete Post",
+			"description": "Deletes a post from the system by specifying the title, content, external ID, and user ID.",
 			"request": {
 				"method": "POST",
 				"header": [
 					{
 						"key": "Accept",
 						"value": "application/json",
-						"type": "default"
+						"type": "default",
+						"description": "Indicates that the response should be in JSON format."
 					}
 				],
 				"body": {
@@ -546,22 +564,26 @@
 						{
 							"key": "title",
 							"value": "my blog title",
-							"type": "default"
+							"type": "default",
+							"description": "The title of the post to be deleted. Example: 'my blog title'."
 						},
 						{
 							"key": "content",
 							"value": "Content goes here",
-							"type": "default"
+							"type": "default",
+							"description": "The content of the post to be deleted. Example: 'Content goes here'."
 						},
 						{
 							"key": "external_id",
 							"value": "https://domain.com/page1",
-							"type": "text"
+							"type": "text",
+							"description": "An external ID or reference URL associated with the post to be deleted. Example: 'https://domain.com/page1'."
 						},
 						{
 							"key": "user_id",
 							"value": "1",
-							"type": "text"
+							"type": "text",
+							"description": "The user ID associated with the post to be deleted. Example: '1'."
 						}
 					]
 				},
@@ -583,6 +605,7 @@
 		},
 		{
 			"name": "List Users",
+			"description": "Retrieves a list of all users in the system.",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -604,13 +627,15 @@
 		},
 		{
 			"name": "Sync from NewsAPI",
+			"description": "Synchronizes the system with the News API to fetch the latest news data.",
 			"request": {
 				"method": "POST",
 				"header": [
 					{
 						"key": "Accept",
 						"value": "application/json",
-						"type": "default"
+						"type": "default",
+						"description": "Indicates that the response should be in JSON format."
 					}
 				],
 				"body": {
@@ -635,13 +660,15 @@
 		},
 		{
 			"name": "NewSync via CLI",
+			"description": "Initiates synchronization of news via the command line interface, including a title, content, external ID, and user ID.",
 			"request": {
 				"method": "POST",
 				"header": [
 					{
 						"key": "Accept",
 						"value": "application/json",
-						"type": "default"
+						"type": "default",
+						"description": "Indicates that the response should be in JSON format."
 					}
 				],
 				"body": {
@@ -650,22 +677,26 @@
 						{
 							"key": "title",
 							"value": "my blog title",
-							"type": "default"
+							"type": "default",
+							"description": "The title of the news item being synchronized. Example: 'my blog title'."
 						},
 						{
 							"key": "content",
 							"value": "Content goes here",
-							"type": "default"
+							"type": "default",
+							"description": "The content of the news item being synchronized. Example: 'Content goes here'."
 						},
 						{
 							"key": "external_id",
 							"value": "https://domain.com/page1",
-							"type": "text"
+							"type": "text",
+							"description": "An external ID or reference URL associated with the news item. Example: 'https://domain.com/page1'."
 						},
 						{
 							"key": "user_id",
 							"value": "1",
-							"type": "text"
+							"type": "text",
+							"description": "The user ID associated with the news item. Example: '1'."
 						}
 					]
 				},
@@ -687,6 +718,7 @@
 		},
 		{
 			"name": "News API Direct Fetch",
+			"description": "Fetches the latest news from the external News API based on the specified country and API key.",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -704,11 +736,13 @@
 					"query": [
 						{
 							"key": "apiKey",
-							"value": "4164b37f2e1a47a1a583003a70c420b3"
+							"value": "4164b37f2e1a47a1a583003a70c420b3",
+							"description": "API key used to authenticate the request. Example: '<API_KEY>'."
 						},
 						{
 							"key": "country",
-							"value": "us"
+							"value": "us",
+							"description": "Country code for the news source. Example: 'us'."
 						}
 					]
 				}
@@ -721,7 +755,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "<JWT_TOKEN>",
+				"value": "",
 				"type": "string",
 				"description": "Bearer token required for accessing authenticated endpoints. Example: '<JWT_TOKEN>'."
 			}
