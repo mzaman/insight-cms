@@ -77,6 +77,9 @@ http://web.test
 
 PhpMyAdmin:
 http://localhost:8081
+Host: mysql
+Username: root
+Password: root
 
 Swagger test form:
 http://localhost:5555

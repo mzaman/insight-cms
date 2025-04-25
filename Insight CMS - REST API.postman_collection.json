@@ -62,6 +62,16 @@
 		{
 			"name": "Login",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vd2ViLnRlc3QvYXBpL3YxL2F1dGgvbG9naW4iLCJpYXQiOjE3NDU1NjgyOTgsImV4cCI6MTc0NTU3MTg5OCwibmJmIjoxNzQ1NTY4Mjk4LCJqdGkiOiJQM3U2QTdsYlUzdlRLRWMwIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.A8ilG02_AjHfC8y0lVPASzA5HCznQe3lBfnZty5eVPU",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [
 					{
@@ -240,7 +250,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjcyOTQyMTk1LCJleHAiOjE2NzI5NDU3OTUsIm5iZiI6MTY3Mjk0MjE5NSwianRpIjoiNTU1NEJ4UmNFTmtUQU5NSyIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.VLi_knNVsdM3P1vGq7Y43GPDbYvsifEkIfF6XSGb-Xk",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vd2ViLnRlc3QvYXBpL3YxL2F1dGgvbG9naW4iLCJpYXQiOjE3NDU0Nzg1MjUsImV4cCI6MTc0NTQ4MjEyNSwibmJmIjoxNzQ1NDc4NTI1LCJqdGkiOiJTSXBzY0YybHhNVWw2cml6Iiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.db8n2o1cY1szU6XbJzczII6Uq_qwEA91M2agH2FPJIY",
 							"type": "string"
 						}
 					]
@@ -639,7 +649,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vd2ViLnRlc3QvYXBpL3YxL2F1dGgvbG9naW4iLCJpYXQiOjE3NDU0NzA2NjMsImV4cCI6MTc0NTQ3NDI2MywibmJmIjoxNzQ1NDcwNjYzLCJqdGkiOiJpV296QjRWbllleEN3aWF2Iiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.BMGRl0o7RByHeC_DJZjViZ7eBOeuePTrFhmqR1nB_C4",
+				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vd2ViLnRlc3QvYXBpL3YxL2F1dGgvbG9naW4iLCJpYXQiOjE3NDU1NjkwMDYsImV4cCI6MTc0NTU3MjYwNiwibmJmIjoxNzQ1NTY5MDA2LCJqdGkiOiJ6emo4aVA3TmxVV3cwRjRmIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.3ASRQpLsbDjdRBTLcy0KoH297GlBS8ERqo6YtOIKjo0",
 				"type": "string"
 			}
 		]

@@ -10,7 +10,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 
-use App\Domains\V1\Swagger\Http\Controllers\Frontend\YamlFrontendController;
+use App\Domains\V1\Swagger\Http\Controllers\Api\YamlApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,47 +29,50 @@ use App\Domains\V1\Swagger\Http\Controllers\Frontend\YamlFrontendController;
 
 
 Route::prefix('v1')->group(function () {
-    
 
-    Route::get('test-form/swagger.json', [YamlFrontendController::class, 'getYaml']);
+    Route::get('test-form/swagger.json', [YamlApiController::class, 'getYaml']);
 
     Route::prefix('auth')->controller(AuthApiController::class)->group(function () {
+        // Authentication routes
         Route::post('login', 'login')->name('auth.login');
         Route::post('register', 'register')->name('auth.register');
         Route::post('logout', 'logout')->name('auth.logout');
         Route::post('refresh', 'refresh')->name('auth.refresh');
     });
 
-    Route::controller(PermissionController::class)
-        ->name('permission.')
-        ->prefix('permissions')
-        ->group(function () {
-            Route::get('/', 'index')->name('list');
-            Route::post('/', 'store')->name('store');
-        });
-
-    Route::controller(RoleController::class)
-        ->name('role.')
-        ->prefix('roles')
-        ->group(function () {
-            Route::get('/', 'index')->name('list');
-            Route::post('/', 'store')->name('store');
-            Route::get('/{id}', 'show')->name('show');
-        });
-
-    Route::controller(UserController::class)
-        ->name('user.')
-        ->prefix('users')
-        ->group(function () {
-            Route::get('/', 'index')->name('list');
-        });
-
-    Route::middleware('has_role:manage_api_keys')
-        ->post('api-key', [ApiKeyApiController::class, 'store'])
-        ->name('api-key.store');
-
-
     Route::middleware('auth:api')->group(function () {
+        // User routes
+        Route::controller(UserController::class)
+            ->name('user.')
+            ->prefix('users')
+            ->group(function () {
+                Route::get('/', 'index')->name('list');
+            });
+
+        // Role permission routes
+        Route::controller(RoleController::class)
+            ->name('role.')
+            ->prefix('roles')
+            ->group(function () {
+                Route::get('/', 'index')->name('list');
+                Route::post('/', 'store')->name('store');
+                Route::get('/{id}', 'show')->name('show');
+            });
+    
+        Route::controller(PermissionController::class)
+            ->name('permission.')
+            ->prefix('permissions')
+            ->group(function () {
+                Route::get('/', 'index')->name('list');
+                Route::post('/', 'store')->name('store');
+            });
+
+        // API key routes
+        Route::middleware('has_role:manage_api_keys')
+            ->post('api-key', [ApiKeyApiController::class, 'store'])
+            ->name('api-key.store');
+
+        // News Article routes
         Route::middleware('has_role:read')
             ->get('posts', [PostController::class, 'index'])
             ->name('post.index');
@@ -78,17 +81,17 @@ Route::prefix('v1')->group(function () {
             ->post('posts', [PostController::class, 'store'])
             ->name('post.store');
 
+        Route::middleware('has_role:delete')
+            ->delete('posts/{id}', [PostController::class, 'destroy'])
+            ->name('post.delete');
+        
+        // News sync routes
         Route::middleware(['throttle:5,1', 'has_role:create'])
             ->post('/sync-news', [PostApiController::class, 'sync'])
             ->name('post.sync');
 
         Route::post('cli-sync-news', [PostApiController::class, 'syncNews']);
 
-        Route::middleware('has_role:delete')
-            ->delete('posts/{id}', [PostController::class, 'destroy'])
-            ->name('post.delete');
-
-    
 
 
     });
