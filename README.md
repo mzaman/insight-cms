@@ -1,6 +1,13 @@
 # Insight CMS
 
-This project provides a streamlined Docker-based development environment for Laravel using Laradock. It includes setup scripts and handy Docker shortcut commands to simplify local development.
+This project provides a streamlined Docker-based development environment for Laravel using docker. It includes setup scripts and handy Docker shortcut commands to simplify local development.
+
+## Prerequisites
+
+- Docker & Docker Compose installed
+- Bash shell available
+- Git installed
+- SSH access if cloning a private repository
 
 ## Project Structure
 
@@ -26,14 +33,22 @@ This project provides a streamlined Docker-based development environment for Lar
 └── Docker/
 ```
 
-## Prerequisites
+## Getting Started
 
-- Docker & Docker Compose installed
-- Bash shell available
-- Git installed
-- SSH access if cloning a private repository
+1. Clone the repository:
 
-## Environment Installation
+```bash
+git clone git@github.com:mzaman/insight-cms.git
+```
+
+2. Navigate to the project directory:
+
+```bash
+cd insight-cms
+```
+
+3. Environment Installation
+Run the setup script:
 
 ```bash
 cd Setup
@@ -41,7 +56,10 @@ chmod +x install.sh
 ./install.sh
 ```
 
-## Edit the /etc/hosts file
+This script will create a `.env` file with default values and set up the necessary Docker containers.
+
+
+4. Edit the /etc/hosts file
 
 ```bash
 sudo nano /etc/hosts
@@ -78,7 +96,7 @@ Cache Clearing
 - Laravel code lives in: `Sources/web`
 - Laradock lives in: `Docker/`
 
-Web URL:
+Web URLs:
 http://web.test
 
 PhpMyAdmin:
