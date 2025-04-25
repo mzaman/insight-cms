@@ -99,6 +99,8 @@ Cache Clearing
 ./cmd/bash.sh composer install
 ```
 
+Docker yaml file location: `Setup/docker/docker-compose.local.yml`
+
 ## Output
 
 - Laravel code lives in: `Sources/web`
