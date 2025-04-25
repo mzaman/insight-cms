@@ -12,26 +12,38 @@ This project provides a streamlined Docker-based development environment for Lar
 ## Project Structure
 
 ```
+├── ARCHITECTURE.md
 ├── README.md
-├── cmd/
-│   ├── artisan
-│   ├── down
-│   ├── rebuild
-│   └── up
-├── Setup/
-│   ├── docker/
-│   │   ├── docker-compose.local.yml
-│   │   ├── mysql/
-│   │   │   └── Dockerfile
-│   │   ├── nginx/
-│   │   │   └── sites/web.local.conf
-│   │   └── workspace/
-│   │       └── crontab/laradock
-│   ├── install.sh
-│   └── utils.sh
-├── Sources/
-└── Docker/
+├── cmd
+│   ├── artisan.sh
+│   ├── bash.sh
+│   ├── down.sh
+│   ├── rebuild.sh
+│   ├── restart.sh
+│   ├── stop.sh
+│   └── up.sh
+├── setup
+│   ├── docker
+│   │   ├── docker-compose.local.yml
+│   │   ├── mysql
+│   │   │   └── Dockerfile
+│   │   ├── nginx
+│   │   │   └── sites
+│   │   │       └── web.local.conf
+│   │   └── workspace
+│   │       └── crontab
+│   │           └── laradock
+│   ├── install.sh
+│   ├── swagger
+│   │   └── swagger.yaml
+│   └── utils.sh
+└── Sources
+    ├── public
+    │   └── index.html
+    └── web
+        ├── app
 ```
+
 
 ## Getting Started
 
@@ -124,6 +136,7 @@ Swagger source file location: `Setup/swagger/swagger.yaml`
 Swagger Editor:
 http://localhost:5151
 
+Postman colletion file: `./Insight CMS - REST API (v1).postman_collection.json`
 
 ## Project Installation
 
@@ -146,6 +159,7 @@ NEWS_API_KEY=62ca91a83b6a43b2b653ad424a34249d
 Get a new API key from NewsAPI URL: https://newsapi.org
 
 To use a new API key, send a POST request to `/api/v1/api-key` with the required `service_name` and `api_key`. The API key will be securely stored and returned in the response.
+API endpoint: http://localhost:5555/#/default/post_api_v1_api_key
 
 To populate the database with dummy data, run the following command:
 
