@@ -26,16 +26,15 @@ INITIAL_COMMANDS=(
 )
 
 POST_UPDATE_COMMANDS=(
-    # "find . -type f -exec chmod 644 {} \;"
-    # "find . -type d -exec chmod 755 {} \;"
+    "find . -type f -exec chmod 644 {} \;"
+    "find . -type d -exec chmod 755 {} \;"
     "chgrp -R www-data storage bootstrap/cache"
     "chmod -R ug+rwx storage bootstrap/cache"
     "chmod -R gu+w storage bootstrap/cache && chmod -R guo+w storage bootstrap/cache"
-    # "chmod -R 777 ./bootstrap/cache/"
     "composer install"
     "php artisan key:generate"
     "php artisan optimize:clear"
-    "php artisan migrate:refresh --seed"
+    "php artisan migrate --seed"
     "composer dump-autoload"
 )
 
