@@ -1,26 +1,24 @@
 openapi: 3.0.0
 info:
-  title: 'Insight CMS : REST API'
+  title: 'Insight CMS : REST API (v1)'
+  description: >-
+    This is the REST API collection for Insight CMS version 1. It provides
+    access to various functionalities such as user authentication, permissions
+    management, role management, and post creation. Each endpoint is designed to
+    interact with the system's core services, enabling users to manage content
+    efficiently.
   version: 1.0.0
-  description: |
-    The Insight CMS REST API allows developers to interact with the content management system.
-    You can manage posts, roles, permissions, and user authentication, and integrate news APIs for fetching headlines.
-    This API also supports security features like API keys and token-based authentication.
 servers:
   - url: http://web.test
-    description: 'Development server'
   - url: https://newsapi.org
-    description: 'News API server'
 components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
-      description: 'Use the Bearer token for authorization.'
     noauthAuth:
       type: http
       scheme: noauth
-      description: 'No authentication is required for this endpoint.'
 security:
   - bearerAuth: []
 paths:
@@ -29,39 +27,41 @@ paths:
       tags:
         - default
       summary: Create NewsAPI Key
-      description: 'Generate a new API key for accessing the NewsAPI service.'
       requestBody:
         content:
           multipart/form-data:
             schema:
               type: object
               properties:
-                api_key:
-                  type: string
-                  description: 'API key string to be used for authentication.'
-                  example: Share
                 service_name:
                   type: string
-                  description: 'The name of the service associated with the API key.'
-                  example: share
+                  description: >-
+                    The name of the service for which the API key is being
+                    created. Example: 'News API2'.
+                  example: News API2
+                api_key:
+                  type: string
+                  description: >-
+                    A unique API key used for accessing the News API. This key
+                    should be kept secure.
+                  example: <API_KEY>
       parameters:
         - name: Accept
           in: header
           schema:
             type: string
-          description: 'Indicates the media type expected by the server.'
+          description: Indicates that the response should be in JSON format.
           example: application/json
       responses:
         '200':
-          description: 'Successfully created a new API key.'
+          description: Successful response
           content:
             application/json: {}
   /api/v1/auth/register:
     post:
       tags:
         - default
-      summary: Register a New User
-      description: 'Create a new user account in the system.'
+      summary: Register
       requestBody:
         content:
           multipart/form-data:
@@ -70,38 +70,39 @@ paths:
               properties:
                 name:
                   type: string
-                  description: 'The user\'s full name.'
+                  description: >-
+                    The full name of the user being registered. Example:
+                    'TestUser'.
                   example: TestUser
                 password:
                   type: string
-                  description: 'The password for the user account.'
+                  description: 'The password for the user. Example: ''password''.'
                   example: password
                 email:
                   type: string
-                  description: 'The user\'s email address.'
+                  description: 'The email address of the user. Example: ''user3@mail.com''.'
                   example: user3@mail.com
                 role_id:
                   type: integer
-                  description: 'The ID of the user\'s role.'
+                  description: 'The ID of the role to be assigned to the user. Example: ''4''.'
                   example: '4'
       parameters:
         - name: Accept
           in: header
           schema:
             type: string
-          description: 'Indicates the media type expected by the server.'
+          description: Indicates that the response should be in JSON format.
           example: application/json
       responses:
         '200':
-          description: 'Successfully registered the user.'
+          description: Successful response
           content:
             application/json: {}
   /api/v1/auth/login:
     post:
       tags:
         - default
-      summary: User Login
-      description: 'Login using email and password to get an authentication token.'
+      summary: Login
       requestBody:
         content:
           multipart/form-data:
@@ -110,11 +111,15 @@ paths:
               properties:
                 email:
                   type: string
-                  description: 'The email address of the user.'
+                  description: >-
+                    The email address of the user attempting to log in. Example:
+                    'admin@mail.com'.
                   example: admin@mail.com
                 password:
                   type: string
-                  description: 'The password of the user.'
+                  description: >-
+                    The password associated with the provided email. Example:
+                    'password'.
                   example: password
       security:
         - bearerAuth: []
@@ -123,19 +128,18 @@ paths:
           in: header
           schema:
             type: string
-          description: 'Indicates the media type expected by the server.'
+          description: Indicates that the response should be in JSON format.
           example: application/json
       responses:
         '200':
-          description: 'Successfully logged in and received authentication token.'
+          description: Successful response
           content:
             application/json: {}
   /api/v1/auth/refresh:
     post:
       tags:
         - default
-      summary: Refresh Authentication Token
-      description: 'Refresh the authentication token to extend the session.'
+      summary: Refresh
       requestBody:
         content:
           multipart/form-data:
@@ -144,30 +148,29 @@ paths:
               properties:
                 email:
                   type: string
-                  description: 'The email address of the user.'
+                  description: The email address of the user requesting the token refresh.
                   example: admin@mail.com
                 password:
                   type: string
-                  description: 'The password of the user.'
+                  description: The password of the user requesting the token refresh.
                   example: password
       parameters:
         - name: Accept
           in: header
           schema:
             type: string
-          description: 'Indicates the media type expected by the server.'
+          description: Indicates that the response should be in JSON format.
           example: application/json
       responses:
         '200':
-          description: 'Successfully refreshed the authentication token.'
+          description: Successful response
           content:
             application/json: {}
   /api/v1/auth/logout:
     post:
       tags:
         - default
-      summary: Logout User
-      description: 'Log out the user and invalidate their session.'
+      summary: Logout
       requestBody:
         content:
           multipart/form-data:
@@ -176,22 +179,26 @@ paths:
               properties:
                 email:
                   type: string
-                  description: 'The email address of the user.'
+                  description: >-
+                    The email address of the user logging out. Example:
+                    'admin@mail.com'.
                   example: admin@mail.com
                 password:
                   type: string
-                  description: 'The password of the user.'
+                  description: >-
+                    The password associated with the provided email. Example:
+                    'password'.
                   example: password
       parameters:
         - name: Accept
           in: header
           schema:
             type: string
-          description: 'Indicates the media type expected by the server.'
+          description: Indicates that the response should be in JSON format.
           example: application/json
       responses:
         '200':
-          description: 'Successfully logged out.'
+          description: Successful response
           content:
             application/json: {}
   /api/v1/permissions:
@@ -199,7 +206,6 @@ paths:
       tags:
         - default
       summary: Add Permission
-      description: 'Create a new permission for the system.'
       requestBody:
         content:
           multipart/form-data:
@@ -208,34 +214,35 @@ paths:
               properties:
                 name:
                   type: string
-                  description: 'The name of the permission.'
+                  description: 'The name of the permission. Example: ''Share''.'
                   example: Share
                 slug:
                   type: string
-                  description: 'The unique slug for the permission.'
+                  description: >-
+                    The slug for the permission, used for URL routing. Example:
+                    'share'.
                   example: share
       parameters:
         - name: Accept
           in: header
           schema:
             type: string
-          description: 'Indicates the media type expected by the server.'
+          description: Indicates that the response should be in JSON format.
           example: application/json
       responses:
         '200':
-          description: 'Successfully created a new permission.'
+          description: Successful response
           content:
             application/json: {}
     get:
       tags:
         - default
       summary: List Permissions
-      description: 'Fetch a list of all permissions available in the system.'
       security:
         - bearerAuth: []
       responses:
         '200':
-          description: 'Successfully fetched permissions list.'
+          description: Successful response
           content:
             application/json: {}
   /api/v1/roles:
@@ -243,7 +250,6 @@ paths:
       tags:
         - default
       summary: Add Role
-      description: 'Create a new role for the system.'
       requestBody:
         content:
           multipart/form-data:
@@ -252,11 +258,13 @@ paths:
               properties:
                 name:
                   type: string
-                  description: 'The name of the role.'
+                  description: 'The name of the role being created. Example: ''Editor''.'
                   example: Editor
                 slug:
                   type: string
-                  description: 'The unique slug for the role.'
+                  description: >-
+                    The slug for the role, used for URL routing. Example:
+                    'editor'.
                   example: editor
       security:
         - bearerAuth: []
@@ -265,11 +273,11 @@ paths:
           in: header
           schema:
             type: string
-          description: 'Indicates the media type expected by the server.'
+          description: Indicates that the response should be in JSON format.
           example: application/json
       responses:
         '200':
-          description: 'Successfully created a new role.'
+          description: Successful response
           content:
             application/json: {}
   /api/v1/roles/1:
@@ -277,7 +285,6 @@ paths:
       tags:
         - default
       summary: Show Role Without Permissions
-      description: 'Fetch details of a role excluding its permissions.'
       security:
         - noauthAuth: []
       parameters:
@@ -285,11 +292,11 @@ paths:
           in: header
           schema:
             type: string
-          description: 'Indicates the media type expected by the server.'
+          description: Indicates that the response should be in JSON format.
           example: application/json
       responses:
         '200':
-          description: 'Successfully fetched the role details.'
+          description: Successful response
           content:
             application/json: {}
   /api/v1/posts:
@@ -297,7 +304,6 @@ paths:
       tags:
         - default
       summary: Delete Post
-      description: 'Delete a specific post from the system.'
       requestBody:
         content:
           multipart/form-data:
@@ -306,40 +312,47 @@ paths:
               properties:
                 title:
                   type: string
-                  description: 'The title of the post to be deleted.'
+                  description: >-
+                    The title of the post to be deleted. Example: 'my blog
+                    title'.
                   example: my blog title
                 content:
                   type: string
-                  description: 'The content of the post to be deleted.'
+                  description: >-
+                    The content of the post to be deleted. Example: 'Content
+                    goes here'.
                   example: Content goes here
                 external_id:
                   type: string
-                  description: 'External reference ID of the post.'
+                  description: >-
+                    An external ID or reference URL associated with the post to
+                    be deleted. Example: 'https://domain.com/page1'.
                   example: https://domain.com/page1
                 user_id:
                   type: integer
-                  description: 'The ID of the user who created the post.'
+                  description: >-
+                    The user ID associated with the post to be deleted. Example:
+                    '1'.
                   example: '1'
       parameters:
         - name: Accept
           in: header
           schema:
             type: string
-          description: 'Indicates the media type expected by the server.'
+          description: Indicates that the response should be in JSON format.
           example: application/json
       responses:
         '200':
-          description: 'Successfully deleted the post.'
+          description: Successful response
           content:
             application/json: {}
     get:
       tags:
         - default
       summary: List Posts
-      description: 'Fetch a list of all posts in the system.'
       responses:
         '200':
-          description: 'Successfully fetched posts list.'
+          description: Successful response
           content:
             application/json: {}
   /api/v1/users:
@@ -347,50 +360,32 @@ paths:
       tags:
         - default
       summary: List Users
-      description: 'Fetch a list of all users in the system.'
       responses:
         '200':
-          description: 'Successfully fetched users list.'
+          description: Successful response
           content:
             application/json: {}
   /api/v1/sync-news:
     post:
       tags:
         - default
-      summary: NewSync
-      description: 'Sync new news to the system.'
+      summary: Sync from NewsAPI
       requestBody:
         content:
           multipart/form-data:
             schema:
               type: object
-              properties:
-                title:
-                  type: string
-                  description: 'The title of the news.'
-                  example: my blog title
-                content:
-                  type: string
-                  description: 'Content of the news to be synced.'
-                  example: Content goes here
-                external_id:
-                  type: string
-                  description: 'External reference ID for the news.'
-                  example: https://domain.com/page1
-                user_id:
-                  type: integer
-                  description: 'The ID of the user syncing the news.'
-                  example: '1'
+              properties: {}
       parameters:
         - name: Accept
           in: header
           schema:
             type: string
-          description: 'Indicates the media type expected by the server.'
+          description: Indicates that the response should be in JSON format.
           example: application/json
       responses:
         '200':
-          description: 'Successfully synced the news.'
+          description: Successful response
           content:
             application/json: {}
   /api/v1/cli-sync-news:
@@ -398,39 +393,22 @@ paths:
       tags:
         - default
       summary: NewSync via CLI
-      description: 'Sync new news via CLI into the system.'
       requestBody:
         content:
           multipart/form-data:
             schema:
               type: object
-              properties:
-                title:
-                  type: string
-                  description: 'The title of the news.'
-                  example: my blog title
-                content:
-                  type: string
-                  description: 'Content of the news to be synced.'
-                  example: Content goes here
-                external_id:
-                  type: string
-                  description: 'External reference ID for the news.'
-                  example: https://domain.com/page1
-                user_id:
-                  type: integer
-                  description: 'The ID of the user syncing the news.'
-                  example: '1'
+              properties: {}
       parameters:
         - name: Accept
           in: header
           schema:
             type: string
-          description: 'Indicates the media type expected by the server.'
+          description: Indicates that the response should be in JSON format.
           example: application/json
       responses:
         '200':
-          description: 'Successfully synced the news via CLI.'
+          description: Successful response
           content:
             application/json: {}
   /v2/top-headlines:
@@ -438,20 +416,21 @@ paths:
       tags:
         - default
       summary: News API Direct Fetch
-      description: 'Fetch top headlines from the News API directly.'
       parameters:
         - name: apiKey
           in: query
           schema:
             type: string
+          description: 'API key used to authenticate the request. Example: ''<API_KEY>''.'
           example: 4164b37f2e1a47a1a583003a70c420b3
         - name: country
           in: query
           schema:
             type: string
+          description: 'Country code for the news source. Example: ''us''.'
           example: us
       responses:
         '200':
-          description: 'Successfully fetched top headlines.'
+          description: Successful response
           content:
             application/json: {}
