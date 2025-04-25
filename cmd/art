@@ -1,0 +1,3 @@
+#!/bin/bash
+echo "Running: docker-compose -f ../Docker/docker-compose.yml exec workspace bash -c 'cd web && php artisan $*'"
+docker-compose -f ../Docker/docker-compose.yml exec workspace bash -c "cd web && php artisan $*"
