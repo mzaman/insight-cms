@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domains\V1\Swagger\Http\Controllers\Frontend;
+namespace App\Domains\V1\Swagger\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;

@@ -32,6 +32,7 @@ POST_UPDATE_COMMANDS=(
     "chmod -R ug+rwx storage bootstrap/cache"
     "chmod -R gu+w storage bootstrap/cache && chmod -R guo+w storage bootstrap/cache"
     "composer install"
+    "composer dump-autoload"
     "php artisan key:generate"
     "php artisan optimize:clear"
     "php artisan migrate --seed"
