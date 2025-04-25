@@ -101,6 +101,7 @@ http://web.test
 
 PhpMyAdmin:
 http://localhost:8081
+
 Host: mysql
 Username: root
 Password: root
@@ -127,10 +128,12 @@ JWT_SECRET=your_generated_secret_key
 ## API Key (Important)
 To use the News API, you will need to obtain an API key from a provider such as NewsAPI. Once you have obtained the API key, you can set it as an environment variable in your `.env` file if missing.
 ```bash
-NEWS_API_KEY=4164b37f2e1a47a1a583003a70c420b3
+NEWS_API_KEY=62ca91a83b6a43b2b653ad424a34249d
 ```
 
-To create a new API key, send a POST request to `/api/v1/api-key` with the required `service_name` and `api_key`. The API key will be securely stored and returned in the response.
+Get a new API key from NewsAPI URL: https://newsapi.org
+
+To use a new API key, send a POST request to `/api/v1/api-key` with the required `service_name` and `api_key`. The API key will be securely stored and returned in the response.
 
 To populate the database with dummy data, run the following command:
 
