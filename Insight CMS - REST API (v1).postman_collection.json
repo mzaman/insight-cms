@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "9fa0a48a-f423-4429-bae6-a8156068898a",
-		"name": "Insight CMS : REST API",
+		"name": "Insight CMS : REST API (v1)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "697454"
 	},
@@ -21,13 +21,13 @@
 					"mode": "formdata",
 					"formdata": [
 						{
-							"key": "api_key",
-							"value": "Share",
+							"key": "service_name",
+							"value": "News API2",
 							"type": "default"
 						},
 						{
-							"key": "service_name",
-							"value": "share",
+							"key": "api_key",
+							"value": "4164b37f2e1a47a1a583003a70c420b3",
 							"type": "default"
 						}
 					]
@@ -573,7 +573,7 @@
 			"response": []
 		},
 		{
-			"name": "NewSync",
+			"name": "Sync from NewsAPI",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -585,28 +585,7 @@
 				],
 				"body": {
 					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "title",
-							"value": "my blog title",
-							"type": "default"
-						},
-						{
-							"key": "content",
-							"value": "Content goes here",
-							"type": "default"
-						},
-						{
-							"key": "external_id",
-							"value": "https://domain.com/page1",
-							"type": "text"
-						},
-						{
-							"key": "user_id",
-							"value": "1",
-							"type": "text"
-						}
-					]
+					"formdata": []
 				},
 				"url": {
 					"raw": "http://web.test/api/v1/sync-news",
@@ -712,7 +691,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vd2ViLnRlc3QvYXBpL3YxL2F1dGgvbG9naW4iLCJpYXQiOjE3NDU1ODY4NDEsImV4cCI6MTc0NTU5MDQ0MSwibmJmIjoxNzQ1NTg2ODQxLCJqdGkiOiI5RnhadmFjSXFEVlNDeXQ3Iiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.r81jXCcnH50AbRWNSRZP6TdFIY6PG9yCmbEjkwe5DYo",
+				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vd2ViLnRlc3QvYXBpL3YxL2F1dGgvbG9naW4iLCJpYXQiOjE3NDU1ODgxMjIsImV4cCI6MTc0NTU5MTcyMiwibmJmIjoxNzQ1NTg4MTIyLCJqdGkiOiJOQmlBV3VaOWNJamVHNzRHIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.E5w0r_8di-VZsm_AG0KyWxCozOTfH-tZPc0uEt7ZsSY",
 				"type": "string"
 			}
 		]
