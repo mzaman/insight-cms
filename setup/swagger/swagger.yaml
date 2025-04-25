@@ -10,7 +10,7 @@ servers:
   - url: http://web.test
     description: 'Development server'
   - url: https://newsapi.org
-    description: 'Production News API server'
+    description: 'News API server'
 components:
   securitySchemes:
     bearerAuth:
