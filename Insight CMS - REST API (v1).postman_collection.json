@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "9fa0a48a-f423-4429-bae6-a8156068898a",
+		"_postman_id": "a638b709-76a3-472a-a66c-77c155d62624",
 		"name": "Insight CMS : REST API (v1)",
+		"description": "This is the REST API collection for Insight CMS version 1. It provides access to various functionalities such as user authentication, permissions management, role management, and post creation. Each endpoint is designed to interact with the system's core services, enabling users to manage content efficiently.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "697454",
-		"description": "This is the REST API collection for Insight CMS version 1. It provides access to various functionalities such as user authentication, permissions management, role management, and post creation. Each endpoint is designed to interact with the system's core services, enabling users to manage content efficiently."
+		"_exporter_id": "697454"
 	},
 	"item": [
 		{
@@ -16,8 +16,8 @@
 					{
 						"key": "Accept",
 						"value": "application/json",
-						"type": "default",
-						"description": "Indicates that the response should be in JSON format."
+						"description": "Indicates that the response should be in JSON format.",
+						"type": "default"
 					}
 				],
 				"body": {
@@ -26,14 +26,14 @@
 						{
 							"key": "service_name",
 							"value": "News API2",
-							"type": "default",
-							"description": "The name of the service for which the API key is being created. Example: 'News API2'."
+							"description": "The name of the service for which the API key is being created. Example: 'News API2'.",
+							"type": "default"
 						},
 						{
 							"key": "api_key",
 							"value": "<API_KEY>",
-							"type": "default",
-							"description": "A unique API key used for accessing the News API. This key should be kept secure."
+							"description": "A unique API key used for accessing the News API. This key should be kept secure.",
+							"type": "default"
 						}
 					]
 				},
@@ -62,8 +62,8 @@
 					{
 						"key": "Accept",
 						"value": "application/json",
-						"type": "default",
-						"description": "Indicates that the response should be in JSON format."
+						"description": "Indicates that the response should be in JSON format.",
+						"type": "default"
 					}
 				],
 				"body": {
@@ -72,26 +72,26 @@
 						{
 							"key": "name",
 							"value": "TestUser",
-							"type": "default",
-							"description": "The full name of the user being registered. Example: 'TestUser'."
+							"description": "The full name of the user being registered. Example: 'TestUser'.",
+							"type": "default"
 						},
 						{
 							"key": "password",
 							"value": "password",
-							"type": "default",
-							"description": "The password for the user. Example: 'password'."
+							"description": "The password for the user. Example: 'password'.",
+							"type": "default"
 						},
 						{
 							"key": "email",
 							"value": "user3@mail.com",
-							"type": "default",
-							"description": "The email address of the user. Example: 'user3@mail.com'."
+							"description": "The email address of the user. Example: 'user3@mail.com'.",
+							"type": "default"
 						},
 						{
 							"key": "role_id",
 							"value": "4",
-							"type": "default",
-							"description": "The ID of the role to be assigned to the user. Example: '4'."
+							"description": "The ID of the role to be assigned to the user. Example: '4'.",
+							"type": "default"
 						}
 					]
 				},
@@ -189,6 +189,7 @@
 						{
 							"key": "email",
 							"value": "admin@mail.com",
+							"description": "The email address of the user requesting the token refresh.",
 							"type": "default",
 							"disabled": true,
 							"description": "The email address of the user requesting the token refresh."
@@ -196,9 +197,9 @@
 						{
 							"key": "password",
 							"value": "password",
+							"description": "The password of the user requesting the token refresh.",
 							"type": "default",
-							"disabled": true,
-							"description": "The password of the user requesting the token refresh."
+							"disabled": true
 						}
 					]
 				},
@@ -667,38 +668,13 @@
 					{
 						"key": "Accept",
 						"value": "application/json",
-						"type": "default",
-						"description": "Indicates that the response should be in JSON format."
+						"description": "Indicates that the response should be in JSON format.",
+						"type": "default"
 					}
 				],
 				"body": {
 					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "title",
-							"value": "my blog title",
-							"type": "default",
-							"description": "The title of the news item being synchronized. Example: 'my blog title'."
-						},
-						{
-							"key": "content",
-							"value": "Content goes here",
-							"type": "default",
-							"description": "The content of the news item being synchronized. Example: 'Content goes here'."
-						},
-						{
-							"key": "external_id",
-							"value": "https://domain.com/page1",
-							"type": "text",
-							"description": "An external ID or reference URL associated with the news item. Example: 'https://domain.com/page1'."
-						},
-						{
-							"key": "user_id",
-							"value": "1",
-							"type": "text",
-							"description": "The user ID associated with the news item. Example: '1'."
-						}
-					]
+					"formdata": []
 				},
 				"url": {
 					"raw": "http://web.test/api/v1/cli-sync-news",
