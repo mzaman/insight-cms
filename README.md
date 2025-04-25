@@ -54,17 +54,23 @@ Add the following line:
 
 ## Docker Shortcut Scripts
 
-| Script    | Description                          | Example Usage                  |
-|-----------|--------------------------------------|--------------------------------|
-| `up`      | Starts Docker containers             | `./cmd/up.sh`                 |
-| `down`    | Stops and removes containers         | `./cmd/down.sh`               |
-| `restart` | Stops and removes containers         | `./cmd/restart.sh`            |
-| `rebuild` | Rebuilds containers with no cache    | `./cmd/rebuild.sh`            |
-| `artisan` | Runs Laravel Artisan in container    | `./cmd/artisan.sh migrate`    |
+| Script    | Description                          | Example Usage                      |
+|-----------|--------------------------------------|------------------------------------|
+| `up`      | Starts Docker containers             | `./cmd/up.sh`                      |
+| `down`    | Stops and removes containers         | `./cmd/down.sh`                    |
+| `restart` | Stops and removes containers         | `./cmd/restart.sh`                 |
+| `rebuild` | Rebuilds containers with no cache    | `./cmd/rebuild.sh`                 |
+| `artisan` | Runs Laravel Artisan in container    | `./cmd/artisan.sh optimize:clear`  |
 
 Make them executable:
 ```bash
 chmod +x cmd/*
+```
+
+Cache Clearing
+
+```bash
+./cmd/artisan.sh optimize:clear
 ```
 
 ## Output
