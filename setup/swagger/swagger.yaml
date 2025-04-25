@@ -1,6 +1,12 @@
 openapi: 3.0.0
 info:
-  title: 'Insight CMS : REST API'
+  title: 'Insight CMS : REST API (v1)'
+  description: >-
+    This is the REST API collection for Insight CMS version 1. It provides
+    access to various functionalities such as user authentication, permissions
+    management, role management, and post creation. Each endpoint is designed to
+    interact with the system's core services, enabling users to manage content
+    efficiently.
   version: 1.0.0
 servers:
   - url: http://web.test
@@ -27,17 +33,24 @@ paths:
             schema:
               type: object
               properties:
-                api_key:
-                  type: string
-                  example: Share
                 service_name:
                   type: string
-                  example: share
+                  description: >-
+                    The name of the service for which the API key is being
+                    created. Example: 'News API2'.
+                  example: News API2
+                api_key:
+                  type: string
+                  description: >-
+                    A unique API key used for accessing the News API. This key
+                    should be kept secure.
+                  example: <API_KEY>
       parameters:
         - name: Accept
           in: header
           schema:
             type: string
+          description: Indicates that the response should be in JSON format.
           example: application/json
       responses:
         '200':
@@ -57,21 +70,28 @@ paths:
               properties:
                 name:
                   type: string
+                  description: >-
+                    The full name of the user being registered. Example:
+                    'TestUser'.
                   example: TestUser
                 password:
                   type: string
+                  description: 'The password for the user. Example: ''password''.'
                   example: password
                 email:
                   type: string
+                  description: 'The email address of the user. Example: ''user3@mail.com''.'
                   example: user3@mail.com
                 role_id:
                   type: integer
+                  description: 'The ID of the role to be assigned to the user. Example: ''4''.'
                   example: '4'
       parameters:
         - name: Accept
           in: header
           schema:
             type: string
+          description: Indicates that the response should be in JSON format.
           example: application/json
       responses:
         '200':
@@ -91,9 +111,15 @@ paths:
               properties:
                 email:
                   type: string
+                  description: >-
+                    The email address of the user attempting to log in. Example:
+                    'admin@mail.com'.
                   example: admin@mail.com
                 password:
                   type: string
+                  description: >-
+                    The password associated with the provided email. Example:
+                    'password'.
                   example: password
       security:
         - bearerAuth: []
@@ -102,6 +128,7 @@ paths:
           in: header
           schema:
             type: string
+          description: Indicates that the response should be in JSON format.
           example: application/json
       responses:
         '200':
@@ -121,15 +148,18 @@ paths:
               properties:
                 email:
                   type: string
+                  description: The email address of the user requesting the token refresh.
                   example: admin@mail.com
                 password:
                   type: string
+                  description: The password of the user requesting the token refresh.
                   example: password
       parameters:
         - name: Accept
           in: header
           schema:
             type: string
+          description: Indicates that the response should be in JSON format.
           example: application/json
       responses:
         '200':
@@ -149,15 +179,22 @@ paths:
               properties:
                 email:
                   type: string
+                  description: >-
+                    The email address of the user logging out. Example:
+                    'admin@mail.com'.
                   example: admin@mail.com
                 password:
                   type: string
+                  description: >-
+                    The password associated with the provided email. Example:
+                    'password'.
                   example: password
       parameters:
         - name: Accept
           in: header
           schema:
             type: string
+          description: Indicates that the response should be in JSON format.
           example: application/json
       responses:
         '200':
@@ -177,15 +214,20 @@ paths:
               properties:
                 name:
                   type: string
+                  description: 'The name of the permission. Example: ''Share''.'
                   example: Share
                 slug:
                   type: string
+                  description: >-
+                    The slug for the permission, used for URL routing. Example:
+                    'share'.
                   example: share
       parameters:
         - name: Accept
           in: header
           schema:
             type: string
+          description: Indicates that the response should be in JSON format.
           example: application/json
       responses:
         '200':
@@ -216,9 +258,13 @@ paths:
               properties:
                 name:
                   type: string
+                  description: 'The name of the role being created. Example: ''Editor''.'
                   example: Editor
                 slug:
                   type: string
+                  description: >-
+                    The slug for the role, used for URL routing. Example:
+                    'editor'.
                   example: editor
       security:
         - bearerAuth: []
@@ -227,6 +273,7 @@ paths:
           in: header
           schema:
             type: string
+          description: Indicates that the response should be in JSON format.
           example: application/json
       responses:
         '200':
@@ -245,6 +292,7 @@ paths:
           in: header
           schema:
             type: string
+          description: Indicates that the response should be in JSON format.
           example: application/json
       responses:
         '200':
@@ -264,21 +312,34 @@ paths:
               properties:
                 title:
                   type: string
+                  description: >-
+                    The title of the post to be deleted. Example: 'my blog
+                    title'.
                   example: my blog title
                 content:
                   type: string
+                  description: >-
+                    The content of the post to be deleted. Example: 'Content
+                    goes here'.
                   example: Content goes here
                 external_id:
                   type: string
+                  description: >-
+                    An external ID or reference URL associated with the post to
+                    be deleted. Example: 'https://domain.com/page1'.
                   example: https://domain.com/page1
                 user_id:
                   type: integer
+                  description: >-
+                    The user ID associated with the post to be deleted. Example:
+                    '1'.
                   example: '1'
       parameters:
         - name: Accept
           in: header
           schema:
             type: string
+          description: Indicates that the response should be in JSON format.
           example: application/json
       responses:
         '200':
@@ -308,30 +369,19 @@ paths:
     post:
       tags:
         - default
-      summary: NewSync
+      summary: Sync from NewsAPI
       requestBody:
         content:
           multipart/form-data:
             schema:
               type: object
-              properties:
-                title:
-                  type: string
-                  example: my blog title
-                content:
-                  type: string
-                  example: Content goes here
-                external_id:
-                  type: string
-                  example: https://domain.com/page1
-                user_id:
-                  type: integer
-                  example: '1'
+              properties: {}
       parameters:
         - name: Accept
           in: header
           schema:
             type: string
+          description: Indicates that the response should be in JSON format.
           example: application/json
       responses:
         '200':
@@ -348,24 +398,13 @@ paths:
           multipart/form-data:
             schema:
               type: object
-              properties:
-                title:
-                  type: string
-                  example: my blog title
-                content:
-                  type: string
-                  example: Content goes here
-                external_id:
-                  type: string
-                  example: https://domain.com/page1
-                user_id:
-                  type: integer
-                  example: '1'
+              properties: {}
       parameters:
         - name: Accept
           in: header
           schema:
             type: string
+          description: Indicates that the response should be in JSON format.
           example: application/json
       responses:
         '200':
@@ -382,11 +421,13 @@ paths:
           in: query
           schema:
             type: string
+          description: 'API key used to authenticate the request. Example: ''<API_KEY>''.'
           example: 4164b37f2e1a47a1a583003a70c420b3
         - name: country
           in: query
           schema:
             type: string
+          description: 'Country code for the news source. Example: ''us''.'
           example: us
       responses:
         '200':
