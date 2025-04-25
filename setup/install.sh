@@ -15,7 +15,7 @@ fi
 # ─────────────────────────────────────────────────────────────
 REPOSITORY_URL=""
 DEFAULT_APP_CODE_RELATIVE_PATH="web"
-DEFAULT_DOCKER_SERVICES=(nginx php-fpm php-worker mysql phpmyadmin redis swagger-ui swagger-editor)
+DEFAULT_DOCKER_SERVICES=(workspace nginx php-fpm php-worker mysql phpmyadmin redis swagger-ui swagger-editor)
 DEFAULT_DB_ROOT_USER="root"
 DEFAULT_DB_ROOT_PASSWORD="root"
 DEFAULT_DB_NAME="insight_cms"
@@ -32,6 +32,7 @@ POST_UPDATE_COMMANDS=(
     "chmod -R ug+rwx storage bootstrap/cache"
     "chmod -R gu+w storage bootstrap/cache && chmod -R guo+w storage bootstrap/cache"
     # "chmod -R 777 ./bootstrap/cache/"
+    "composer install"
     "php artisan key:generate"
     "php artisan optimize:clear"
     "php artisan migrate:refresh --seed"
