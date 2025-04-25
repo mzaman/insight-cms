@@ -58,6 +58,7 @@ Add the following line:
 |-----------|--------------------------------------|--------------------------------|
 | `up`      | Starts Docker containers             | `./cmd/up.sh`                 |
 | `down`    | Stops and removes containers         | `./cmd/down.sh`               |
+| `restart` | Stops and removes containers         | `./cmd/restart.sh`            |
 | `rebuild` | Rebuilds containers with no cache    | `./cmd/rebuild.sh`            |
 | `artisan` | Runs Laravel Artisan in container    | `./cmd/artisan.sh migrate`    |
 
