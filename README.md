@@ -74,9 +74,11 @@ Add the following line:
 
 | Script    | Description                          | Example Usage                      |
 |-----------|--------------------------------------|------------------------------------|
+| `bash`    | Run command in application root      | `./cmd/bash.sh`                    |
 | `up`      | Starts Docker containers             | `./cmd/up.sh`                      |
+| `stop`    | Stops Docker containers              | `./cmd/stop.sh`                    |
 | `down`    | Stops and removes containers         | `./cmd/down.sh`                    |
-| `restart` | Stops and removes containers         | `./cmd/restart.sh`                 |
+| `restart` | Restarts containers                  | `./cmd/restart.sh`                 |
 | `rebuild` | Rebuilds containers with no cache    | `./cmd/rebuild.sh`                 |
 | `artisan` | Runs Laravel Artisan in container    | `./cmd/artisan.sh optimize:clear`  |
 
@@ -89,6 +91,12 @@ Cache Clearing
 
 ```bash
 ./cmd/artisan.sh optimize:clear
+```
+
+Cache Clearing
+
+```bash
+./cmd/bash.sh composer install
 ```
 
 ## Output
@@ -108,6 +116,8 @@ Password: root
 
 Swagger test form:
 http://localhost:5555
+
+Swagger source file location: `Setup/swagger/swagger.yaml`
 
 Swagger Editor:
 http://localhost:5151
