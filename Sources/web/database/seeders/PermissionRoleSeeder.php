@@ -14,68 +14,57 @@ class PermissionRoleSeeder extends Seeder
      */
     public function run()
     {
-        // Sync permissions to roles
-        $adminPermissions = [
-            1,  // Create
-            2,  // Delete
-            3,  // Read
-            4,  // Update
-            5,  // Approve
-            6,  // Publish
-            7,  // Manage Users
-            8,  // Manage Roles
-            9,  // Manage Permissions
-            10,  // Manage API Keys
+        // Define the permissions slugs for each role
+        $rolePermissions = [
+            'admin' => [
+                'user-manage', 'user-create', 'user-delete', 'user-update', 'user-view',
+                'user-activate', 'user-deactivate', 'user-reset-password',
+                'role-create', 'role-delete', 'role-update', 'role-view', 'role-assign', 'role-revoke',
+                'permission-create', 'permission-delete', 'permission-update', 'permission-view', 'permission-assign', 'permission-revoke',
+                'api-key-manage', 'api-key-create', 'api-key-delete', 'api-key-view',
+                'post-create', 'post-delete', 'post-update', 'post-read', 'post-publish', 'post-sync', 'post-archive', 'post-restore',
+            ],
+            'manager' => [
+                'user-delete', 'user-view', 'user-update',
+                'role-update', 'role-view', 'role-assign',
+                'permission-update', 'permission-view', 'permission-assign',
+                'api-key-manage', 'api-key-create', 'api-key-delete', 'post-read', 'post-update', 'post-archive',
+            ],
+            'editor' => [
+                'user-view', 'user-update',
+                'role-view',
+                'permission-view', 'permission-assign',
+                'post-create', 'post-update', 'post-read', 'post-publish', 'post-sync',
+            ],
+            'guest' => [
+                'post-read',
+            ],
         ];
 
-        $managerPermissions = [
-            2,  // Delete
-            3,  // Read
-            4,  // Update
-            5,  // Approve
-        ];
+        // Iterate over each role and assign corresponding permissions
+        foreach ($rolePermissions as $roleSlug => $permissions) {
+            // Get role ID by slug
+            $role = DB::table('roles')->where('slug', $roleSlug)->first();
 
-        $editorPermissions = [
-            1,  // Create
-            3,  // Read
-            4,  // Update
-            5,  // Approve
-        ];
+            if ($role) {
+                $roleId = $role->id;
 
-        $guestPermissions = [
-            3,  // Read
-        ];
+                // Remove old permissions for this role
+                DB::table('permission_role')->where('role_id', $roleId)->delete();
 
-        // Admin Role
-        DB::table('permission_role')->where('role_id', 1)->delete(); // Remove old permissions for Admin
-        DB::table('permission_role')->insert(
-            array_map(function ($permissionId) {
-                return ['role_id' => 1, 'permission_id' => $permissionId];
-            }, $adminPermissions)
-        );
+                // Fetch permission IDs based on slugs
+                $permissionIds = DB::table('permissions')
+                    ->whereIn('slug', $permissions)
+                    ->pluck('id');
 
-        // Manager Role
-        DB::table('permission_role')->where('role_id', 2)->delete(); // Remove old permissions for Manager
-        DB::table('permission_role')->insert(
-            array_map(function ($permissionId) {
-                return ['role_id' => 2, 'permission_id' => $permissionId];
-            }, $managerPermissions)
-        );
+                // Attach new permissions to this role
+                $permissionsToAttach = $permissionIds->map(function ($permissionId) use ($roleId) {
+                    return ['role_id' => $roleId, 'permission_id' => $permissionId];
+                })->toArray();
 
-        // Editor Role
-        DB::table('permission_role')->where('role_id', 4)->delete(); // Remove old permissions for Editor
-        DB::table('permission_role')->insert(
-            array_map(function ($permissionId) {
-                return ['role_id' => 4, 'permission_id' => $permissionId];
-            }, $editorPermissions)
-        );
-
-        // Guest Role
-        DB::table('permission_role')->where('role_id', 3)->delete(); // Remove old permissions for Guest
-        DB::table('permission_role')->insert(
-            array_map(function ($permissionId) {
-                return ['role_id' => 3, 'permission_id' => $permissionId];
-            }, $guestPermissions)
-        );
+                // Insert new permissions for the role
+                DB::table('permission_role')->insert($permissionsToAttach);
+            }
+        }
     }
 }

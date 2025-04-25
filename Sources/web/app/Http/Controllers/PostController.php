@@ -34,6 +34,7 @@ class PostController extends Controller
         $data = $request->validate([
             'title'=>'required|max:255',
             'content'=>'required',
+            'external_id'=>'required',
             'user_id'=>'required|numeric'
         ]);
         $this->postRepository->create($data);

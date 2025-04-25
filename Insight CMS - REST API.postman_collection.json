@@ -7,6 +7,48 @@
 	},
 	"item": [
 		{
+			"name": "Create NewsAPI Key",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "api_key",
+							"value": "Share",
+							"type": "default"
+						},
+						{
+							"key": "service_name",
+							"value": "share",
+							"type": "default"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://web.test/api/v1/api-key",
+					"protocol": "http",
+					"host": [
+						"web",
+						"test"
+					],
+					"path": [
+						"api",
+						"v1",
+						"api-key"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Register",
 			"request": {
 				"method": "POST",
@@ -354,17 +396,10 @@
 			"response": []
 		},
 		{
-			"name": "Show Role With Permissions",
+			"name": "Show Role Without Permissions",
 			"request": {
 				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjcyOTM4MDUzLCJleHAiOjE2NzI5NDE2NTMsIm5iZiI6MTY3MjkzODA1MywianRpIjoiUkk2M092RzR4M1FyOUNSTyIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.RW3MM9ZXmCcT7AH5tRY0UTnNK8sfoWAA3jn9XIp8qbw",
-							"type": "string"
-						}
-					]
+					"type": "noauth"
 				},
 				"method": "GET",
 				"header": [
@@ -394,40 +429,41 @@
 		{
 			"name": "Add Post",
 			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjcyNzQ1NDMxLCJleHAiOjE2NzI3NDkwMzEsIm5iZiI6MTY3Mjc0NTQzMSwianRpIjoiVnBBdDFJVHY2UXlpNmdKZSIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.otY7vuDFfEU1IgKjRnaCJxKIVETO4e1_00RTNIcpkcg",
-							"type": "string"
-						}
-					]
-				},
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
 				"body": {
 					"mode": "formdata",
 					"formdata": [
 						{
 							"key": "title",
-							"value": "post 1",
+							"value": "my blog title",
 							"type": "default"
 						},
 						{
 							"key": "content",
-							"value": "rerererer  ere",
+							"value": "Content goes here",
 							"type": "default"
+						},
+						{
+							"key": "external_id",
+							"value": "https://domain.com/page1",
+							"type": "text"
 						},
 						{
 							"key": "user_id",
 							"value": "1",
-							"type": "default"
+							"type": "text"
 						}
 					]
 				},
 				"url": {
-					"raw": "http://web.test/api/post",
+					"raw": "http://web.test/api/v1/posts",
 					"protocol": "http",
 					"host": [
 						"web",
@@ -435,57 +471,8 @@
 					],
 					"path": [
 						"api",
-						"post"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create NewsAPI Key",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjcyNzQ1NDMxLCJleHAiOjE2NzI3NDkwMzEsIm5iZiI6MTY3Mjc0NTQzMSwianRpIjoiVnBBdDFJVHY2UXlpNmdKZSIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.otY7vuDFfEU1IgKjRnaCJxKIVETO4e1_00RTNIcpkcg",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "title",
-							"value": "post 1",
-							"type": "default"
-						},
-						{
-							"key": "content",
-							"value": "rerererer  ere",
-							"type": "default"
-						},
-						{
-							"key": "user_id",
-							"value": "1",
-							"type": "default"
-						}
-					]
-				},
-				"url": {
-					"raw": "http://web.test/api/post",
-					"protocol": "http",
-					"host": [
-						"web",
-						"test"
-					],
-					"path": [
-						"api",
-						"post"
+						"v1",
+						"posts"
 					]
 				}
 			},
@@ -515,17 +502,7 @@
 		{
 			"name": "Delete Post",
 			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNjcyOTM0MTU3LCJleHAiOjE2NzI5Mzc3NTcsIm5iZiI6MTY3MjkzNDE1NywianRpIjoiSXlMcnVqUDNSWkpGWU9VMSIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.T1MXRdwDyU3fD9HhfbEP9qwYAZzvtBxKg4tXfBwURCI",
-							"type": "string"
-						}
-					]
-				},
-				"method": "DELETE",
+				"method": "POST",
 				"header": [
 					{
 						"key": "Accept",
@@ -533,8 +510,33 @@
 						"type": "default"
 					}
 				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "my blog title",
+							"type": "default"
+						},
+						{
+							"key": "content",
+							"value": "Content goes here",
+							"type": "default"
+						},
+						{
+							"key": "external_id",
+							"value": "https://domain.com/page1",
+							"type": "text"
+						},
+						{
+							"key": "user_id",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
 				"url": {
-					"raw": "http://web.test/api/v1/posts/21",
+					"raw": "http://web.test/api/v1/posts",
 					"protocol": "http",
 					"host": [
 						"web",
@@ -543,8 +545,7 @@
 					"path": [
 						"api",
 						"v1",
-						"posts",
-						"21"
+						"posts"
 					]
 				}
 			},
@@ -572,10 +573,41 @@
 			"response": []
 		},
 		{
-			"name": "News Sync",
+			"name": "NewSync",
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "my blog title",
+							"type": "default"
+						},
+						{
+							"key": "content",
+							"value": "Content goes here",
+							"type": "default"
+						},
+						{
+							"key": "external_id",
+							"value": "https://domain.com/page1",
+							"type": "text"
+						},
+						{
+							"key": "user_id",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
 				"url": {
 					"raw": "http://web.test/api/v1/sync-news",
 					"protocol": "http",
@@ -593,10 +625,41 @@
 			"response": []
 		},
 		{
-			"name": "News Sync via CLI",
+			"name": "NewSync via CLI",
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "my blog title",
+							"type": "default"
+						},
+						{
+							"key": "content",
+							"value": "Content goes here",
+							"type": "default"
+						},
+						{
+							"key": "external_id",
+							"value": "https://domain.com/page1",
+							"type": "text"
+						},
+						{
+							"key": "user_id",
+							"value": "1",
+							"type": "text"
+						}
+					]
+				},
 				"url": {
 					"raw": "http://web.test/api/v1/cli-sync-news",
 					"protocol": "http",
@@ -649,7 +712,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vd2ViLnRlc3QvYXBpL3YxL2F1dGgvbG9naW4iLCJpYXQiOjE3NDU1NjkwMDYsImV4cCI6MTc0NTU3MjYwNiwibmJmIjoxNzQ1NTY5MDA2LCJqdGkiOiJ6emo4aVA3TmxVV3cwRjRmIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.3ASRQpLsbDjdRBTLcy0KoH297GlBS8ERqo6YtOIKjo0",
+				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vd2ViLnRlc3QvYXBpL3YxL2F1dGgvbG9naW4iLCJpYXQiOjE3NDU1ODY4NDEsImV4cCI6MTc0NTU5MDQ0MSwibmJmIjoxNzQ1NTg2ODQxLCJqdGkiOiI5RnhadmFjSXFEVlNDeXQ3Iiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.r81jXCcnH50AbRWNSRZP6TdFIY6PG9yCmbEjkwe5DYo",
 				"type": "string"
 			}
 		]

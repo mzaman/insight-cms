@@ -59,7 +59,8 @@ class PostApiService extends \App\Services\BaseApiService implements PostApiServ
 
         try {
 
-            // Assuming you've retrieved the encrypted API key from the database
+            // $apiKey = \Config::get('news.api_key');
+            // Retrieve the encrypted API key from the database
             $encryptedApiKey = ApiKey::latest()->first()->api_key;
 
             // Decrypt the API key
@@ -68,7 +69,6 @@ class PostApiService extends \App\Services\BaseApiService implements PostApiServ
             // Use GuzzleHttp client to fetch data from NewsAPI
             $client = new Client();
             $apiUrl = \Config::get('news.api_base_url') . '/' . \Config::get('news.api_version') . '/top-headlines';
-            // $apiKey = \Config::get('news.api_key');
 
             $response = $client->get($apiUrl, [
                 'query' => ['apiKey' => $apiKey, 'country' => 'us']
@@ -102,7 +102,7 @@ class PostApiService extends \App\Services\BaseApiService implements PostApiServ
             return $this->setResult($posts)
                 ->setCode(200)
                 ->setStatus(true)
-                ->setMessage('Posts fetched and stored successfully.')
+                ->setMessage('Posts fetched and cached successfully.')
                 ->toJson();
 
         } catch (Exception $e) {
