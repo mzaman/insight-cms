@@ -27,4 +27,11 @@ class UserApiRepository extends \App\Repositories\BaseRepository implements User
     // Additional methods specific to UserApiRepository
     // New methods for the repository operations
 
+    public function get() {
+        $users = $this->model->where('deleted_at', '!=', null)->get();
+        dd($users);
+        return json_encode( $users );
+        return $users;
+    }
+
 }
