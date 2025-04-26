@@ -12,16 +12,28 @@ This project provides a streamlined Docker-based development environment for Lar
 ## Project Structure
 
 ```
-├── ARCHITECTURE.md
 ├── README.md
+├── ARCHITECTURE.md
+├── SCRIPTS.md
+├── Insight CMS - REST API (v1).postman_collection.json
 ├── cmd
-│   ├── artisan.sh
-│   ├── bash.sh
-│   ├── down.sh
-│   ├── rebuild.sh
-│   ├── restart.sh
-│   ├── stop.sh
-│   └── up.sh
+│   ├── art
+│   ├── artisan
+│   ├── artisan_output.log
+│   ├── bash
+│   ├── bash_output.log
+│   ├── clear
+│   ├── composer
+│   ├── container
+│   ├── down
+│   ├── exec
+│   ├── nginx_output.log
+│   ├── rebuild
+│   ├── restart
+│   ├── stop
+│   ├── up
+│   ├── workspace
+│   └── workspace_output.log
 ├── setup
 │   ├── docker
 │   │   ├── docker-compose.local.yml
@@ -40,8 +52,7 @@ This project provides a streamlined Docker-based development environment for Lar
 └── Sources
     ├── public
     │   └── index.html
-    └── web
-        ├── app
+    └── web/app
 ```
 
 
@@ -92,7 +103,7 @@ Add the following line:
 | `down`    | Stops and removes containers         | `./down`                    |
 | `restart` | Restarts containers                  | `./restart`                 |
 | `rebuild` | Rebuilds containers with no cache    | `./rebuild`                 |
-| `artisan` | Runs Laravel Artisan in container    | `./art optimize:clear`  |
+| `art` | Runs Laravel Artisan in container    | `./art optimize:clear`  |
 | `artisan` | Runs Laravel Artisan in container    | `./artisan optimize:clear`  |
 
 Make them executable:
@@ -109,7 +120,7 @@ Enter cmd directory (`cd cmd`) and run `./up` to start the containers.:
 Cache Clearing
 
 ```bash
-./artisan optimize:clear
+./art optimize:clear
 ```
 
 Cache Clearing
@@ -117,6 +128,8 @@ Cache Clearing
 ```bash
 ./bash composer install
 ```
+
+Please see [Scripts File](SCRIPTS.md) for more information.
 
 Docker yaml file location: `Setup/docker/docker-compose.local.yml`
 
