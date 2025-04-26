@@ -15,25 +15,20 @@ This project provides a streamlined Docker-based development environment for Lar
 ├── README.md
 ├── ARCHITECTURE.md
 ├── SCRIPTS.md
-├── Insight CMS - REST API (v1).postman_collection.json
 ├── cmd
 │   ├── art
 │   ├── artisan
-│   ├── artisan_output.log
 │   ├── bash
-│   ├── bash_output.log
 │   ├── clear
 │   ├── composer
 │   ├── container
 │   ├── down
 │   ├── exec
-│   ├── nginx_output.log
 │   ├── rebuild
 │   ├── restart
 │   ├── stop
 │   ├── up
 │   ├── workspace
-│   └── workspace_output.log
 ├── setup
 │   ├── docker
 │   │   ├── docker-compose.local.yml
@@ -156,8 +151,6 @@ Swagger source file location: `Setup/swagger/swagger.yaml`
 Swagger Editor:
 http://localhost:5151
 
-Postman colletion file: `./Insight CMS - REST API (v1).postman_collection.json`
-
 ## Project Installation
 
 ## Environment Variables
@@ -206,6 +199,25 @@ By default, there are three types of users:
 - **Manager**: Has the rights to delete and read posts.
 - **Guest**: Can only read posts.
 
+Urer's roles
+  'admin' => Admin role can perform almost all actions.,
+  'manager' => [
+      'user-delete', 'user-view', 'user-update',
+      'role-update', 'role-view', 'role-assign',
+      'permission-update', 'permission-view', 'permission-assign',
+      'api-key-manage', 'api-key-create', 'api-key-delete', 'post-read', 'post-update', 'post-archive',
+  ],
+  'editor' => [
+      'user-view', 'user-update',
+      'role-view',
+      'permission-view', 'permission-assign',
+      'post-create', 'post-update', 'post-read', 'post-publish', 'post-sync',
+  ],
+  'guest' => [
+      'post-read',
+  ],
+
+
 ## User Credentials
 
 Here are the default credentials for each user:
@@ -226,11 +238,16 @@ Here are the default credentials for each user:
   - **Email**: `guest@mail.com`
   - **Password**: `password`
 
+## API Test Form
+URL: http://localhost:5555
+
 ## Postman Instructions
+
+Postman colletion file: `./Insight CMS - REST API (v1).postman_collection.json`
 
 To use the Postman collection, follow these steps:
 
-1. Import the **`roles-permissions.postman_collection.json`** file into Postman.
+1. Import the **`./Insight CMS - REST API (v1).postman_collection.json`** file into Postman.
 2. After logging in or registering, save the **Bearer Token** in the `Authorization` section. You can use this token for subsequent requests.
 
 
