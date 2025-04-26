@@ -31,7 +31,7 @@ This command clears cached configuration, routes, and views, improving Laravel's
 
 ### `bash`
 **Usage**: `./bash <container_name> [command]`  
-**Description**: This script is used to execute any bash command inside the specified container. If no command is provided, it opens an interactive bash shell inside the container (e.g., `workspace`).  
+**Description**: This script allows you to run any bash command inside a specified container (e.g., `workspace`). It can execute multiple arguments in the application root inside the container.  
 **Example**:  
 ```bash
 ./bash workspace "composer install"
@@ -42,24 +42,24 @@ If no command is provided:
 ```bash
 ./bash workspace
 ```
-This will open a bash shell inside the `workspace` container.
+This will open a bash shell inside the `workspace` container, allowing you to run multiple commands interactively.
 
 ---
 
 ### `clear`
-**Usage**: `./clear <command>`  
-**Description**: This script is used to execute any bash command (like `ls`, `pwd`, or others) inside a Docker container. It's useful for checking the environment or clearing terminal output.  
+**Usage**: `./clear`  
+**Description**: This script is used to run `php artisan optimize:clear` inside the Docker container. It clears all application caches, including configuration, routes, and views. No additional arguments are needed.  
 **Example**:  
 ```bash
-./clear ls -l
+./clear
 ```
-This runs the `ls -l` command to list files in the current directory inside the container.
+This runs `php artisan optimize:clear`, clearing all application caches in the container.
 
 ---
 
 ### `composer`
 **Usage**: `./composer <command>`  
-**Description**: This script runs Composer commands inside the Docker container's `workspace` environment. It can execute all Composer commands like `composer install`, `composer update`, and more.  
+**Description**: This script runs Composer commands inside the Docker container's `workspace` environment. It can execute all Composer commands like `composer install`, `composer update`, and others.  
 **Example**:  
 ```bash
 ./composer install
@@ -76,12 +76,35 @@ This command runs `composer update` to update the PHP dependencies.
 
 ### `container`
 **Usage**: `./container <container_name> [command]`  
-**Description**: Similar to the `bash` and `exec` scripts, this script allows you to run any command inside the specified Docker container, not limited to Artisan or Composer commands.  
+**Description**: This script allows you to enter a specified Docker container. If no command is provided, it simply enters the container. If a command is provided as the second argument, it will execute it inside the specified container.  
 **Example**:  
 ```bash
-./container workspace "php artisan migrate"
+./container workspace
 ```
-This runs `php artisan migrate` inside the `workspace` container to run database migrations.
+This will enter the `workspace` container and leave you with an interactive shell.
+
+Another example:  
+```bash
+./container nginx "nginx -t"
+```
+This will enter the `nginx` container and run the `nginx -t` command to test the Nginx configuration.
+
+---
+
+### `exec`
+**Usage**: `./exec <container_name> [command]`  
+**Description**: This script allows you to enter the specified container and run any command within it. It supports multiple arguments after the container name.  
+**Example**:  
+```bash
+./exec workspace php artisan migrate
+```
+This runs `php artisan migrate` inside the `workspace` container to execute migrations.
+
+Another example:  
+```bash
+./exec nginx nginx -t
+```
+This runs `nginx -t` inside the `nginx` container to test the Nginx configuration.
 
 ---
 
@@ -92,18 +115,7 @@ This runs `php artisan migrate` inside the `workspace` container to run database
 ```bash
 ./down
 ```
-This stops and removes all containers, networks, and volumes created by `docker-compose`.
-
----
-
-### `exec`
-**Usage**: `./exec <container_name> <command>`  
-**Description**: This script allows you to execute a command inside a specified running Docker container. It uses `docker-compose exec` to run the command inside the container.  
-**Example**:  
-```bash
-./exec workspace "php artisan migrate"
-```
-This will run `php artisan migrate` inside the `workspace` container to execute migrations.
+This command stops and removes all containers, networks, and volumes created by `docker-compose`.
 
 ---
 
@@ -120,7 +132,7 @@ This command rebuilds and restarts the Docker containers with the latest changes
 
 ### `restart`
 **Usage**: `./restart`  
-**Description**: This script restarts the Docker containers using `docker-compose restart`. It is used when you need to restart containers without bringing them down completely.  
+**Description**: This script restarts the Docker containers using `docker-compose restart`. It is used when you need to restart containers without fully bringing them down.  
 **Example**:  
 ```bash
 ./restart
@@ -131,7 +143,7 @@ This restarts all the containers defined in `docker-compose.yml`.
 
 ### `stop`
 **Usage**: `./stop`  
-**Description**: This script stops the running Docker containers using `docker-compose stop`. It allows for a graceful stop without removing the containers.  
+**Description**: This script stops the running Docker containers using `docker-compose stop`. It halts the containers without removing them, allowing you to resume work later.  
 **Example**:  
 ```bash
 ./stop
@@ -142,12 +154,12 @@ This stops all the running containers without removing them.
 
 ### `up`
 **Usage**: `./up`  
-**Description**: This script starts or restarts the Docker containers by running `docker-compose up`. It is used to bring the containers up based on the configuration in `docker-compose.yml`.  
+**Description**: This script starts or restarts the Docker containers by running `docker-compose up`. It is used to bring up all the containers defined in `docker-compose.yml`.  
 **Example**:  
 ```bash
 ./up
 ```
-This command starts or restarts all the containers as defined in `docker-compose.yml`.
+This command starts or restarts all the containers, including `workspace` and other services defined in the `docker-compose.yml` file.
 
 ---
 
@@ -158,22 +170,14 @@ This command starts or restarts all the containers as defined in `docker-compose
 | `art`       | Executes Artisan commands inside the container.                                                  | `./art migrate --seed`                               |
 | `artisan`   | Executes Artisan commands inside the container.                                                  | `./artisan optimize:clear`                           |
 | `bash`      | Runs bash commands or opens a bash shell inside the container.                                    | `./bash composer install`                            |
-| `clear`     | Executes any bash command inside the container.                                                  | `./clear ls -l`                                      |
+| `clear`     | Runs `php artisan optimize:clear` to clear application caches inside the container.               | `./clear`                                            |
 | `composer`  | Executes Composer commands inside the container (e.g., `install`, `update`).                      | `./composer install`                                 |
-| `container` | Executes commands inside the container (similar to bash and exec scripts).                        | `./container php artisan migrate`                    |
+| `container` | Enters a Docker container and runs an optional command inside it.                                 | `./container workspace`                              |
+| `exec`      | Enters a Docker container and executes a specified command inside it.                             | `./exec workspace php artisan migrate`               |
 | `down`      | Stops and removes the Docker containers using `docker-compose down`.                             | `./down`                                             |
-| `exec`      | Executes a specified command inside a specified container.                                       | `./exec workspace php artisan migrate`               |
 | `rebuild`   | Rebuilds the Docker containers using `docker-compose up --build`.                                 | `./rebuild`                                          |
 | `restart`   | Restarts the Docker containers using `docker-compose restart`.                                   | `./restart`                                          |
 | `stop`      | Stops the Docker containers using `docker-compose stop`.                                         | `./stop`                                             |
 | `up`        | Starts or restarts the Docker containers using `docker-compose up`.                              | `./up`                                               |
 
 ---
-
-# How to Download
-
-You can download the markdown file from the link below:
-
-[Download Script Usage Descriptions](sandbox:/mnt/data/script_usage_descriptions.md)
-
-Let me know if you need further modifications!
