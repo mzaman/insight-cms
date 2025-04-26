@@ -54,7 +54,7 @@ This will open a bash shell inside the `workspace` container, allowing you to ru
 ```bash
 ./clear
 ```
-This runs `php artisan optimize:clear`, clearing all application caches in the container.
+This runs `php artisan optimize:clear`, clearing all application caches in the container. As a result, it will rebuild the configuration cache, config cache, route cache, and view cache for below operations.
 
 ---
 
@@ -84,12 +84,6 @@ This command runs `composer update` to update the PHP dependencies.
 ```
 This will enter the `workspace` container and leave you with an interactive shell.
 
-Another example:  
-```bash
-./container nginx "nginx -t"
-```
-This will enter the `nginx` container and run the `nginx -t` command to test the Nginx configuration.
-
 ---
 
 ### `exec`
@@ -97,9 +91,9 @@ This will enter the `nginx` container and run the `nginx -t` command to test the
 **Description**: This script allows you to enter the specified container and run any command within it. It supports multiple arguments after the container name.  
 **Example**:  
 ```bash
-./exec workspace php artisan migrate
+./exec nginx
 ```
-This runs `php artisan migrate` inside the `workspace` container to execute migrations.
+This will enter the `nginx` container and leave you with an interactive shell.
 
 Another example:  
 ```bash
