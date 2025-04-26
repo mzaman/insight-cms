@@ -161,9 +161,9 @@ Postman colletion file: `./Insight CMS - REST API (v1).postman_collection.json`
 ## Project Installation
 
 ## Environment Variables
-Generate a JWT Secret (Important)
+Initially its pre-configured with JWT secret that should work. but generate a JWT Secret if there is any issue with JWT.
 ```bash
-php artisan jwt:secret
+cd cmd && ./art jwt:secret
 ```
  Check Your .env File
 After running the jwt:secret command, ensure that the .env file contains the following line:
@@ -182,11 +182,21 @@ To use a new API key, send a POST request to `/api/v1/api-key` with the required
 API endpoint: http://localhost:5555/#/default/post_api_v1_api_key
 
 
-To populate the database with dummy data, run the following command:
+To populate the database with dummy data, run the following command from cmd directory:
 
 ```bash
-php artisan migrate:refresh --seed
+./art migrate:refresh --seed
 ```
+
+To clear cached news, run the following command from cmd directory:
+
+```bash
+./clear
+```
+
+NewsAPI (api/v1/sync-news) endpoint is used to fetch news from NewsAPI and store it in the database. After first fetch, the API will cached the news for 1 hour. The message on API response will show that the news is being fetched from the cache for the specified time. After that it will fetch the news from the API again and store it in the database and cache it for 1 hour. API URL: http://localhost:5555/#/default/post_api_v1_sync_news
+
+There is endpoint that's prepared to be triggered by a cron job that runs every 1 hour. For testing purposes, you can run it manually by sending a POST request to `api/v1/cli-sync-news`. API URL: http://web.test/api/v1/cli-sync-news
 
 ## Description
 
@@ -207,6 +217,10 @@ Here are the default credentials for each user:
 - **Manager**:
   - **Email**: `manager@mail.com`
   - **Password**: `password`
+  
+- **Editor**:
+  - **Email**: `editor@mail.com`
+  - **Password**: `password`
 
 - **Guest**:
   - **Email**: `guest@mail.com`
@@ -217,7 +231,7 @@ Here are the default credentials for each user:
 To use the Postman collection, follow these steps:
 
 1. Import the **`roles-permissions.postman_collection.json`** file into Postman.
-2. After logging in or registering, save the **Bearer Token** in the `Authorization` section of the `roles-permissions` request.
+2. After logging in or registering, save the **Bearer Token** in the `Authorization` section. You can use this token for subsequent requests.
 
 
 
