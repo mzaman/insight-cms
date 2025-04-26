@@ -86,29 +86,36 @@ Add the following line:
 
 | Script    | Description                          | Example Usage                      |
 |-----------|--------------------------------------|------------------------------------|
-| `bash`    | Run command in application root      | `./cmd/bash.sh`                    |
-| `up`      | Starts Docker containers             | `./cmd/up.sh`                      |
-| `stop`    | Stops Docker containers              | `./cmd/stop.sh`                    |
-| `down`    | Stops and removes containers         | `./cmd/down.sh`                    |
-| `restart` | Restarts containers                  | `./cmd/restart.sh`                 |
-| `rebuild` | Rebuilds containers with no cache    | `./cmd/rebuild.sh`                 |
-| `artisan` | Runs Laravel Artisan in container    | `./cmd/artisan.sh optimize:clear`  |
+| `workspace` | Enters workspace containers                   | `./workspace`                    |
+| `up`      | Starts Docker containers             | `./up`                      |
+| `stop`    | Stops Docker containers              | `./stop`                    |
+| `down`    | Stops and removes containers         | `./down`                    |
+| `restart` | Restarts containers                  | `./restart`                 |
+| `rebuild` | Rebuilds containers with no cache    | `./rebuild`                 |
+| `artisan` | Runs Laravel Artisan in container    | `./art optimize:clear`  |
+| `artisan` | Runs Laravel Artisan in container    | `./artisan optimize:clear`  |
 
 Make them executable:
 ```bash
 chmod +x cmd/*
 ```
 
+## Usage
+Enter cmd directory (`cd cmd`) and run `./up` to start the containers.:
+1. Run `./up` to start the containers.
+2. Run `./workspace` to enter the workspace container where softwares are running.
+3. Run `./workspace` and then enter `cd /var/www/web` or simply `cd web` to change directory. It will enter you can run all Composer and Artisan commands.
+
 Cache Clearing
 
 ```bash
-./cmd/artisan.sh optimize:clear
+./artisan optimize:clear
 ```
 
 Cache Clearing
 
 ```bash
-./cmd/bash.sh composer install
+./bash composer install
 ```
 
 Docker yaml file location: `Setup/docker/docker-compose.local.yml`
@@ -160,6 +167,7 @@ Get a new API key from NewsAPI URL: https://newsapi.org
 
 To use a new API key, send a POST request to `/api/v1/api-key` with the required `service_name` and `api_key`. The API key will be securely stored and returned in the response.
 API endpoint: http://localhost:5555/#/default/post_api_v1_api_key
+
 
 To populate the database with dummy data, run the following command:
 
