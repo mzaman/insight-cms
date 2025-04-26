@@ -30,7 +30,7 @@ This project provides a streamlined Docker-based development environment for Lar
 │   ├── stop
 │   ├── up
 │   ├── workspace
-├── setup
+├── Setup
 │   ├── docker
 │   │   ├── docker-compose.local.yml
 │   │   ├── mysql
