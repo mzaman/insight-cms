@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Domains\V1\Auth\Http\Controllers\Api\AuthApiController;
+use App\Domains\V1\Auth\Http\Controllers\Api\UserApiController;
 use App\Domains\V1\News\Http\Controllers\Api\PostApiController;
 use App\Domains\V1\Token\Http\Controllers\Api\ApiKeyApiController;
 use App\Http\Controllers\PermissionController;
@@ -33,7 +34,6 @@ Route::prefix('v1')->group(function () {
         Route::post('logout', 'logout')->name('auth.logout');
         Route::post('refresh', 'refresh')->name('auth.refresh');
     });
-
 
     Route::middleware('auth:api')->group(function () {
         // API key routes
@@ -89,9 +89,12 @@ Route::prefix('v1')->group(function () {
         
         // News sync routes
         Route::middleware(['throttle:5,1', 'capable:post-create'])
-            ->post('/sync-news', [PostApiController::class, 'sync'])
-            ->name('post.sync');
+        ->post('/sync-news', [PostApiController::class, 'sync'])
+        ->name('post.sync');
 
-        Route::post('cli-sync-news', [PostApiController::class, 'syncNews']);
+        Route::middleware('capable:post-create')
+            ->post('cli-sync-news', [PostApiController::class, 'syncNews'])
+            ->name('post.cli.sync');
+
     });
 });

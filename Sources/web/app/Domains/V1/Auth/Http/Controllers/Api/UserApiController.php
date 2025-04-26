@@ -7,7 +7,9 @@ use App\Domains\V1\Auth\Http\Requests\Api\User\UpdateUserRequest;
 use App\Domains\V1\Auth\Models\User;
 use App\Domains\V1\Auth\Services\Api\UserApiService;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
 
 class UserApiController extends Controller
@@ -23,8 +25,6 @@ class UserApiController extends Controller
     {
         // Inject the service dependency into the controller
         $this->service = $service;
-        
-        $this->authorizeResource(User::class, 'user');
     }
 
     /**
@@ -35,8 +35,15 @@ class UserApiController extends Controller
     public function index()
     {
         // Retrieve and return all resources
+        $response = $this->service->all();
+        // dd($response);
         return $this->service->all();
     }
+    // public function index(): JsonResponse
+    // {
+    //     // Retrieve and return all resources
+    //     return $this->service->all();
+    // }
 
     /**
      * Store a newly created resource in storage.
