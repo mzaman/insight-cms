@@ -32,9 +32,10 @@ This command clears cached configuration, routes, and views, improving Laravel's
 ### `bash`
 **Usage**: `./bash <container_name> [command]`  
 **Description**: This script allows you to run any bash command inside a specified container (e.g., `workspace`). It can execute multiple arguments in the application root inside the container.  
-**Example**:  
+**Examples**:  
 ```bash
-./bash workspace "composer install"
+./bash ls -la
+./bash composer install
 ```
 This will run `composer install` inside the `workspace` container to install PHP dependencies.
 
