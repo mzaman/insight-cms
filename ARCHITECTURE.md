@@ -6,7 +6,7 @@
 In this project, I utilized two custom Laravel packages that I have developed to streamline the development process and create a highly scalable and maintainable application architecture. These packages are:
 
 1. [Laravel Simple Module](https://github.com/mzaman/laravel-simple-module)
-2. [Laravel Boilerplate](https://github.com/mzaman/laravel-boilerplate)
+2. [Laravel Dockyard](https://github.com/mzaman/laravel-dockyard)
 
 These packages help organize the application into modular components, manage environments with Docker, and ensure consistency and scalability throughout the development process.
 
@@ -193,11 +193,11 @@ app/ - Laravel application code
 
 ---
 
-## Laravel Boilerplate
+## Laravel Dockyard
 
 ### Features
 
-The **Laravel Boilerplate** package provides a pre-configured environment for Laravel applications. It ensures that developers can quickly set up their development environment, including Docker configurations, and get started without having to deal with the setup complexity.
+The **Laravel Dockyard** package provides a pre-configured environment for Laravel applications. It ensures that developers can quickly set up their development environment, including Docker configurations, and get started without having to deal with the setup complexity.
 
 Key features include:
 
@@ -207,7 +207,7 @@ Key features include:
   
 - **Pre-configured for Laravel**: The boilerplate is specifically tailored for Laravel, ensuring that all the necessary configurations are set up for optimal performance with minimal setup.
 
-### Why Use Laravel Boilerplate?
+### Why Use Laravel Dockyard?
 
 - **Fast Setup**: Developers can get started quickly by using the pre-configured Docker environment and environment settings.
 - **Consistency**: It ensures a consistent setup across multiple development environments, making collaboration easier and preventing "it works on my machine" issues.
@@ -217,10 +217,10 @@ Key features include:
 
 ## Conclusion
 
-These two packages—**Laravel Simple Module** and **Laravel Boilerplate**—are designed to improve development workflows by providing a structured and scalable architecture for Laravel applications. With the modularity of the Simple Module package and the pre-configured environment provided by the Boilerplate package, developers can focus more on writing business logic and less on environment setup or project organization.
+These two packages—**Laravel Simple Module** and **Laravel Dockyard**—are designed to improve development workflows by providing a structured and scalable architecture for Laravel applications. With the modularity of the Simple Module package and the pre-configured environment provided by the Boilerplate package, developers can focus more on writing business logic and less on environment setup or project organization.
 
 For more details, you can explore the following repositories:
 
 - [Laravel Simple Module](https://github.com/mzaman/laravel-simple-module)
-- [Laravel Boilerplate](https://github.com/mzaman/laravel-boilerplate)
+- [Laravel Dockyard](https://github.com/mzaman/laravel-boilerplate)
 
