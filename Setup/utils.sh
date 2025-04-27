@@ -19,8 +19,8 @@ load_variables() {
     LARAVEL_VERSION="${LARAVEL_VERSION:-$DEFAULT_LARAVEL_VERSION}"
     DOCKER_SERVICES=("${DOCKER_SERVICES[@]:-${DEFAULT_DOCKER_SERVICES[@]}}")
 
-    LARADOCK_REPO="https://github.com/laradock/laradock.git"
-    LARADOCK_BRANCH="master"
+    LARADOCK_REPO="git@github.com:mzaman/laradock.git"
+    LARADOCK_BRANCH="develop"
 
     PRE_INSTALL_LARAVEL_COMMANDS=(
         "find . -type f -exec chmod 644 {} \;"
@@ -96,6 +96,7 @@ copy_custom_configs() {
     print_style "🛠 Copying custom docker configurations..." "info"
     cp -r "$LOCAL_SCRIPT_PATH_HOST/docker/mysql/Dockerfile" "$LOCAL_DOCKER_PATH_HOST/mysql/"
     cp -r "$LOCAL_SCRIPT_PATH_HOST/docker/nginx/sites/"* "$LOCAL_DOCKER_PATH_HOST/nginx/sites/"
+    # cp -r "$LOCAL_SCRIPT_PATH_HOST/docker/workspace/Dockerfile" "$LOCAL_DOCKER_PATH_HOST/workspace/Dockerfile"
     cp -r "$LOCAL_SCRIPT_PATH_HOST/docker/workspace/crontab/laradock" "$LOCAL_DOCKER_PATH_HOST/workspace/crontab/"
     cp -r "$LOCAL_SCRIPT_PATH_HOST/docker/.env.local.example" "$LOCAL_DOCKER_PATH_HOST/.env"
     cp -r "$LOCAL_SCRIPT_PATH_HOST/docker/docker-compose.local.yml" "$LOCAL_DOCKER_PATH_HOST/docker-compose.yml"
