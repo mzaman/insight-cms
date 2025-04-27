@@ -69,9 +69,7 @@ cd insight-cms
 Run the setup script:
 
 ```bash
-cd Setup
-chmod +x install.sh
-./install.sh
+chmod +x Setup/install.sh && ./Setup/install.sh
 ```
 
 ### 4. Edit the `/etc/hosts` file
