@@ -7,14 +7,14 @@ use App\Domains\Auth\Events\Role\RoleDeleted;
 use App\Domains\Auth\Events\Role\RoleUpdated;
 use App\Domains\Auth\Models\Role;
 use App\Exceptions\GeneralException;
-use App\Services\BaseService;
+use App\Services\BasicService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
 /**
  * Class RoleService.
  */
-class RoleService extends BaseService
+class RoleService extends BasicService
 {
     /**
      * RoleService constructor.

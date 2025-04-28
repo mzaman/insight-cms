@@ -10,7 +10,7 @@ use App\Domains\Auth\Events\User\UserStatusChanged;
 use App\Domains\Auth\Events\User\UserUpdated;
 use App\Domains\Auth\Models\User;
 use App\Exceptions\GeneralException;
-use App\Services\BaseService;
+use App\Services\BasicService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Hash;
 /**
  * Class UserService.
  */
-class UserService extends BaseService
+class UserService extends BasicService
 {
     /**
      * UserService constructor.
