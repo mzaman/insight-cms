@@ -37,6 +37,7 @@ load_variables() {
         "composer dump-autoload"
         "php artisan key:generate"
         "php artisan optimize:clear"
+        "php artisan storage:link"
         "npm install"
         "npm run prod"
     )
