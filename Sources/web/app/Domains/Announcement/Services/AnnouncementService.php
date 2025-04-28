@@ -3,12 +3,12 @@
 namespace App\Domains\Announcement\Services;
 
 use App\Domains\Announcement\Models\Announcement;
-use App\Services\BaseService;
+use App\Services\BasicService;
 
 /**
  * Class AnnouncementService.
  */
-class AnnouncementService extends BaseService
+class AnnouncementService extends BasicService
 {
     /**
      * AnnouncementService constructor.
