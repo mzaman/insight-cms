@@ -4,3 +4,4 @@
 /Docker
 *node_modules
 *composer.lock
+/*.log
