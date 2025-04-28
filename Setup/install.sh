@@ -27,7 +27,7 @@ INITIAL_COMMANDS=(
 )
 
 POST_UPDATE_COMMANDS=(
-    "php artisan migrate"
+    "php artisan migrate:refresh --seed"
 )
 
 ADDITIONAL_PACKAGES=(
