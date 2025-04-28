@@ -30,7 +30,7 @@ class Authenticate extends Middleware
 
             // For non-API requests, return the login route
             if (! $request->expectsJson()) {
-                return route('login');
+                return route('frontend.auth.login');
             }
 
         } catch (AuthenticationException $e) {
