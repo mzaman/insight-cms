@@ -7,7 +7,7 @@ use Database\Seeders\Traits\DisableForeignKeys;
 use Illuminate\Database\Seeder;
 
 /**
- * Class UserTableSeeder.
+ * Class UserSeeder.
  */
 class UserSeeder extends Seeder
 {
@@ -21,40 +21,57 @@ class UserSeeder extends Seeder
         $this->disableForeignKeys();
 
         // Add the master administrator, user id of 1
-        User::create([
+        User::firstOrCreate([
+            'email' => 'admin@mail.com',
+        ], [
             'type' => User::TYPE_ADMIN,
             'name' => 'Super Admin',
-            'email' => 'admin@mail.com',
-            'password' => 'password',
+            'password' => bcrypt('password'),
             'email_verified_at' => now(),
             'active' => true,
         ]);
 
         if (app()->environment(['local', 'testing'])) {
-
-            User::create([
+            // Add Manager user
+            User::firstOrCreate([
+                'email' => 'manager@mail.com',
+            ], [
                 'type' => User::TYPE_ADMIN,
                 'name' => 'Manager',
-                'email' => 'manager@mail.com',
-                'password' => 'password',
+                'password' => bcrypt('password'),
                 'email_verified_at' => now(),
                 'active' => true,
             ]);
 
-            User::create([
+            // Add Editor user
+            User::firstOrCreate([
+                'email' => 'editor@mail.com',
+            ], [
                 'type' => User::TYPE_ADMIN,
                 'name' => 'Editor',
-                'email' => 'editor@mail.com',
-                'password' => 'password',
+                'password' => bcrypt('password'),
                 'email_verified_at' => now(),
                 'active' => true,
             ]);
 
-            User::create([
+            // Add CLI user
+            User::firstOrCreate([
+                'email' => 'cliuser@mail.com',
+            ], [
+                'type' => User::TYPE_ADMIN,
+                'name' => 'CLI User',
+                'password' => bcrypt('password'),
+                'email_verified_at' => now(),
+                'active' => true,
+            ]);
+
+            // Add Guest user
+            User::firstOrCreate([
+                'email' => 'guest@mail.com',
+            ], [
                 'type' => User::TYPE_USER,
                 'name' => 'Test User',
-                'email' => 'guest@mail.com',
-                'password' => 'password',
+                'password' => bcrypt('password'),
                 'email_verified_at' => now(),
                 'active' => true,
             ]);
