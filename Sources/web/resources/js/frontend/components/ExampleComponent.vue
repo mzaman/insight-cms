@@ -1,11 +1,11 @@
 <template>
-    <span>Laravel Boilerplate</span>
+    <span>Insight CMS</span>
 </template>
 
 <script>
-    export default {
-        mounted() {
-            console.log('Component mounted.')
-        }
+export default {
+    mounted() {
+        console.log('Component mounted.')
     }
+}
 </script>
