@@ -252,7 +252,12 @@ Here are the default credentials for each user:
 ## API Test Form
 URL: [http://localhost:5555](http://localhost:5555)
 
-## Postman Instructions
+- REDIS UI URL: [http://localhost:9987](http://localhost:9987)
+- Username: `laradock`
+- Password: `laradock`
+
+
+## Postman Collection
 
 To use the Postman collection, follow these steps:
 

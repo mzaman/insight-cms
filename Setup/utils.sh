@@ -101,7 +101,7 @@ copy_custom_configs() {
     cp -r "$LOCAL_SCRIPT_PATH_HOST/docker/.env.local.example" "$LOCAL_DOCKER_PATH_HOST/.env"
     cp -r "$LOCAL_SCRIPT_PATH_HOST/docker/docker-compose.local.yml" "$LOCAL_DOCKER_PATH_HOST/docker-compose.yml"
     # cp -r "$LOCAL_APP_CODE_PATH_HOST/.env.example" "$LOCAL_APP_CODE_PATH_HOST/.env"
-    # cp -r "$LOCAL_SCRIPT_PATH_HOST/swagger/swagger.yaml" "$LOCAL_APP_CODE_PATH_HOST/storage/app/public/swagger.yaml"
+    cp -r "$LOCAL_SCRIPT_PATH_HOST/swagger/swagger.yaml" "$LOCAL_APP_CODE_PATH_HOST/storage/app/public/swagger.yaml"
 }
 
 execute_in_local_docker() {
