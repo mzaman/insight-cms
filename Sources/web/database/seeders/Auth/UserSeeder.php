@@ -24,18 +24,37 @@ class UserSeeder extends Seeder
         User::create([
             'type' => User::TYPE_ADMIN,
             'name' => 'Super Admin',
-            'email' => 'admin@admin.com',
-            'password' => 'secret',
+            'email' => 'admin@mail.com',
+            'password' => 'password',
             'email_verified_at' => now(),
             'active' => true,
         ]);
 
         if (app()->environment(['local', 'testing'])) {
+
+            User::create([
+                'type' => User::TYPE_ADMIN,
+                'name' => 'Manager',
+                'email' => 'manager@mail.com',
+                'password' => 'password',
+                'email_verified_at' => now(),
+                'active' => true,
+            ]);
+
+            User::create([
+                'type' => User::TYPE_ADMIN,
+                'name' => 'Editor',
+                'email' => 'editor@mail.com',
+                'password' => 'password',
+                'email_verified_at' => now(),
+                'active' => true,
+            ]);
+
             User::create([
                 'type' => User::TYPE_USER,
                 'name' => 'Test User',
-                'email' => 'user@user.com',
-                'password' => 'secret',
+                'email' => 'guest@mail.com',
+                'password' => 'password',
                 'email_verified_at' => now(),
                 'active' => true,
             ]);

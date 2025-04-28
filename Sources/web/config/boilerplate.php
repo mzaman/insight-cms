@@ -2,7 +2,7 @@
 
 /*
  * All configuration options for Laravel Boilerplate
- * http://laravel-boilerplate.com.
+ * https://github.com/mzaman/insight-cms
  */
 
 return [
