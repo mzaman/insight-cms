@@ -43,14 +43,14 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\LocaleMiddleware::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Domains\Auth\Http\Middleware\ToBeLoggedOut::class,
-        	//SwitchGuard::class,
+        	SwitchGuard::class,
         ],
 
         'api' => [
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        	//SwitchGuard::class,  // Add the middleware here
+        	SwitchGuard::class,  // Add the middleware here
         ],
 
         'admin' => [
@@ -74,6 +74,7 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         '2fa' => \App\Domains\Auth\Http\Middleware\TwoFactorAuthenticationStatus::class,
         'auth' => \App\Http\Middleware\Authenticate::class,
+        'auth.select' => \App\Http\Middleware\SwitchGuard::class, //SwitchGuard::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
