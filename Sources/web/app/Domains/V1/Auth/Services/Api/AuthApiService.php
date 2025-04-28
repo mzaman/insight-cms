@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Hash;
 use \Exception;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
-use App\Models\User;
 use Carbon\Carbon;
 
 
@@ -64,7 +63,7 @@ class AuthApiService extends \App\Services\BaseApiService implements UserApiServ
         ];
     
         // Validate credentials
-        $user = User::where('email', $credentials['email'])->first();
+        $user = $this->repository->getByColumn($credentials['email'], 'email');
     
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
             // If no user is found or password doesn't match
@@ -119,39 +118,67 @@ class AuthApiService extends \App\Services\BaseApiService implements UserApiServ
      */
     public function register($data)
     {
-        // Logout if the user is already logged in
-        if (Auth::check()) {
-            Auth::logout();
+        // Get the name, email, and password from the provided array
+        $credentials = [
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => $data['password'],
+        ];
+    
+        // Check if the email already exists using the repository
+        $existingUser = $this->repository->getByColumn($credentials['email'], 'email');
+    
+        if ($existingUser) {
+            // If user already exists with the same email
+            $response = [
+                'success' => false,
+                'status' => 'Conflict',
+                'code' => 409,
+                'message' => __('Email is already registered'),
+            ];
+            return response()->json($response, $response['code']);
         }
-
+    
+        // Create a new user using the repository
         try {
-            // Create a new user
+            // Use the repository to create the user
             $user = $this->repository->create([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'role_id' => $data['role_id'],
-                'password' => Hash::make($data['password']),
+                'name' => $credentials['name'],
+                'email' => $credentials['email'],
+                'password' => Hash::make($credentials['password']), // Hash password before saving
             ]);
-
-            // Generate a token for the user
-            $token = Auth::login($user);
-            $user->makeHidden([
-                'id',                 // Exclude id field
-                'email_verified_at', // Exclude email_verified_at field
-                'created_at',         // Exclude created_at field
-                'updated_at',         // Exclude updated_at field
-                'deleted_at'          // Exclude deleted_at field
-            ]);
-            // Return the response with user and token
-            return $this->responseWith($user, $token);
-
-        } catch (Exception $e) {
-            // Handle exception and return a relevant message
-            return response()->json([
-                'status' => 'error',
-                'message' => $e->getMessage(),
-            ], 500);
+    
+            // Create the JWT token for the new user
+            $accessToken = JWTAuth::fromUser($user);
+    
+            // Optionally, hide unnecessary properties
+            $user->makeHidden(['password', 'email_verified_at', 'created_at', 'updated_at', 'deleted_at', 'to_be_logged_out', 'last_login_at', 'last_login_ip', 'timezone', 'provider', 'provider_id']);
+    
+            // Define token expiration (optional - override as needed)
+            $expiresAt = Carbon::now()->addMinutes(config('jwt.ttl', 60)); // Config TTL in minutes
+    
+            $response = [
+                'success' => true,
+                'status' => 'OK',
+                'code' => 200,
+                'message' => __('User registered successfully'),
+                'access_token' => $accessToken,
+                'token_expires_at' => $expiresAt->toDateTimeString(),
+                'token_type' => 'Bearer',
+                'user' => $user, // Return the user with hidden attributes
+            ];
+    
+        } catch (JWTException $e) {
+            // Handle exception if token generation fails
+            $response = [
+                'success' => false,
+                'status' => 'Unauthorized',
+                'code' => 401,
+                'message' => __('Could not create token, please try again'),
+            ];
         }
+    
+        return response()->json($response, $response['code']);
     }
 
     /**

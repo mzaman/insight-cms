@@ -210,6 +210,7 @@ A cron job triggers the data synchronization every 1 hour. For testing, you can 
 
 ## Description
 
+I encountered a CORS issue while testing in Chrome, which may be specific to the (Chrome) browser. This is usually a temporary issue during development, and the proper CORS configuration on the server should resolve it.
 
 ### User Roles
 By default, there are four types of users:
