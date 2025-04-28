@@ -8,6 +8,11 @@ use App\Domains\V1\Auth\Repositories\Api\UserApiRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use \Exception;
+use JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use App\Models\User;
+use Carbon\Carbon;
+
 
 /**
  * Class AuthApiService.
@@ -52,36 +57,58 @@ class AuthApiService extends \App\Services\BaseApiService implements UserApiServ
      */
     public function login(array $data)
     {
-        try {
-            // Logout if the user is already logged in
-            if (Auth::check()) {
-                Auth::logout();
-            }
-
-            // Attempt to login
-            $token = Auth::attempt($data);
-            
-            // Check if token was generated
-            if ($token) {
-                $user = Auth::user()->makeHidden([
-                    'id',                 // Exclude id field
-                    'email_verified_at', // Exclude email_verified_at field
-                    'created_at',         // Exclude created_at field
-                    'updated_at',         // Exclude updated_at field
-                    'deleted_at'          // Exclude deleted_at field
-                ]);
-
-                // Return user with token
-                return $this->responseWith($user, $token);
-            } else {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Unauthorized',
-                ], 401);
-            }
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+        // Get the email and password from the provided array
+        $credentials = [
+            'email' => $data['email'],
+            'password' => $data['password'],
+        ];
+    
+        // Validate credentials
+        $user = User::where('email', $credentials['email'])->first();
+    
+        if (!$user || !Hash::check($credentials['password'], $user->password)) {
+            // If no user is found or password doesn't match
+            $response = [
+                'success' => false,
+                'status' => 'Unauthorized',
+                'code' => 401,
+                'message' => __('Invalid email or password'),
+            ];
+            return response()->json($response, $response['code']);
         }
+    
+        // Try to create a JWT token for the authenticated user
+        try {
+            // Create the JWT token
+            $accessToken = JWTAuth::fromUser($user);
+    
+            // Optionally, hide unnecessary properties
+            $user->makeHidden(['id', 'password', 'email_verified_at', 'created_at', 'updated_at', 'deleted_at',  'timezone', 'provider', 'provider_id']);
+    
+            // Define token expiration (optional - override as needed)
+            $expiresAt = Carbon::now()->addMinutes(config('jwt.ttl', 60)); // Config TTL in minutes
+    
+            $response = [
+                'success' => true,
+                'status' => 'OK',
+                'code' => 200,
+                'message' => __('User logged in successfully'),
+                'access_token' => $accessToken,
+                'token_expires_at' => $expiresAt->toDateTimeString(),
+                'token_type' => 'Bearer',
+                'user' => $user, // Return the user with hidden attributes
+            ];
+        } catch (JWTException $e) {
+            // Handle exception if token generation fails
+            $response = [
+                'success' => false,
+                'status' => 'Unauthorized',
+                'code' => 401,
+                'message' => __('Could not create token, please try again'),
+            ];
+        }
+    
+        return response()->json($response, $response['code']);
     }
 
     /**
