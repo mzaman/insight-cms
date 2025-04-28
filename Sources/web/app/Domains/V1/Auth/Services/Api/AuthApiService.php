@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Hash;
 use \Exception;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
-use App\Models\User;
 use Carbon\Carbon;
 
 
@@ -64,7 +63,7 @@ class AuthApiService extends \App\Services\BaseApiService implements UserApiServ
         ];
     
         // Validate credentials
-        $user = User::where('email', $credentials['email'])->first();
+        $user = $this->repository->getByColumn($credentials['email'], 'email');
     
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
             // If no user is found or password doesn't match
