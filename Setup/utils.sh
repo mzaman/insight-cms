@@ -20,7 +20,7 @@ load_variables() {
     DOCKER_SERVICES=("${DOCKER_SERVICES[@]:-${DEFAULT_DOCKER_SERVICES[@]}}")
 
     LARADOCK_REPO="git@github.com:mzaman/laradock.git"
-    LARADOCK_BRANCH="develop"
+    LARADOCK_BRANCH="master"
 
     PRE_INSTALL_LARAVEL_COMMANDS=(
         "find . -type f -exec chmod 644 {} \;"
