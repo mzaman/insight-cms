@@ -37,6 +37,7 @@ load_variables() {
         "composer dump-autoload"
         "php artisan key:generate"
         "php artisan optimize:clear"
+        "php artisan storage:link"
         "npm install"
         "npm run prod"
     )
@@ -96,7 +97,6 @@ copy_custom_configs() {
     print_style "🛠 Copying custom docker configurations..." "info"
     cp -r "$LOCAL_SCRIPT_PATH_HOST/docker/mysql/Dockerfile" "$LOCAL_DOCKER_PATH_HOST/mysql/"
     cp -r "$LOCAL_SCRIPT_PATH_HOST/docker/nginx/sites/"* "$LOCAL_DOCKER_PATH_HOST/nginx/sites/"
-    # cp -r "$LOCAL_SCRIPT_PATH_HOST/docker/workspace/Dockerfile" "$LOCAL_DOCKER_PATH_HOST/workspace/Dockerfile"
     cp -r "$LOCAL_SCRIPT_PATH_HOST/docker/workspace/crontab/laradock" "$LOCAL_DOCKER_PATH_HOST/workspace/crontab/"
     cp -r "$LOCAL_SCRIPT_PATH_HOST/docker/.env.local.example" "$LOCAL_DOCKER_PATH_HOST/.env"
     cp -r "$LOCAL_SCRIPT_PATH_HOST/docker/docker-compose.local.yml" "$LOCAL_DOCKER_PATH_HOST/docker-compose.yml"
