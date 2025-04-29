@@ -1,28 +1,31 @@
 openapi: 3.0.0
 info:
   title: 'Insight CMS : REST API (v1)'
-  description: >-
-    This is the REST API collection for Insight CMS version 1. It provides
-    access to various functionalities such as user authentication, permissions
-    management, role management, and post creation. Each endpoint is designed to
-    interact with the system's core services, enabling users to manage content
-    efficiently.
+  description: |
+    Welcome to the **Insight CMS REST API v1** documentation! This API enables you to interact with the various components of the Insight CMS platform, such as user management, authentication, permissions, role management, and content management (posts, etc.).
 
-    **Authentication:**
-    - To access most of the protected APIs, users need to authenticate first using the `login` API (`/api/v1/auth/login`).
-    - After a successful login, the system will issue a **Bearer Token** (JWT). This token needs to be passed in the `Authorization` header as `Bearer <JWT_TOKEN>` in subsequent requests to access other protected routes.
-    - The token has an expiration, and once expired, users can refresh it using the `refresh` endpoint (`/api/v1/auth/refresh`).
+    **Authentication Overview:**
+    - Users must first authenticate by calling the `/api/v1/auth/login` endpoint with their `email` and `password` to obtain a **JWT (Bearer) Token**.
+    - This token will be used in the `Authorization` header as `Bearer <JWT_TOKEN>` for subsequent requests to access protected endpoints.
+    - The token is time-limited and will expire, but users can refresh the token by using the `/api/v1/auth/refresh` endpoint.
+    - Logging out is done via the `/api/v1/auth/logout` endpoint, which invalidates the token.
 
-    **Login Procedure:**
-    1. Call `/api/v1/auth/login` with `email` and `password` to authenticate.
-    2. On success, a JWT token is returned, which must be included in the `Authorization` header for subsequent API calls.
-    3. When the token expires, you can call `/api/v1/auth/refresh` to obtain a new token.
-    4. Logout can be performed using the `/api/v1/auth/logout` endpoint.
+    **Authentication Flow:**
+    1. **Login**: Call `/api/v1/auth/login` with valid credentials.
+    2. **Receive Token**: On successful login, the system responds with a JWT token that can be used to authenticate further requests.
+    3. **Use Token**: For all protected routes, pass the token in the `Authorization` header as `Bearer <JWT_TOKEN>`.
+    4. **Refresh Token**: If the token expires, use `/api/v1/auth/refresh` to obtain a new token.
+    5. **Logout**: Call `/api/v1/auth/logout` to invalidate the token.
+
+    **Rate Limiting and Pagination:**
+    - If applicable, the API may implement rate limiting using headers such as `X-Rate-Limit` to indicate how many requests can be made within a specific time period.
+    - Pagination may be used for endpoints that return large datasets (e.g., listing users or posts). This will include `page` and `limit` query parameters to control the number of records returned.
 
   version: 1.0.0
 servers:
   - url: http://web.test
   - url: https://newsapi.org
+
 components:
   securitySchemes:
     bearerAuth:
@@ -32,8 +35,37 @@ components:
     noauthAuth:
       type: http
       scheme: noauth
-security:
-  - bearerAuth: []
+  responses:
+    Unauthorized:
+      description: Unauthorized - Authentication failed or token expired
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Unauthorized. Invalid email/password or expired token."
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Resource not found."
+    Forbidden:
+      description: Access forbidden due to insufficient permissions
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Forbidden. You do not have permission to access this resource."
 paths:
   /api/v1/api-key:
     post:
