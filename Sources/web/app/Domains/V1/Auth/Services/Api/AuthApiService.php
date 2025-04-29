@@ -64,12 +64,10 @@ class AuthApiService extends \App\Services\BaseApiService implements UserApiServ
 
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
             // If no user is found or password doesn't match
-            return response()->json([
-                'success' => false,
-                'status' => 'Unauthorized',
-                'code' => 401,
-                'message' => __('Invalid email or password'),
-            ], 401);
+            return $this->setStatus(false)
+                ->setMessage(__('Invalid email or password'))
+                ->setCode(401)
+                ->toJson();
         }
 
         // Check if the user is already logged in (if token exists)
@@ -90,29 +88,27 @@ class AuthApiService extends \App\Services\BaseApiService implements UserApiServ
             $accessToken = JWTAuth::fromUser($user);
 
             // Optionally, hide unnecessary properties
-            $user->makeHidden(['id', 'password', 'email_verified_at', 'created_at', 'updated_at', 'deleted_at', 'timezone', 'provider', 'provider_id']);
+            $user->makeHidden(['id', 'password', 'email_verified_at', 'created_at', 'updated_at', 'deleted_at', 'timezone', 'provider', 'provider_id', 'roles']);
 
             // Define token expiration (optional - override as needed)
             $expiresAt = Carbon::now()->addMinutes(config('jwt.ttl', 60)); // Config TTL in minutes
 
-            return response()->json([
-                'success' => true,
-                'status' => 'OK',
-                'code' => 200,
-                'message' => __('User logged in successfully'),
-                'access_token' => $accessToken,
-                'token_expires_at' => $expiresAt->toDateTimeString(),
-                'token_type' => 'Bearer',
-                'user' => $user, // Return the user with hidden attributes
-            ], 200);
+            return $this->setStatus(true)
+                ->setMessage(__('User logged in successfully'))
+                ->setResult([
+                    'access_token' => $accessToken,
+                    'token_expires_at' => $expiresAt->toDateTimeString(),
+                    'token_type' => 'Bearer',
+                    'user' => $user, // Return the user with hidden attributes
+                ])
+                ->setCode(200)
+                ->toJson();
         } catch (JWTException $e) {
             // Handle exception if token generation fails
-            return response()->json([
-                'success' => false,
-                'status' => 'Unauthorized',
-                'code' => 401,
-                'message' => __('Could not create token, please try again'),
-            ], 401);
+            return $this->setStatus(false)
+                ->setMessage(__('Could not create token, please try again'))
+                ->setCode(401)
+                ->toJson();
         }
     }
 
@@ -130,21 +126,18 @@ class AuthApiService extends \App\Services\BaseApiService implements UserApiServ
             'email' => $data['email'],
             'password' => $data['password'],
         ];
-    
+
         // Check if the email already exists using the repository
         $existingUser = $this->repository->getByColumn($credentials['email'], 'email');
-    
+
         if ($existingUser) {
             // If user already exists with the same email
-            $response = [
-                'success' => false,
-                'status' => 'Conflict',
-                'code' => 409,
-                'message' => __('Email is already registered'),
-            ];
-            return response()->json($response, $response['code']);
+            return $this->setStatus(false)
+                ->setMessage(__('Email is already registered'))
+                ->setCode(409)
+                ->toJson(); // Using BaseApiService response
         }
-    
+
         // Create a new user using the repository
         try {
             // Use the repository to create the user
@@ -153,38 +146,34 @@ class AuthApiService extends \App\Services\BaseApiService implements UserApiServ
                 'email' => $credentials['email'],
                 'password' => Hash::make($credentials['password']), // Hash password before saving
             ]);
-    
+
             // Create the JWT token for the new user
             $accessToken = JWTAuth::fromUser($user);
-    
+
             // Optionally, hide unnecessary properties
             $user->makeHidden(['password', 'email_verified_at', 'created_at', 'updated_at', 'deleted_at', 'to_be_logged_out', 'last_login_at', 'last_login_ip', 'timezone', 'provider', 'provider_id']);
-    
+
             // Define token expiration (optional - override as needed)
             $expiresAt = Carbon::now()->addMinutes(config('jwt.ttl', 60)); // Config TTL in minutes
-    
-            $response = [
-                'success' => true,
-                'status' => 'OK',
-                'code' => 200,
-                'message' => __('User registered successfully'),
-                'access_token' => $accessToken,
-                'token_expires_at' => $expiresAt->toDateTimeString(),
-                'token_type' => 'Bearer',
-                'user' => $user, // Return the user with hidden attributes
-            ];
-    
+
+            // Set the result data using BaseApiService's response methods
+            return $this->setStatus(true)
+                ->setMessage(__('User registered successfully'))
+                ->setResult([
+                    'access_token' => $accessToken,
+                    'token_expires_at' => $expiresAt->toDateTimeString(),
+                    'token_type' => 'Bearer',
+                    'user' => $user, // Return the user with hidden attributes
+                ])
+                ->setCode(200)
+                ->toJson(); // Using BaseApiService response
         } catch (JWTException $e) {
             // Handle exception if token generation fails
-            $response = [
-                'success' => false,
-                'status' => 'Unauthorized',
-                'code' => 401,
-                'message' => __('Could not create token, please try again'),
-            ];
+            return $this->setStatus(false)
+                ->setMessage(__('Could not create token, please try again'))
+                ->setCode(401)
+                ->toJson(); // Using BaseApiService response
         }
-    
-        return response()->json($response, $response['code']);
     }
 
     /**
@@ -204,26 +193,23 @@ class AuthApiService extends \App\Services\BaseApiService implements UserApiServ
                 JWTAuth::invalidate($token);
 
                 // Return success message
-                return response()->json([
-                    'status' => 'success',
-                    'code' => 200,
-                    'message' => 'Successfully logged out',
-                ]);
+                return $this->setStatus(true)
+                    ->setMessage('Successfully logged out')
+                    ->setCode(200)
+                    ->toJson(); // Using BaseApiService response
             } else {
                 // If no token is found or invalid token, return error response
-                return response()->json([
-                    'status' => 'error',
-                    'code' => 401,
-                    'message' => 'No valid token found, user is not authenticated',
-                ]);
+                return $this->setStatus(false)
+                    ->setMessage('No valid token found, user is not authenticated')
+                    ->setCode(401)
+                    ->toJson(); // Using BaseApiService response
             }
         } catch (JWTException $e) {
             // If an exception occurs (e.g., invalid token), return error response
-            return response()->json([
-                'status' => 'error',
-                'code' => 401,
-                'message' => 'Failed to log out, invalid token or session',
-            ]);
+            return $this->setStatus(false)
+                ->setMessage('Failed to log out, invalid token or session')
+                ->setCode(401)
+                ->toJson(); // Using BaseApiService response
         }
     }
 
@@ -237,58 +223,35 @@ class AuthApiService extends \App\Services\BaseApiService implements UserApiServ
         // Try to create a JWT token for the authenticated user
         try {
             $user = JWTAuth::user();
-            // Create the JWT token
+            // Create the JWT refresh token
             $refreshToken = Auth::refresh();
 
             // Optionally, hide unnecessary properties
-            $user->makeHidden(['id', 'password', 'email_verified_at', 'created_at', 'updated_at', 'deleted_at',  'timezone', 'provider', 'provider_id', 'roles']);
+            $user->makeHidden(['id', 'password', 'email_verified_at', 'created_at', 'updated_at', 'deleted_at', 'timezone', 'provider', 'provider_id', 'roles']);
 
             // Define token expiration (optional - override as needed)
             $expiresAt = Carbon::now()->addMinutes(config('jwt.ttl', 60)); // Config TTL in minutes
 
-            $response = [
-                'success' => true,
-                'status' => 'OK',
-                'code' => 200,
-                'message' => __('Token refreshed successfully'),
-                'access_token' => $refreshToken,
-                'token_expires_at' => $expiresAt->toDateTimeString(),
-                'token_type' => 'Bearer',
-                'user' => $user, // Return the user with hidden attributes
-            ];
+            // Set the result data using BaseApiService's response methods
+            return $this->setStatus(true)
+                ->setMessage(__('Token refreshed successfully'))
+                ->setResult([
+                    'access_token' => $refreshToken,
+                    'token_expires_at' => $expiresAt->toDateTimeString(),
+                    'token_type' => 'Bearer',
+                    'user' => $user, // Return the user with hidden attributes
+                ])
+                ->setCode(200)
+                ->toJson(); // Using BaseApiService response
         } catch (JWTException $e) {
             // Handle exception if token generation fails
-            $response = [
-                'success' => false,
-                'status' => 'Unauthorized',
-                'code' => 401,
-                'message' => __('Could not refresh token, please try again'),
-            ];
+            return $this->setStatus(false)
+                ->setMessage(__('Could not refresh token, please try again'))
+                ->setCode(401)
+                ->toJson(); // Using BaseApiService response
         }
-
+        
         return response()->json($response, $response['code']);
     }
 
-    /**
-     * Generate response with user data and token.
-     *
-     * @param mixed $user
-     * @param string $token
-     * @return \Illuminate\Http\JsonResponse
-     */
-    protected function responseWith($user, string $token)
-    {
-        // Construct the response array
-        $responseArr = [
-            'status' => 'success',
-            'user' => $user,
-            'authorisation' => [
-                'token' => $token,
-                'type' => 'bearer',
-            ]
-        ];
-
-        // Return the JSON response
-        return response()->json($responseArr);
-    }
 }
