@@ -5,6 +5,8 @@ use App\Domains\V1\Auth\Http\Controllers\Api\AuthApiController;
 use App\Domains\V1\Auth\Http\Controllers\Api\UserApiController;
 use App\Domains\V1\News\Http\Controllers\Api\PostApiController;
 use App\Domains\V1\Token\Http\Controllers\Api\ApiKeyApiController;
+use App\Domains\V1\System\Http\Controllers\Api\LogApiController;
+use App\Domains\V1\System\Http\Controllers\Api\HealthCheckApiController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PostController;
@@ -97,5 +99,22 @@ Route::prefix('v1')->group(function () {
         Route::middleware('permission:admin.access.post.create')
             ->post('cli-sync-news', [PostApiController::class, 'syncNews'])
             ->name('post.cli.sync');
+
+            
+        // Health Check Route
+        Route::middleware('permission:admin.access.system.healthcheck')
+            ->get('/health', [HealthCheckApiController::class, 'healthCheck'])
+            ->name('system.healthcheck');
+
+
+        // // API Log View Route
+        // Route::middleware('permission:admin.access.api.log.view')
+        //     ->get('api-logs', [LogApiController::class, 'index'])
+        //     ->name('api-log.view');
+
+        // // API Log Delete Route
+        // Route::middleware('permission:admin.access.api.log.delete')
+        //     ->delete('api-logs/{id}', [LogApiController::class, 'destroy'])
+        //     ->name('api-log.delete');
     });
 });

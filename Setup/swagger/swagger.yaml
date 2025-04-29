@@ -104,29 +104,31 @@ components:
 security:
   - bearerAuth: []
 paths:
-  /api/v1/api-key:
+  /api/v1/auth/login:
     post:
       tags:
         - default
-      summary: Create NewsAPI Key
+      summary: Login
       requestBody:
         content:
           multipart/form-data:
             schema:
               type: object
               properties:
-                service_name:
+                email:
                   type: string
                   description: >-
-                    The name of the service for which the API key is being
-                    created. Example: 'News API2'.
-                  example: News API2
-                api_key:
+                    The email address of the user attempting to log in. Example:
+                    'admin@mail.com'.
+                  example: admin@mail.com
+                password:
                   type: string
                   description: >-
-                    A unique API key used for accessing the News API. This key
-                    should be kept secure.
-                  example: <API_KEY>
+                    The password associated with the provided email. Example:
+                    'password'.
+                  example: password
+      security:
+        - bearerAuth: []
       parameters:
         - name: Accept
           in: header
@@ -168,43 +170,6 @@ paths:
                   type: integer
                   description: 'The ID of the role to be assigned to the user. Example: ''4''.'
                   example: '4'
-      parameters:
-        - name: Accept
-          in: header
-          schema:
-            type: string
-          description: Indicates that the response should be in JSON format.
-          example: application/json
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json: {}
-  /api/v1/auth/login:
-    post:
-      tags:
-        - default
-      summary: Login
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  description: >-
-                    The email address of the user attempting to log in. Example:
-                    'admin@mail.com'.
-                  example: admin@mail.com
-                password:
-                  type: string
-                  description: >-
-                    The password associated with the provided email. Example:
-                    'password'.
-                  example: password
-      security:
-        - bearerAuth: []
       parameters:
         - name: Accept
           in: header
@@ -278,6 +243,51 @@ paths:
             type: string
           description: Indicates that the response should be in JSON format.
           example: application/json
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/api-key:
+    post:
+      tags:
+        - default
+      summary: Create NewsAPI Key
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                service_name:
+                  type: string
+                  description: >-
+                    The name of the service for which the API key is being
+                    created. Example: 'News API2'.
+                  example: News API Key
+                api_key:
+                  type: string
+                  description: >-
+                    A unique API key used for accessing the News API. This key
+                    should be kept secure.
+                  example: 62ca91a83b6a43b2b653ad424a34249d
+      parameters:
+        - name: Accept
+          in: header
+          schema:
+            type: string
+          description: Indicates that the response should be in JSON format.
+          example: application/json
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/users:
+    get:
+      tags:
+        - default
+      summary: List Users
       responses:
         '200':
           description: Successful response
@@ -367,6 +377,8 @@ paths:
       tags:
         - default
       summary: Show Role Without Permissions
+      security:
+        - noauthAuth: []
       parameters:
         - name: Accept
           in: header
@@ -430,16 +442,6 @@ paths:
       tags:
         - default
       summary: List Posts
-      responses:
-        '200':
-          description: Successful response
-          content:
-            application/json: {}
-  /api/v1/users:
-    get:
-      tags:
-        - default
-      summary: List Users
       responses:
         '200':
           description: Successful response
@@ -509,6 +511,16 @@ paths:
             type: string
           description: 'Country code for the news source. Example: ''us''.'
           example: us
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/v1/health:
+    get:
+      tags:
+        - default
+      summary: Health Check
       responses:
         '200':
           description: Successful response

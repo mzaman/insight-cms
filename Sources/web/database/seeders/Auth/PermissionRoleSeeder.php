@@ -204,6 +204,22 @@ class PermissionRoleSeeder extends Seeder
                 'description' => 'Restore Post',
                 'sort' => 30,
             ]),
+            new Permission([
+                'name' => 'admin.access.health.check',
+                'description' => 'Access Health Check',
+                'sort' => 31,
+            ]),
+            new Permission([
+                'name' => 'admin.access.api.log.view',
+                'description' => 'View API Logs',
+                'sort' => 32,
+            ]),
+            new Permission([
+                'name' => 'admin.access.api.log.delete',
+                'description' => 'Delete API Logs',
+                'sort' => 33,
+            ]),
+
         ]);
 
         // Assign Permissions to other Roles
