@@ -2,7 +2,7 @@
 
 namespace App\Domains\V1\Auth\Repositories\Api;
 
-use App\Domains\V1\Auth\Models\User;
+use App\Domains\Auth\Models\User;
 
 /**
  * Class UserApiRepository.
