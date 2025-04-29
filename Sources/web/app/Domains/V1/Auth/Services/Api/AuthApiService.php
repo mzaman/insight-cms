@@ -198,16 +198,27 @@ class AuthApiService extends \App\Services\BaseApiService implements UserApiServ
      */
     public function logout()
     {
-        // Logout the user
-        Auth::logout();
+        // Check if the user is authenticated
+        if (Auth::check()) {
+            // Logout the user
+            Auth::logout();
 
-        // Return success message
+            // Return success message
+            return response()->json([
+                'status' => 'success',
+                'code' => 200, // HTTP status code for successful logout
+                'message' => 'Successfully logged out',
+            ]);
+        }
+
+        // If the user is not authenticated, return an error message
         return response()->json([
-            'status' => 'success',
-            'message' => 'Successfully logged out',
+            'status' => 'error',
+            'code' => 401, // Unauthorized status code for missing authentication
+            'message' => 'User is not authenticated',
         ]);
     }
-
+    
     /**
      * Refresh the JWT token.
      *
