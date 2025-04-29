@@ -198,39 +198,47 @@ class AuthApiService extends \App\Services\BaseApiService implements UserApiServ
         ]);
     }
 
-  /**
-   * Refresh the JWT token.
-   *
-   * @return \Illuminate\Http\JsonResponse
-   */
-  public function refresh()
-  {
-      try {
-          // Retrieve the currently authenticated user
-          $user = Auth::user();
+    /**
+     * Refresh the JWT token.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function refresh()
+    {
+        // Try to create a JWT token for the authenticated user
+        try {
+            $user = JWTAuth::user();
+            // Create the JWT token
+            $refreshToken = Auth::refresh();
 
-          // Generate a new token
-          $token = Auth::refresh();
+            // Optionally, hide unnecessary properties
+            $user->makeHidden(['id', 'password', 'email_verified_at', 'created_at', 'updated_at', 'deleted_at',  'timezone', 'provider', 'provider_id', 'roles']);
 
-          // Return the response with the new token and user details
-          return $this->responseWith(
-              $user->makeHidden([
-                  'id',                 // Exclude id field
-                  'email_verified_at',  // Exclude email_verified_at field
-                  'created_at',          // Exclude created_at field
-                  'updated_at',          // Exclude updated_at field
-                  'deleted_at',          // Exclude deleted_at field
-              ]),
-              $token
-          );
-      } catch (Exception $e) {
-          // Handle any error that occurs during refresh
-          return response()->json([
-              'status' => 'error',
-              'message' => 'Failed to refresh token. Please try again.',
-          ], 500);
-      }
-  }
+            // Define token expiration (optional - override as needed)
+            $expiresAt = Carbon::now()->addMinutes(config('jwt.ttl', 60)); // Config TTL in minutes
+
+            $response = [
+                'success' => true,
+                'status' => 'OK',
+                'code' => 200,
+                'message' => __('Token refreshed successfully'),
+                'access_token' => $refreshToken,
+                'token_expires_at' => $expiresAt->toDateTimeString(),
+                'token_type' => 'Bearer',
+                'user' => $user, // Return the user with hidden attributes
+            ];
+        } catch (JWTException $e) {
+            // Handle exception if token generation fails
+            $response = [
+                'success' => false,
+                'status' => 'Unauthorized',
+                'code' => 401,
+                'message' => __('Could not refresh token, please try again'),
+            ];
+        }
+
+        return response()->json($response, $response['code']);
+    }
 
     /**
      * Generate response with user data and token.
