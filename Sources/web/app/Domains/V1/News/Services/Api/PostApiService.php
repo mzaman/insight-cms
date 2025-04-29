@@ -3,17 +3,15 @@
 namespace App\Domains\V1\News\Services\Api;
 
 use App\Domains\V1\News\Repositories\Api\PostApiRepository;
-use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
-use App\Domains\V1\Auth\Models\User;  // For accessing CLI user if needed
-use App\Domains\V1\Token\Models\ApiKey;
 use \Exception;
-use Illuminate\Support\Facades\Crypt;
+use App\Domains\V1\News\Traits\NewsFetcher;
 
 class PostApiService extends \App\Services\BaseApiService implements PostApiServiceInterface
 {
+    use NewsFetcher;
+    
     /**
      * Set message api for CRUD
      * @param string $title
@@ -44,7 +42,6 @@ class PostApiService extends \App\Services\BaseApiService implements PostApiServ
      */
     public function fetchAndStorePosts()
     {
-        // Check if cached articles exist to avoid fetching again from API
         if (Cache::has('posts')) {
             return $this->setResult(Cache::get('posts'))
                 ->setCode(200)
@@ -53,74 +50,46 @@ class PostApiService extends \App\Services\BaseApiService implements PostApiServ
                 ->toJson();
         }
 
-        // Detect if sync is initiated via CLI and set the user ID accordingly
-        $isCli = php_sapi_name() == 'cli';
-        $userId = $isCli ? $this->getCliUserId() : Auth::id(); // Use CLI User if it's a CLI sync, else use authenticated user.
+        $userId = $this->resolveSyncUserId();
 
         try {
+            $apiKey = $this->getDecryptedApiKey();
 
-            // $apiKey = \Config::get('news.api_key');
-            // Retrieve the encrypted API key from the database
-            $encryptedApiKey = ApiKey::latest()->first()->api_key;
+            $apiUrl = config('news.api_base_url') . '/' . config('news.api_version') . '/top-headlines';
 
-            // Decrypt the API key
-            $apiKey = Crypt::decryptString($encryptedApiKey);
-
-            // Use GuzzleHttp client to fetch data from NewsAPI
-            $client = new Client();
-            $apiUrl = \Config::get('news.api_base_url') . '/' . \Config::get('news.api_version') . '/top-headlines';
-
-            $response = $client->get($apiUrl, [
-                'query' => ['apiKey' => $apiKey, 'country' => 'us']
+            $apiData = $this->fetchFromApi($apiUrl, [
+                'apiKey' => $apiKey,
+                'country' => 'us',
             ]);
 
-            // Decode the API response
-            $posts = json_decode($response->getBody()->getContents(), true)['articles'];
+            $articles = $apiData['articles'] ?? [];
 
-            // Prepare the data for insertion with timestamps
-            $postData = [];
-            foreach ($posts as $post) {
-                $postData[] = [
+            // Prepare data (still service-specific)
+            $postData = collect($articles)->map(function ($post) use ($userId) {
+                return [
                     'title' => $post['title'],
                     'source' => $post['source']['name'],
                     'content' => $post['content'],
                     'published_at' => $post['publishedAt'],
                     'external_id' => $post['url'],
-                    'user_id' => $userId,  // Use the correct user_id (CLI or Authenticated user)
+                    'user_id' => $userId,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
-            }
+            })->toArray();
 
-            // Use repository method to upsert the posts (either create or update)
             $this->repository->upsert($postData);
+            Cache::put('posts', $articles, now()->addHour());
 
-            // Cache the fetched posts for 1 hour
-            Cache::put('posts', $posts, now()->addHour());
-
-            // Return success response
-            return $this->setResult($posts)
+            return $this->setResult($articles)
                 ->setCode(200)
                 ->setStatus(true)
                 ->setMessage('Posts fetched and cached successfully.')
                 ->toJson();
 
         } catch (Exception $e) {
-            // Log the error and format the response
-            Log::error('Failed to fetch posts from NewsAPI: ' . $e->getMessage());
             return $this->exceptionResponse($e)->toJson();
         }
     }
 
-    /**
-     * Get the CLI User ID.
-     * 
-     * @return int
-     */
-    protected function getCliUserId()
-    {
-        // Retrieve the CLI User by email or a predefined user for synchronization
-        $cliUser = User::where('email', 'cliuser@mail.com')->first();
-        return $cliUser ? $cliUser->id : 1; // Default to user ID 1 if no CLI user is found
-    }
 }

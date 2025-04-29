@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "a638b709-76a3-472a-a66c-77c155d62624",
+		"_postman_id": "698ecddf-2992-42f3-80c7-27b8fdf301ac",
 		"name": "Insight CMS : REST API (v1)",
 		"description": "This is the REST API collection for Insight CMS version 1. It provides access to various functionalities such as user authentication, permissions management, role management, and post creation. Each endpoint is designed to interact with the system's core services, enabling users to manage content efficiently.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -8,9 +8,18 @@
 	},
 	"item": [
 		{
-			"name": "Create NewsAPI Key",
-			"description": "Generates a new API key for accessing the News API. The API key is used for making requests to fetch news articles.",
+			"name": "Login",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [
 					{
@@ -24,21 +33,21 @@
 					"mode": "formdata",
 					"formdata": [
 						{
-							"key": "service_name",
-							"value": "News API2",
-							"description": "The name of the service for which the API key is being created. Example: 'News API2'.",
+							"key": "email",
+							"value": "admin@mail.com",
+							"description": "The email address of the user attempting to log in. Example: 'admin@mail.com'.",
 							"type": "default"
 						},
 						{
-							"key": "api_key",
-							"value": "<API_KEY>",
-							"description": "A unique API key used for accessing the News API. This key should be kept secure.",
+							"key": "password",
+							"value": "password",
+							"description": "The password associated with the provided email. Example: 'password'.",
 							"type": "default"
 						}
 					]
 				},
 				"url": {
-					"raw": "http://web.test/api/v1/api-key",
+					"raw": "http://web.test/api/v1/auth/login",
 					"protocol": "http",
 					"host": [
 						"web",
@@ -47,7 +56,8 @@
 					"path": [
 						"api",
 						"v1",
-						"api-key"
+						"auth",
+						"login"
 					]
 				}
 			},
@@ -55,7 +65,6 @@
 		},
 		{
 			"name": "Register",
-			"description": "Registers a new user in the system. The user will need to provide a name, password, email, and role ID.",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -113,74 +122,15 @@
 			"response": []
 		},
 		{
-			"name": "Login",
-			"description": "Logs a user into the system by providing their email and password. Returns a JWT token if authentication is successful.",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "",
-							"type": "string",
-							"description": "JWT token for authorization. The token is required for accessing protected endpoints."
-						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json",
-						"type": "default",
-						"description": "Indicates that the response should be in JSON format."
-					}
-				],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "email",
-							"value": "admin@mail.com",
-							"type": "default",
-							"description": "The email address of the user attempting to log in. Example: 'admin@mail.com'."
-						},
-						{
-							"key": "password",
-							"value": "password",
-							"type": "default",
-							"description": "The password associated with the provided email. Example: 'password'."
-						}
-					]
-				},
-				"url": {
-					"raw": "http://web.test/api/v1/auth/login",
-					"protocol": "http",
-					"host": [
-						"web",
-						"test"
-					],
-					"path": [
-						"api",
-						"v1",
-						"auth",
-						"login"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Refresh",
-			"description": "Refreshes the JWT token to extend the session. The user needs to provide their email and password for the refresh request.",
 			"request": {
 				"method": "POST",
 				"header": [
 					{
 						"key": "Accept",
 						"value": "application/json",
-						"type": "default",
-						"description": "Indicates that the response should be in JSON format."
+						"description": "Indicates that the response should be in JSON format.",
+						"type": "default"
 					}
 				],
 				"body": {
@@ -191,8 +141,7 @@
 							"value": "admin@mail.com",
 							"description": "The email address of the user requesting the token refresh.",
 							"type": "default",
-							"disabled": true,
-							"description": "The email address of the user requesting the token refresh."
+							"disabled": true
 						},
 						{
 							"key": "password",
@@ -222,15 +171,14 @@
 		},
 		{
 			"name": "Logout",
-			"description": "Logs the user out of the system, invalidating the JWT token.",
 			"request": {
 				"method": "POST",
 				"header": [
 					{
 						"key": "Accept",
 						"value": "application/json",
-						"type": "default",
-						"description": "Indicates that the response should be in JSON format."
+						"description": "Indicates that the response should be in JSON format.",
+						"type": "default"
 					}
 				],
 				"body": {
@@ -239,14 +187,14 @@
 						{
 							"key": "email",
 							"value": "admin@mail.com",
-							"type": "default",
-							"description": "The email address of the user logging out. Example: 'admin@mail.com'."
+							"description": "The email address of the user logging out. Example: 'admin@mail.com'.",
+							"type": "default"
 						},
 						{
 							"key": "password",
 							"value": "password",
-							"type": "default",
-							"description": "The password associated with the provided email. Example: 'password'."
+							"description": "The password associated with the provided email. Example: 'password'.",
+							"type": "default"
 						}
 					]
 				},
@@ -268,16 +216,81 @@
 			"response": []
 		},
 		{
-			"name": "Add Permission",
-			"description": "Adds a new permission to the system, specifying its name and slug.",
+			"name": "Create NewsAPI Key",
 			"request": {
 				"method": "POST",
 				"header": [
 					{
 						"key": "Accept",
 						"value": "application/json",
-						"type": "default",
-						"description": "Indicates that the response should be in JSON format."
+						"description": "Indicates that the response should be in JSON format.",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "service_name",
+							"value": "News API Key",
+							"description": "The name of the service for which the API key is being created. Example: 'News API2'.",
+							"type": "default"
+						},
+						{
+							"key": "api_key",
+							"value": "62ca91a83b6a43b2b653ad424a34249d",
+							"description": "A unique API key used for accessing the News API. This key should be kept secure.",
+							"type": "default"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://web.test/api/v1/api-key",
+					"protocol": "http",
+					"host": [
+						"web",
+						"test"
+					],
+					"path": [
+						"api",
+						"v1",
+						"api-key"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Users",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://web.test/api/v1/users",
+					"protocol": "http",
+					"host": [
+						"web",
+						"test"
+					],
+					"path": [
+						"api",
+						"v1",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Permission",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"description": "Indicates that the response should be in JSON format.",
+						"type": "default"
 					}
 				],
 				"body": {
@@ -286,14 +299,14 @@
 						{
 							"key": "name",
 							"value": "Share",
-							"type": "default",
-							"description": "The name of the permission. Example: 'Share'."
+							"description": "The name of the permission. Example: 'Share'.",
+							"type": "default"
 						},
 						{
 							"key": "slug",
 							"value": "share",
-							"type": "default",
-							"description": "The slug for the permission, used for URL routing. Example: 'share'."
+							"description": "The slug for the permission, used for URL routing. Example: 'share'.",
+							"type": "default"
 						}
 					]
 				},
@@ -315,7 +328,6 @@
 		},
 		{
 			"name": "List Permissions",
-			"description": "Retrieves a list of all permissions in the system. Requires a bearer token for authentication.",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -323,8 +335,7 @@
 						{
 							"key": "token",
 							"value": "",
-							"type": "string",
-							"description": "JWT token for authorization. The token is required for accessing protected endpoints."
+							"type": "string"
 						}
 					]
 				},
@@ -348,7 +359,6 @@
 		},
 		{
 			"name": "Add Role",
-			"description": "Adds a new role to the system, specifying its name and slug.",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -356,8 +366,7 @@
 						{
 							"key": "token",
 							"value": "<JWT_TOKEN>",
-							"type": "string",
-							"description": "JWT token required for authorization. Example: '<JWT_TOKEN>'."
+							"type": "string"
 						}
 					]
 				},
@@ -366,8 +375,8 @@
 					{
 						"key": "Accept",
 						"value": "application/json",
-						"type": "default",
-						"description": "Indicates that the response should be in JSON format."
+						"description": "Indicates that the response should be in JSON format.",
+						"type": "default"
 					}
 				],
 				"body": {
@@ -376,14 +385,14 @@
 						{
 							"key": "name",
 							"value": "Editor",
-							"type": "default",
-							"description": "The name of the role being created. Example: 'Editor'."
+							"description": "The name of the role being created. Example: 'Editor'.",
+							"type": "default"
 						},
 						{
 							"key": "slug",
 							"value": "editor",
-							"type": "default",
-							"description": "The slug for the role, used for URL routing. Example: 'editor'."
+							"description": "The slug for the role, used for URL routing. Example: 'editor'.",
+							"type": "default"
 						}
 					]
 				},
@@ -405,15 +414,14 @@
 		},
 		{
 			"name": "List Roles",
-			"description": "Retrieves a list of all roles in the system.",
 			"request": {
 				"method": "GET",
 				"header": [
 					{
 						"key": "Accept",
 						"value": "application/json",
-						"type": "default",
-						"description": "Indicates that the response should be in JSON format."
+						"description": "Indicates that the response should be in JSON format.",
+						"type": "default"
 					}
 				],
 				"url": {
@@ -435,7 +443,6 @@
 		},
 		{
 			"name": "Show Role Without Permissions",
-			"description": "Retrieves a role's details without showing the permissions associated with it.",
 			"request": {
 				"auth": {
 					"type": "noauth"
@@ -445,8 +452,8 @@
 					{
 						"key": "Accept",
 						"value": "application/json",
-						"type": "default",
-						"description": "Indicates that the response should be in JSON format."
+						"description": "Indicates that the response should be in JSON format.",
+						"type": "default"
 					}
 				],
 				"url": {
@@ -468,15 +475,14 @@
 		},
 		{
 			"name": "Add Post",
-			"description": "Adds a new post to the system, including the title, content, external ID, and user ID.",
 			"request": {
 				"method": "POST",
 				"header": [
 					{
 						"key": "Accept",
 						"value": "application/json",
-						"type": "default",
-						"description": "Indicates that the response should be in JSON format."
+						"description": "Indicates that the response should be in JSON format.",
+						"type": "default"
 					}
 				],
 				"body": {
@@ -485,26 +491,26 @@
 						{
 							"key": "title",
 							"value": "my blog title",
-							"type": "default",
-							"description": "The title of the post. Example: 'my blog title'."
+							"description": "The title of the post. Example: 'my blog title'.",
+							"type": "default"
 						},
 						{
 							"key": "content",
 							"value": "Content goes here",
-							"type": "default",
-							"description": "The content of the post. Example: 'Content goes here'."
+							"description": "The content of the post. Example: 'Content goes here'.",
+							"type": "default"
 						},
 						{
 							"key": "external_id",
 							"value": "https://domain.com/page1",
-							"type": "text",
-							"description": "An external ID or reference URL associated with the post. Example: 'https://domain.com/page1'."
+							"description": "An external ID or reference URL associated with the post. Example: 'https://domain.com/page1'.",
+							"type": "text"
 						},
 						{
 							"key": "user_id",
 							"value": "1",
-							"type": "text",
-							"description": "The user ID associated with the post. Example: '1'."
+							"description": "The user ID associated with the post. Example: '1'.",
+							"type": "text"
 						}
 					]
 				},
@@ -526,7 +532,6 @@
 		},
 		{
 			"name": "List Posts",
-			"description": "Retrieves a list of all posts in the system.",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -548,15 +553,14 @@
 		},
 		{
 			"name": "Delete Post",
-			"description": "Deletes a post from the system by specifying the title, content, external ID, and user ID.",
 			"request": {
 				"method": "POST",
 				"header": [
 					{
 						"key": "Accept",
 						"value": "application/json",
-						"type": "default",
-						"description": "Indicates that the response should be in JSON format."
+						"description": "Indicates that the response should be in JSON format.",
+						"type": "default"
 					}
 				],
 				"body": {
@@ -565,26 +569,26 @@
 						{
 							"key": "title",
 							"value": "my blog title",
-							"type": "default",
-							"description": "The title of the post to be deleted. Example: 'my blog title'."
+							"description": "The title of the post to be deleted. Example: 'my blog title'.",
+							"type": "default"
 						},
 						{
 							"key": "content",
 							"value": "Content goes here",
-							"type": "default",
-							"description": "The content of the post to be deleted. Example: 'Content goes here'."
+							"description": "The content of the post to be deleted. Example: 'Content goes here'.",
+							"type": "default"
 						},
 						{
 							"key": "external_id",
 							"value": "https://domain.com/page1",
-							"type": "text",
-							"description": "An external ID or reference URL associated with the post to be deleted. Example: 'https://domain.com/page1'."
+							"description": "An external ID or reference URL associated with the post to be deleted. Example: 'https://domain.com/page1'.",
+							"type": "text"
 						},
 						{
 							"key": "user_id",
 							"value": "1",
-							"type": "text",
-							"description": "The user ID associated with the post to be deleted. Example: '1'."
+							"description": "The user ID associated with the post to be deleted. Example: '1'.",
+							"type": "text"
 						}
 					]
 				},
@@ -605,38 +609,15 @@
 			"response": []
 		},
 		{
-			"name": "List Users",
-			"description": "Retrieves a list of all users in the system.",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://web.test/api/v1/users",
-					"protocol": "http",
-					"host": [
-						"web",
-						"test"
-					],
-					"path": [
-						"api",
-						"v1",
-						"users"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Sync from NewsAPI",
-			"description": "Synchronizes the system with the News API to fetch the latest news data.",
 			"request": {
 				"method": "POST",
 				"header": [
 					{
 						"key": "Accept",
 						"value": "application/json",
-						"type": "default",
-						"description": "Indicates that the response should be in JSON format."
+						"description": "Indicates that the response should be in JSON format.",
+						"type": "default"
 					}
 				],
 				"body": {
@@ -661,7 +642,6 @@
 		},
 		{
 			"name": "NewSync via CLI",
-			"description": "Initiates synchronization of news via the command line interface, including a title, content, external ID, and user ID.",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -694,7 +674,6 @@
 		},
 		{
 			"name": "News API Direct Fetch",
-			"description": "Fetches the latest news from the external News API based on the specified country and API key.",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -724,6 +703,27 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://web.test/api/v1/health",
+					"protocol": "http",
+					"host": [
+						"web",
+						"test"
+					],
+					"path": [
+						"api",
+						"v1",
+						"health"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"auth": {
@@ -731,9 +731,8 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "",
-				"type": "string",
-				"description": "Bearer token required for accessing authenticated endpoints. Example: '<JWT_TOKEN>'."
+				"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vd2ViLnRlc3QvYXBpL3YxL2F1dGgvbG9naW4iLCJpYXQiOjE3NDU5NjYzMzcsImV4cCI6MTc0NTk2OTkzNywibmJmIjoxNzQ1OTY2MzM3LCJqdGkiOiJORmVHaVp2ZGdobno0UEljIiwic3ViIjoiMSIsInBydiI6IjQ0Zjc1MGY3Y2U1NzRkNzUxMDhhNmY4NzY3ODBiMDliMjc5M2FlY2QifQ.8gccmQvivAk49LUWGKN_jFBqEsSJ5T2-Vx25PNl4ITU",
+				"type": "string"
 			}
 		]
 	},
