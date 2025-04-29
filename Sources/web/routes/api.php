@@ -91,8 +91,8 @@ Route::prefix('v1')->group(function () {
 
         // News sync routes
         Route::middleware(['throttle:5,1', 'permission:admin.access.post.create'])
-        ->post('/sync-news', [PostApiController::class, 'sync'])
-        ->name('post.sync');
+            ->post('/sync-news', [PostApiController::class, 'sync'])
+            ->name('post.sync');
 
         Route::middleware('permission:admin.access.post.create')
             ->post('cli-sync-news', [PostApiController::class, 'syncNews'])

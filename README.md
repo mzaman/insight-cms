@@ -147,7 +147,7 @@ Please see the [Scripts File](SCRIPTS.md) for more information.
 
 **Web URLs:**
 
-- [Web](http://web.test)
+- Frontend: [http://web.test](http://web.test)
 - PhpMyAdmin: [http://localhost:8081](http://localhost:8081)
 - Host: `mysql`
 - Username: `root`
@@ -264,6 +264,9 @@ To use the Postman collection, follow these steps:
 
 1. Import the **`./Insight CMS - REST API (v1).postman_collection.json`** file into Postman.
 2. After logging in or registering, save the **Bearer Token** in the `Authorization` section. You can use this token for subsequent requests.
+
+- Postman Collection: [Insight CMS - REST API (v1).postman_collection.json](./Insight CMS - REST API (v1).postman_collection.json)
+- Transform Postman Collections into OpenAPI: [https://metamug.com/util/postman-to-swagger](https://metamug.com/util/postman-to-swagger)
 
 ## License
 
