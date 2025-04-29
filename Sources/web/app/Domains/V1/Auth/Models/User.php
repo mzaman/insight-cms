@@ -8,7 +8,6 @@ use App\Domains\V1\Auth\Models\Traits\Relationship\UserRelationship;
 use App\Domains\V1\Auth\Models\Traits\Scope\UserScope;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Lab404\Impersonate\Models\Impersonate;
