@@ -75,7 +75,17 @@ class AuthApiService extends \App\Services\BaseApiService implements UserApiServ
             ];
             return response()->json($response, $response['code']);
         }
-    
+
+        // Check if the user is already logged in (if token exists)
+        try {
+            if (JWTAuth::parseToken()->authenticate()) {
+                // If the user is already logged in, invalidate the current token
+                JWTAuth::invalidate(JWTAuth::getToken());
+            }
+        } catch (Exception $e) {
+            // If no token is found, continue with login
+        }
+
         // Try to create a JWT token for the authenticated user
         try {
             // Create the JWT token
