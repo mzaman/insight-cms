@@ -13,6 +13,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Permission\Traits\HasRoles;
 
 /**
  * Class User.
@@ -21,6 +22,7 @@ class User extends Authenticatable implements JWTSubject
 {
     use SoftDeletes,
         HasApiTokens, 
+        HasRoles,
         HasFactory, 
         Notifiable,
         UserAttribute,

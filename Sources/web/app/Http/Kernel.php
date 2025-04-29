@@ -25,6 +25,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        SwitchGuard::class,
     ];
 
     /**
@@ -43,14 +44,14 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\LocaleMiddleware::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Domains\Auth\Http\Middleware\ToBeLoggedOut::class,
-        	SwitchGuard::class,
+        	// SwitchGuard::class,
         ],
 
         'api' => [
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        	SwitchGuard::class,  // Add the middleware here
+        	// SwitchGuard::class,  // Add the middleware here
         ],
 
         'admin' => [
