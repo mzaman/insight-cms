@@ -6,10 +6,12 @@ use App\Domains\V1\Auth\Models\Traits\Attribute\UserAttribute;
 use App\Domains\V1\Auth\Models\Traits\Method\UserMethod;
 use App\Domains\V1\Auth\Models\Traits\Relationship\UserRelationship;
 use App\Domains\V1\Auth\Models\Traits\Scope\UserScope;
+use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Lab404\Impersonate\Models\Impersonate;
 use Laravel\Sanctum\HasApiTokens;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -20,10 +22,10 @@ use Spatie\Permission\Traits\HasRoles;
  */
 class User extends Authenticatable implements JWTSubject
 {
-    use SoftDeletes,
-        HasApiTokens, 
+    use HasApiTokens,
+        HasFactory,
         HasRoles,
-        HasFactory, 
+        Impersonate,
         Notifiable,
         SoftDeletes,
         UserAttribute,
@@ -95,6 +97,29 @@ class User extends Authenticatable implements JWTSubject
         'permissions',
         'roles',
     ];
+
+
+    /**
+     * Return true or false if the user can impersonate an other user.
+     *
+     * @param void
+     * @return bool
+     */
+    public function canImpersonate(): bool
+    {
+        return $this->can('admin.access.user.impersonate');
+    }
+
+    /**
+     * Return true or false if the user can be impersonate.
+     *
+     * @param void
+     * @return bool
+     */
+    public function canBeImpersonated(): bool
+    {
+        return ! $this->isMasterAdmin();
+    }
 
     /**
      * Create a new factory instance for the model.

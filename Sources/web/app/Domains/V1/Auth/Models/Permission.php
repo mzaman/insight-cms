@@ -6,7 +6,7 @@ use App\Domains\V1\Auth\Models\Traits\Attribute\PermissionAttribute;
 use App\Domains\V1\Auth\Models\Traits\Method\PermissionMethod;
 use App\Domains\V1\Auth\Models\Traits\Relationship\PermissionRelationship;
 use App\Domains\V1\Auth\Models\Traits\Scope\PermissionScope;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+// use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\Permission\Models\Permission as SpatiePermission;
 // use Illuminate\Database\Eloquent\Model;
 
