@@ -210,6 +210,7 @@ A cron job triggers the data synchronization every 1 hour. For testing, you can 
 
 ## Description
 
+I encountered a CORS issue while testing in Chrome, which may be specific to the (Chrome) browser. This is usually a temporary issue during development, and the proper CORS configuration on the server should resolve it.
 
 ### User Roles
 By default, there are four types of users:
@@ -252,7 +253,12 @@ Here are the default credentials for each user:
 ## API Test Form
 URL: [http://localhost:5555](http://localhost:5555)
 
-## Postman Instructions
+- REDIS UI URL: [http://localhost:9987](http://localhost:9987)
+- Username: `laradock`
+- Password: `laradock`
+
+
+## Postman Collection
 
 To use the Postman collection, follow these steps:
 

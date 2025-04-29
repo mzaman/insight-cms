@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Domains\V1\Auth\Http\Controllers\Api\AuthApiController;
 use App\Domains\V1\Auth\Http\Controllers\Api\UserApiController;
@@ -37,17 +36,20 @@ Route::prefix('v1')->group(function () {
 
     Route::middleware('auth:api')->group(function () {
         // API key routes
-        Route::middleware('capable:api-key-create')
+        Route::middleware('permission:admin.access.api.key.create')
             ->post('api-key', [ApiKeyApiController::class, 'store'])
             ->name('api-key.store');
-            
+
         // User routes
         Route::controller(UserController::class)
             ->name('user.')
             ->prefix('users')
             ->group(function () {
-                Route::middleware('capable:user-view')
+                Route::middleware('permission:admin.access.user.list|admin.access.user.deactivate|admin.access.user.reactivate|admin.access.user.impersonate')
                     ->get('/', 'index')->name('list');
+                
+                Route::middleware('permission:admin.access.user.create')
+                    ->post('/', 'store')->name('store');
             });
 
         // Role permission routes
@@ -55,46 +57,45 @@ Route::prefix('v1')->group(function () {
             ->name('role.')
             ->prefix('roles')
             ->group(function () {
-                Route::middleware('capable:role-view')
+                Route::middleware('permission:admin.access.role.view|admin.access.role.create')
                     ->get('/', 'index')->name('list');
-                Route::middleware('capable:role-create')
+                Route::middleware('permission:admin.access.role.create')
                     ->post('/', 'store')->name('store');
-                Route::middleware('capable:role-view')
+                Route::middleware('permission:admin.access.role.view')
                     ->get('/{id}', 'show')->name('show');
             });
-    
+
         // Permission routes
         Route::controller(PermissionController::class)
             ->name('permission.')
             ->prefix('permissions')
             ->group(function () {
-                Route::middleware('capable:permission-view')
+                Route::middleware('permission:admin.access.permission.view|admin.access.permission.create')
                     ->get('/', 'index')->name('list');
-                Route::middleware('capable:permission-create')
+                Route::middleware('permission:admin.access.permission.create')
                     ->post('/', 'store')->name('store');
             });
 
         // News Article routes
-        Route::middleware('capable:post-read')
+        Route::middleware('permission:admin.access.post.read|admin.access.post.create')
             ->get('posts', [PostController::class, 'index'])
             ->name('post.index');
 
-        Route::middleware('capable:post-create')
+        Route::middleware('permission:admin.access.post.create')
             ->post('posts', [PostController::class, 'store'])
             ->name('post.store');
 
-        Route::middleware('capable:post-delete')
+        Route::middleware('permission:admin.access.post.delete')
             ->delete('posts/{id}', [PostController::class, 'destroy'])
             ->name('post.delete');
-        
+
         // News sync routes
-        Route::middleware(['throttle:5,1', 'capable:post-create'])
+        Route::middleware(['throttle:5,1', 'permission:admin.access.post.create'])
         ->post('/sync-news', [PostApiController::class, 'sync'])
         ->name('post.sync');
 
-        Route::middleware('capable:post-create')
+        Route::middleware('permission:admin.access.post.create')
             ->post('cli-sync-news', [PostApiController::class, 'syncNews'])
             ->name('post.cli.sync');
-
     });
 });
