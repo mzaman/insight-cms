@@ -7,6 +7,18 @@ info:
     management, role management, and post creation. Each endpoint is designed to
     interact with the system's core services, enabling users to manage content
     efficiently.
+
+    **Authentication:**
+    - To access most of the protected APIs, users need to authenticate first using the `login` API (`/api/v1/auth/login`).
+    - After a successful login, the system will issue a **Bearer Token** (JWT). This token needs to be passed in the `Authorization` header as `Bearer <JWT_TOKEN>` in subsequent requests to access other protected routes.
+    - The token has an expiration, and once expired, users can refresh it using the `refresh` endpoint (`/api/v1/auth/refresh`).
+
+    **Login Procedure:**
+    1. Call `/api/v1/auth/login` with `email` and `password` to authenticate.
+    2. On success, a JWT token is returned, which must be included in the `Authorization` header for subsequent API calls.
+    3. When the token expires, you can call `/api/v1/auth/refresh` to obtain a new token.
+    4. Logout can be performed using the `/api/v1/auth/logout` endpoint.
+
   version: 1.0.0
 servers:
   - url: http://web.test
@@ -16,6 +28,7 @@ components:
     bearerAuth:
       type: http
       scheme: bearer
+      bearerFormat: JWT
     noauthAuth:
       type: http
       scheme: noauth
