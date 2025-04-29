@@ -44,9 +44,6 @@ class AuthApiService extends \App\Services\BaseApiService implements UserApiServ
       $this->repository = $repository;
     }
 
-    // Additional methods specific to UserApiService
-    // New methods for the Api Service
-    
     /**
      * Login user.
      * 
@@ -61,43 +58,44 @@ class AuthApiService extends \App\Services\BaseApiService implements UserApiServ
             'email' => $data['email'],
             'password' => $data['password'],
         ];
-    
+
         // Validate credentials
         $user = $this->repository->getByColumn($credentials['email'], 'email');
-    
+
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
             // If no user is found or password doesn't match
-            $response = [
+            return response()->json([
                 'success' => false,
                 'status' => 'Unauthorized',
                 'code' => 401,
                 'message' => __('Invalid email or password'),
-            ];
-            return response()->json($response, $response['code']);
+            ], 401);
         }
 
         // Check if the user is already logged in (if token exists)
         try {
-            if (JWTAuth::parseToken()->authenticate()) {
-                // If the user is already logged in, invalidate the current token
-                JWTAuth::invalidate(JWTAuth::getToken());
+            $token = JWTAuth::getToken(); // Retrieve the current token from the request
+
+            if ($token) {
+                // Invalidate the old token if it exists
+                JWTAuth::invalidate($token);
             }
         } catch (Exception $e) {
-            // If no token is found, continue with login
+            // If no token is found (first login or invalid token), continue with login
         }
 
         // Try to create a JWT token for the authenticated user
         try {
             // Create the JWT token
             $accessToken = JWTAuth::fromUser($user);
-    
+
             // Optionally, hide unnecessary properties
-            $user->makeHidden(['id', 'password', 'email_verified_at', 'created_at', 'updated_at', 'deleted_at',  'timezone', 'provider', 'provider_id']);
-    
+            $user->makeHidden(['id', 'password', 'email_verified_at', 'created_at', 'updated_at', 'deleted_at', 'timezone', 'provider', 'provider_id']);
+
             // Define token expiration (optional - override as needed)
             $expiresAt = Carbon::now()->addMinutes(config('jwt.ttl', 60)); // Config TTL in minutes
-    
-            $response = [
+
+            return response()->json([
                 'success' => true,
                 'status' => 'OK',
                 'code' => 200,
@@ -106,18 +104,16 @@ class AuthApiService extends \App\Services\BaseApiService implements UserApiServ
                 'token_expires_at' => $expiresAt->toDateTimeString(),
                 'token_type' => 'Bearer',
                 'user' => $user, // Return the user with hidden attributes
-            ];
+            ], 200);
         } catch (JWTException $e) {
             // Handle exception if token generation fails
-            $response = [
+            return response()->json([
                 'success' => false,
                 'status' => 'Unauthorized',
                 'code' => 401,
                 'message' => __('Could not create token, please try again'),
-            ];
+            ], 401);
         }
-    
-        return response()->json($response, $response['code']);
     }
 
     /**
@@ -198,27 +194,39 @@ class AuthApiService extends \App\Services\BaseApiService implements UserApiServ
      */
     public function logout()
     {
-        // Check if the user is authenticated
-        if (Auth::check()) {
-            // Logout the user
-            Auth::logout();
+        try {
+            // Get the token from the request
+            $token = JWTAuth::getToken();
 
-            // Return success message
+            // Check if the token is valid and exists
+            if ($token) {
+                // Invalidate the token
+                JWTAuth::invalidate($token);
+
+                // Return success message
+                return response()->json([
+                    'status' => 'success',
+                    'code' => 200,
+                    'message' => 'Successfully logged out',
+                ]);
+            } else {
+                // If no token is found or invalid token, return error response
+                return response()->json([
+                    'status' => 'error',
+                    'code' => 401,
+                    'message' => 'No valid token found, user is not authenticated',
+                ]);
+            }
+        } catch (JWTException $e) {
+            // If an exception occurs (e.g., invalid token), return error response
             return response()->json([
-                'status' => 'success',
-                'code' => 200, // HTTP status code for successful logout
-                'message' => 'Successfully logged out',
+                'status' => 'error',
+                'code' => 401,
+                'message' => 'Failed to log out, invalid token or session',
             ]);
         }
-
-        // If the user is not authenticated, return an error message
-        return response()->json([
-            'status' => 'error',
-            'code' => 401, // Unauthorized status code for missing authentication
-            'message' => 'User is not authenticated',
-        ]);
     }
-    
+
     /**
      * Refresh the JWT token.
      *
