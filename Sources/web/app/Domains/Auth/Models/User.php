@@ -155,4 +155,18 @@ class User extends Authenticatable implements MustVerifyEmail, TwoFactorAuthenti
     {
         return UserFactory::new();
     }
+
+    /**
+     * Get the default guard name for the user model.
+     * By overriding this, you enforce that roles/permissions will be applied using a single guard.
+     * In this case, 'web' guard is used.
+     *
+     * @return string
+     */
+    protected function getDefaultGuardName(): string
+    {
+        // Here, we enforce the 'web' guard for all roles/permissions.
+        // Change this to match your default guard if necessary.
+        return 'web';
+    }
 }
