@@ -7,5 +7,20 @@ namespace App\Domains\V1\Auth\Models\Traits\Attribute;
  */
 trait RoleAttribute
 {
+    /**
+     * @return string
+     */
+    public function getPermissionsLabelAttribute(): string
+    {
+        if ($this->isAdmin()) {
+            return 'All';
+        }
 
+        if (! $this->permissions->count()) {
+            return 'None';
+        }
+
+        return collect($this->getPermissionDescriptions())
+            ->implode('<br/>');
+    }
 }
