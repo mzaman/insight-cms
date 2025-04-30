@@ -21,6 +21,6 @@ trait RoleAttribute
         }
 
         return collect($this->getPermissionDescriptions())
-            ->implode('<br/>');
+            ->implode(', ');
     }
 }
