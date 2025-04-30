@@ -19,7 +19,7 @@ class ApiKeySeeder extends Seeder
         $apiKeys = [
             [
                 'service_name' => 'NewsAPI',
-                'api_key' => Crypt::encryptString(\Config::get('news.api_key')),
+                'api_key' => Crypt::encryptString(\Config::get('newsapi.api_key')),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]

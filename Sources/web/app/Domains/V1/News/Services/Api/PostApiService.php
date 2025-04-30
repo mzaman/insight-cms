@@ -3,6 +3,7 @@
 namespace App\Domains\V1\News\Services\Api;
 
 use App\Domains\V1\News\Repositories\Api\PostApiRepository;
+use App\Domains\V1\News\Services\Api\NewsApiService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use \Exception;
@@ -12,6 +13,8 @@ class PostApiService extends \App\Services\BaseApiService implements PostApiServ
 {
     use NewsFetcher;
     
+    protected $newsApiService;
+
     /**
      * Set message api for CRUD
      * @param string $title
@@ -33,6 +36,8 @@ class PostApiService extends \App\Services\BaseApiService implements PostApiServ
     public function __construct(PostApiRepository $repository)
     {
         $this->repository = $repository;
+        // Automatically resolved NewsApiService
+        $this->newsApiService = app(NewsApiService::class); // Using service container to resolve dependency
     }
 
     /**
@@ -53,14 +58,16 @@ class PostApiService extends \App\Services\BaseApiService implements PostApiServ
         $userId = $this->resolveSyncUserId();
 
         try {
-            $apiKey = $this->getDecryptedApiKey();
+            // $apiKey = $this->getDecryptedApiKey();
 
-            $apiUrl = config('news.api_base_url') . '/' . config('news.api_version') . '/top-headlines';
+            // $apiUrl = config('newsapi.base_url') . '/' . config('newsapi.version') . '/top-headlines';
 
-            $apiData = $this->fetchFromApi($apiUrl, [
-                'apiKey' => $apiKey,
-                'country' => 'us',
-            ]);
+            // $apiData = $this->fetchFromApi($apiUrl, [
+            //     'apiKey' => $apiKey,
+            //     'country' => 'us',
+            // ]);
+            // Use NewsApiService to fetch data
+            $apiData = $this->newsApiService->fetchTopHeadlines();
 
             $articles = $apiData['articles'] ?? [];
 

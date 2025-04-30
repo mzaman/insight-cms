@@ -140,7 +140,7 @@ class HealthCheckApiController extends Controller
 
             $apiKey = $this->getDecryptedApiKey();
 
-            $apiUrl = config('news.api_base_url') . '/' . config('news.api_version') . '/top-headlines';
+            $apiUrl = config('newsapi.base_url') . '/' . config('newsapi.version') . '/top-headlines';
 
             $apiData = $this->fetchFromApi($apiUrl, [
                 'apiKey' => $apiKey,

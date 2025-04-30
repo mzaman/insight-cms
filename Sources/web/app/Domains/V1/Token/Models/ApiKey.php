@@ -24,4 +24,8 @@ class ApiKey extends Model
 
         // This model does not need to manage timestamps manually
         public $timestamps = true;
+        
+        // Do not append the decrypted key automatically in JSON responses
+        protected $appends = []; // No need to append decrypted_api_key
+
 }
