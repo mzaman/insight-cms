@@ -6,7 +6,7 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 use App\Domains\V1\News\Services\Api\NewsApiService;
 use App\Domains\V1\System\Services\Api\LogApiService;
-use App\Domains\V1\System\Repositories\LogApiRepository;
+use App\Domains\V1\System\Repositories\Api\LogApiRepository;
 use App\Domains\V1\System\Models\Log as ApiLog;
 use App\Domains\V1\Token\Models\ApiKey;
 

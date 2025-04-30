@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Domains\V1\Token\Models\Traits\Method;
+use Illuminate\Support\Facades\Crypt;
 
 /**
  * Trait ApiKeyMethod.
