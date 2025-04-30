@@ -24,7 +24,7 @@ class LogApiController extends Controller
         // Inject the service dependency into the controller
         $this->service = $service;
         
-        $this->authorizeResource(Log::class, 'log');
+        // $this->authorizeResource(Log::class, 'log');
     }
 
     /**
