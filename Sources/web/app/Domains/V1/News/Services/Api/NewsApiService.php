@@ -26,9 +26,9 @@ class NewsApiService
      */
     public function __construct(string $apiKey, LogApiService $logApiService)
     {
-        $this->logApiService = $logApiService;  // Automatically resolved by Laravel
+        $this->logApiService = $logApiService;  // Automatically resolved by Laravel for DI binding in AppServiceProvider
         $this->apiKey = $apiKey;  
-        $this->service = new Client();  
+        $this->client = new Client();  
     }
 
     /**
@@ -103,7 +103,7 @@ class NewsApiService
                 ];
 
                 // Make the request using the Guzzle client
-                $response = $this->service->request($method, $endpoint, [
+                $response = $this->client->request($method, $endpoint, [
                     'query' => $params,
                     'headers' => $headers,
                 ]);
