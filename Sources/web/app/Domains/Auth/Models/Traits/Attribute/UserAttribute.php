@@ -45,7 +45,7 @@ trait UserAttribute
         }
 
         return collect($this->getPermissionDescriptions())
-            ->implode('<br/>');
+            ->implode(', ');
     }
 
     /**
@@ -65,6 +65,6 @@ trait UserAttribute
             ->each(function ($role) {
                 return ucwords($role);
             })
-            ->implode('<br/>');
+            ->implode(', ');
     }
 }
