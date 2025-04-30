@@ -209,25 +209,63 @@ A cron job triggers the data synchronization every 1 hour. For testing, you can 
 **API URL:** [http://web.test/api/v1/cli-sync-news](http://web.test/api/v1/cli-sync-news)
 
 ### User Roles
+---
+
+## **Managing Roles, Users, and Permissions**
+
+All roles, users, and permissions can be managed, assigned, or updated through the Admin URL:
+
+[**Admin URL: http://web.test/admin/auth/role**](http://web.test/admin/auth/role)
+
+- **Access** the Admin panel to create new roles, assign permissions, and manage users effectively.
+- **Assign** roles to users based on their responsibilities.
+- **Update** permissions as necessary for different roles to control system access.
+
 By default, there are four types of users:
 
-- **Admin**: Can perform almost all actions, including managing users, roles, permissions, API keys, and posts.
-  
-- **Manager**:
-  - **User Management**: Delete, View, Update Users
-  - **Role Management**: Update, View, Assign Roles
-  - **Permission Management**: Update, View, Assign Permissions
-  - **API Key Management**: Manage, Create, Delete API Keys
-  - **Post Management**: Read, Update, Archive Posts
+# Roles and Permissions
 
-- **Editor**:
-  - **User Management**: View, Update Users
-  - **Role Management**: View Roles
-  - **Permission Management**: View, Assign Permissions
-  - **Post Management**: Create, Update, Read, Publish, Sync Posts
+## 1. Admin Role
+- **Permissions**: All permissions in the system.
+- **Key Permissions**:
+  - User, Role, Permission, and Post Management
+  - API Key Management, Health Check, and API Logs
 
-- **Guest**:
-  - **Post Management**: Read Posts
+## 2. Manager Role
+- **Permissions**: Specific to **Post Management** and **API Key Management**.
+- **Key Permissions**:
+  - Post Sync, Create, Update, Read, and Delete Posts
+  - Manage API Keys
+
+## 3. Editor Role
+- **Permissions**: Limited to **Post Management**.
+- **Key Permissions**:
+  - Create, Update, Read, and Delete Posts
+
+## 4. CLI Role
+- **Permissions**: For background tasks.
+- **Key Permissions**:
+  - Post Sync and API Key Management
+
+---
+
+## Permissions Summary Table
+
+| Role        | Permissions                                                                                     |
+|-------------|-------------------------------------------------------------------------------------------------|
+| **Admin**   | All permissions (User, Role, Post, API Key, Health Check, Logs)                                 |
+| **Manager** | Post Sync, API Key Management, Create/Update/Delete Posts                                       |
+| **Editor**  | Create/Update/Read/Delete Posts                                                                  |
+| **CLI**     | Post Sync, API Key Management (for background tasks)                                            |
+
+---
+
+## Key Permissions Explained
+- **Post Sync**: Sync posts with external sources.
+- **API Key Management**: Manage API keys for external integrations.
+- **Post Management**: Create, read, update, and delete posts.
+- **Health Check**: Access the system’s health status.
+- **API Logs**: View and delete logs of API interactions.
 
 ## User Credentials
 

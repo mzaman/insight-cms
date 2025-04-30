@@ -4,61 +4,11 @@
 This project provides a streamlined Docker-based development environment for Laravel using Docker. It includes setup scripts and handy Docker shortcut commands to simplify local development.
 
 ## Prerequisites
-Before you begin using this project, you need to ensure that your system meets the following preinstallation requirements:
 
 - Docker & Docker Compose installed
 - Bash shell available
 - Git installed
 - SSH access if cloning a private repository
-
-## 1. **Docker**
-
-This project relies on Docker to create and manage containers. You need to have Docker installed on your machine.
-
-- **Docker Engine**: The core component for running containers.
-- **Docker Compose**: Used to define and run multi-container Docker applications.
-
-### Installing Docker
-You can download Docker based on your operating system:
-- [Docker for Mac](https://www.docker.com/products/docker-desktop)
-- [Docker for Windows](https://www.docker.com/products/docker-desktop)
-- [Docker for Linux](https://docs.docker.com/engine/install/)
-
-#### Verify Installation:
-After installation, you can verify if Docker and Docker Compose are installed correctly by running:
-```bash
-docker --version
-docker-compose --version
-```
-
-> **Note**: Docker Desktop comes with Docker Compose preinstalled, so you don’t need to install it separately on macOS and Windows. On Linux, you might need to install it manually.
-
-## 2. **Docker Compose**
-
-This project uses Docker Compose to manage multiple Docker containers. You need to have Docker Compose installed on your machine.
-
-### Installing Docker Compose
-You can download Docker Compose based on your operating system:
-- [Docker Compose for Mac](https://docs.docker.com/desktop/setup/install/mac-install/)
-- [Docker Compose for Windows](https://docs.docker.com/desktop/setup/install/windows-install/)
-- [Docker Compose for Linux](https://docs.docker.com/desktop/setup/install/linux/)
-
-#### Verify Installation:
-After installation, you can verify if Docker Compose is installed correctly by running:
-
-```bash
-docker-compose --version
-```
-
-## 3. System Requirements
-- **Linux**: Any supported Linux distribution (e.g., Ubuntu).
-- **macOS**: Docker Desktop for macOS.
-- **Windows**: Docker Desktop for Windows, with WSL 2 enabled.
-
-## 4. RAM and CPU
-- A minimum of 4 GB of RAM is recommended.
-- Docker uses CPU resources to manage containers, so ensure your machine has adequate resources.
-
 
 ## Project Structure
 
@@ -119,9 +69,7 @@ cd insight-cms
 Run the setup script:
 
 ```bash
-cd Setup
-chmod +x install.sh
-./install.sh
+chmod +x Setup/install.sh && ./Setup/install.sh
 ```
 
 ### 4. Edit the `/etc/hosts` file
@@ -199,7 +147,7 @@ Please see the [Scripts File](SCRIPTS.md) for more information.
 
 **Web URLs:**
 
-- [Web](http://web.test)
+- Frontend: [http://web.test](http://web.test)
 - PhpMyAdmin: [http://localhost:8081](http://localhost:8081)
 - Host: `mysql`
 - Username: `root`
@@ -260,29 +208,64 @@ A cron job triggers the data synchronization every 1 hour. For testing, you can 
 
 **API URL:** [http://web.test/api/v1/cli-sync-news](http://web.test/api/v1/cli-sync-news)
 
-## Description
-
-
 ### User Roles
+---
+
+## **Managing Roles, Users, and Permissions**
+
+All roles, users, and permissions can be managed, assigned, or updated through the Admin URL:
+
+[**Admin URL: http://web.test/admin/auth/role**](http://web.test/admin/auth/role)
+
+- **Access** the Admin panel to create new roles, assign permissions, and manage users effectively.
+- **Assign** roles to users based on their responsibilities.
+- **Update** permissions as necessary for different roles to control system access.
+
 By default, there are four types of users:
 
-- **Admin**: Can perform almost all actions, including managing users, roles, permissions, API keys, and posts.
-  
-- **Manager**:
-  - **User Management**: Delete, View, Update Users
-  - **Role Management**: Update, View, Assign Roles
-  - **Permission Management**: Update, View, Assign Permissions
-  - **API Key Management**: Manage, Create, Delete API Keys
-  - **Post Management**: Read, Update, Archive Posts
+# Roles and Permissions
 
-- **Editor**:
-  - **User Management**: View, Update Users
-  - **Role Management**: View Roles
-  - **Permission Management**: View, Assign Permissions
-  - **Post Management**: Create, Update, Read, Publish, Sync Posts
+## 1. Admin Role
+- **Permissions**: All permissions in the system.
+- **Key Permissions**:
+  - User, Role, Permission, and Post Management
+  - API Key Management, Health Check, and API Logs
 
-- **Guest**:
-  - **Post Management**: Read Posts
+## 2. Manager Role
+- **Permissions**: Specific to **Post Management** and **API Key Management**.
+- **Key Permissions**:
+  - Post Sync, Create, Update, Read, and Delete Posts
+  - Manage API Keys
+
+## 3. Editor Role
+- **Permissions**: Limited to **Post Management**.
+- **Key Permissions**:
+  - Create, Update, Read, and Delete Posts
+
+## 4. CLI Role
+- **Permissions**: For background tasks.
+- **Key Permissions**:
+  - Post Sync and API Key Management
+
+---
+
+## Permissions Summary Table
+
+| Role        | Permissions                                                                                     |
+|-------------|-------------------------------------------------------------------------------------------------|
+| **Admin**   | All permissions (User, Role, Post, API Key, Health Check, Logs)                                 |
+| **Manager** | Post Sync, API Key Management, Create/Update/Delete Posts                                       |
+| **Editor**  | Create/Update/Read/Delete Posts                                                                  |
+| **CLI**     | Post Sync, API Key Management (for background tasks)                                            |
+
+---
+
+## Key Permissions Explained
+- **Post Sync**: Sync posts with external sources.
+- **API Key Management**: Manage API keys for external integrations.
+- **Post Management**: Create, read, update, and delete posts.
+- **Health Check**: Access the system’s health status.
+- **API Logs**: View and delete logs of API interactions.
 
 ## User Credentials
 
@@ -304,12 +287,20 @@ Here are the default credentials for each user:
 ## API Test Form
 URL: [http://localhost:5555](http://localhost:5555)
 
-## Postman Instructions
+- REDIS UI URL: [http://localhost:9987](http://localhost:9987)
+- Username: `laradock`
+- Password: `laradock`
+
+
+## Postman Collection
 
 To use the Postman collection, follow these steps:
 
 1. Import the **`./Insight CMS - REST API (v1).postman_collection.json`** file into Postman.
 2. After logging in or registering, save the **Bearer Token** in the `Authorization` section. You can use this token for subsequent requests.
+
+- Postman Collection: [Insight CMS - REST API (v1).postman_collection.json](./Insight CMS - REST API (v1).postman_collection.json)
+- Transform Postman Collections into OpenAPI: [https://metamug.com/util/postman-to-swagger](https://metamug.com/util/postman-to-swagger)
 
 ## License
 
