@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LocaleController;
+use App\Domains\V1\Swagger\Http\Controllers\Frontend\YamlFrontendController;
 
 /*
  * Global Routes
